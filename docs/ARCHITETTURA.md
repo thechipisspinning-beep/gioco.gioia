@@ -1,247 +1,181 @@
-# Animal World — Architettura tecnica (Unity)
+# Animal World — Architettura tecnica (Godot 4)
 
-> **Versione:** 0.2 (proposta) · **Ultimo aggiornamento:** 2026-11-22
-> Le scelte marcate **[DA CONFERMARE]** dipendono da decisioni aperte (vedi [`DECISIONI_APERTE.md`](DECISIONI_APERTE.md)).
+> **Versione:** 1.0 · **Ultimo aggiornamento:** 2026-11-22
+> Motore: **Godot 4.7.2 stable** · Linguaggio: **GDScript tipizzato** (D-30).
+> Questa architettura sostituisce la precedente proposta per Unity.
 
 ---
 
 ## 1. Principi
 
-1. **Sistemi indipendenti, dipendenze esplicite.** Ogni sistema vive nel proprio Assembly Definition e comunica con gli altri tramite interfacce o eventi, mai cercando oggetti in scena "a caso".
-2. **Dati separati dalla logica.** Il contenuto (specie, oggetti, ricette, missioni, mobili) è definito in **ScriptableObject**; lo stato di gioco (cosa possiede il giocatore) è in **classi C# semplici** serializzabili.
-3. **Logica pura testabile.** Le regole di gioco (amicizia, inventario, missioni, crescita piante, salvataggio) stanno in un assembly **senza dipendenze da UnityEngine** quando possibile, così si possono coprire con unit test veloci.
-4. **Semplicità prima di tutto.** Niente framework di dependency injection esterni, niente ECS/DOTS se non serve. Un piccolo `GameServices` locator inizializzato all'avvio è sufficiente.
-5. **Prestazioni per progetto, non per correzione.** Streaming del mondo, LOD, pooling e simulazione a livelli sono previsti dall'inizio.
+1. **Sistemi indipendenti.** Ogni sistema vive nella propria cartella e comunica con gli altri tramite **segnali** dell'`EventBus` o API pubbliche dei servizi, mai cercando nodi per nome in giro per la scena.
+2. **Dati separati dalla logica.** Il contenuto (specie, oggetti, ricette, mobili, missioni) è definito in **Resource** (`.tres`); lo stato di gioco in classi `RefCounted` serializzabili in dizionari.
+3. **Logica pura testabile.** Le regole (amicizia, salute, inventario, missioni, crescita piante, salvataggio) stanno in `res://core/`, classi che **non dipendono dalla scena**: si testano in modalità headless in pochi secondi.
+4. **Semplicità.** Niente plugin superflui. Pochi autoload (singleton) ben definiti.
+5. **Prestazioni per progetto.** Streaming a blocchi, LOD, pooling e simulazione a livelli fin dall'inizio.
+6. **Tipizzazione statica ovunque** (`var x: int`, `func f() -> void`), con warning di tipo trattati come errori.
 
 ---
 
-## 2. Stack tecnologico proposto
+## 2. Tecnologie
 
-| Area | Scelta | Motivo |
-|------|--------|--------|
-| Versione Unity | **Unity 6 LTS** (ultima LTS disponibile all'avvio) | Supporto lungo, URP maturo, UI Toolkit runtime |
-| Render pipeline | **URP** | Ideale per stile stilizzato, scalabile da Switch-class a PC |
-| Input | **Input System** (nuovo) | Tastiera/mouse + controller con lo stesso codice, rebinding |
-| Telecamera | **Cinemachine 3** | Orbit, collisioni, transizioni tra camere (esplorazione / interazione / costruzione) |
-| Animazione | **Mecanim** + **Animation Rigging** | Blend tree locomozione, IK piedi e look-at |
-| Contenuti caricabili | **Addressables** | Caricamento/scaricamento di zone, animali e mobili; controllo memoria |
-| UI | **UI Toolkit** [DA CONFERMARE] (alternativa: uGUI) | Menu complessi (diario, inventario, costruzione) più facili da mantenere |
-| Terreno | **Unity Terrain** a tile, oppure mesh modellate [DA CONFERMARE, D-08] | Terrain è rapido da iterare; mesh danno più controllo sullo stile |
-| Vegetazione | GPU instancing (detail/tree del Terrain o sistema custom) | Migliaia di piante a basso costo |
-| Navigazione | **AI Navigation** (NavMesh) per tile | Movimento animali e NPC |
-| Salvataggio | JSON (Newtonsoft Json for Unity) con versione dello schema | Leggibile, debuggabile, migrabile |
-| Localizzazione | **Unity Localization** package | Tabelle di stringhe, nessun testo hard-coded |
-| Test | Unity Test Framework (EditMode + PlayMode) | Verifica automatica dei sistemi |
-| Versionamento | Git + **Git LFS** per asset binari | Modelli, texture e audio fuori dalla storia "pesante" |
+| Area | Scelta | Note |
+|------|--------|------|
+| Motore | Godot 4.7.2 stable | Gratuito, open source (MIT), nessun account |
+| Rendering | **Forward+** su PC/console, **Mobile** su telefoni, **Compatibility** sul web | Lo stile toon è progettato per apparire uguale su tutti e tre |
+| Fisica | Jolt (integrata in Godot 4.4+) | Più stabile e veloce |
+| Input | InputMap con azioni; tastiera/mouse, controller, touch | Il gameplay legge solo azioni |
+| Navigazione | NavigationServer3D (NavigationRegion3D per blocco) | Movimento animali e NPC |
+| UI | Control + Theme condiviso | Navigabile con controller e touch |
+| Salvataggi | JSON in `user://`, versionato, scrittura atomica | Leggibile e migrabile |
+| Traduzioni | TranslationServer con file CSV (`it`, `en`) | Nessun testo nel codice |
+| Test | Runner di test interno headless (`tests/run_tests.gd`) | Nessuna dipendenza esterna |
+| CI | GitHub Actions: test + build web | D-32 |
+| Asset 3D | Generati dal team (mesh procedurali/script), D-29 | Sostituibili con modelli `.glb` |
 
 ---
 
 ## 3. Struttura delle cartelle
 
 ```
-Assets/
-  _Project/
-    Art/                  # Modelli, texture, materiali, shader, VFX (per categoria)
-      Characters/Gioia/
-      Animals/<Specie>/
-      Environment/<Zona>/
-      Props/  Furniture/  UI/
-    Audio/                # Musica, ambienti, SFX, versi animali
-    Data/                 # ScriptableObject di contenuto
-      Species/  Items/  Recipes/  Plants/  Furniture/  Quests/  Outfits/  Zones/
-    Prefabs/
-    Scenes/
-      Boot.unity          # Inizializzazione servizi
-      MainMenu.unity
-      World/              # Scena "persistente" + scene tile della mappa
-      Interiors/          # Casa, negozi
-      Sandbox/            # Scene di test per singoli sistemi
-    Scripts/
-      Core/               # Logica pura (no UnityEngine) — testabile
-      Runtime/            # MonoBehaviour e integrazione con Unity, per sistema
-      Editor/             # Strumenti editor (validatori, generatori)
-    Settings/             # URP asset, Input Actions, Localization, Addressables
-  Tests/
-    EditMode/
-    PlayMode/
+project.godot
+autoload/            # Singleton globali (EventBus, GameClock, Services…)
+core/                # Logica pura, senza dipendenze dalla scena — testata
+  time/  animals/  inventory/  quests/  home/  garden/  cooking/  save/
+data/                # Resource di contenuto (.tres)
+  species/  items/  recipes/  plants/  furniture/  quests/  outfits/  zones/
+systems/             # Nodi e scene di gameplay, per sistema
+  player/  camera/  animals/  world/  interaction/  home/  activities/
+ui/                  # HUD, menu, diario, controlli touch, tema
+art/                 # Generatori di mesh, shader, materiali, palette
+audio/
+scenes/
+  boot/  main_menu/  world/  interiors/
+  sandbox/           # Scene di prova di singoli sistemi
+localization/        # it.csv / en.csv
+tests/               # Test automatici (unit + integrazione)
+tools/               # Script di build, screenshot, esportazione
+docs/                # Documentazione di progetto
 ```
 
 ---
 
-## 4. Assembly Definition (moduli)
+## 4. Autoload (singleton)
 
-```
-AnimalWorld.Core            (noEngineReferences: true) — modelli di stato, regole, eventi
-AnimalWorld.Runtime.Common  — GameServices, EventBus, tempo, utilità, pooling
-AnimalWorld.Runtime.Player  — controller Gioia, telecamera, interazione
-AnimalWorld.Runtime.Animals — specie, AI, simulazione, compagni
-AnimalWorld.Runtime.World   — streaming tile, giorno/notte, meteo, zone
-AnimalWorld.Runtime.Home    — casa, costruzione, arredamento
-AnimalWorld.Runtime.Activities — cucina, giardinaggio, raccolta
-AnimalWorld.Runtime.Quests  — missioni, obiettivi, ricompense
-AnimalWorld.Runtime.Save    — serializzazione, slot, migrazioni
-AnimalWorld.Runtime.UI      — HUD, menu, diario
-AnimalWorld.Runtime.Platform — codice specifico per piattaforma (salvataggi console, touch, ciclo di vita mobile)
-AnimalWorld.Editor          — strumenti editor
-AnimalWorld.Tests.EditMode / AnimalWorld.Tests.PlayMode
-```
+| Autoload | Responsabilità |
+|----------|----------------|
+| `EventBus` | Segnali globali del gameplay (`animal_met`, `animal_adopted`, `item_collected`, `recipe_cooked`, …). Disaccoppia missioni, diario e notifiche dai sistemi che generano gli eventi |
+| `GameClock` | Ora/giorno di gioco, velocità, pausa; emette `hour_changed`, `day_started`. Avvolge `core/time/GameTime` |
+| `Settings` | Opzioni utente (audio, grafica, controlli, lingua, Modalità serena) |
+| `SaveManager` | Raccolta e ripristino dello stato di tutti i servizi, slot, salvataggio automatico |
+| `Services` (fasi successive) | Accesso a `AnimalRegistry`, `Inventory`, `QuestLog`, `HomeLayout`, `Garden`… |
 
-Regola: i moduli `Runtime.*` dipendono da `Core` e `Common`, **mai tra di loro in modo circolare**. La UI legge lo stato e invia comandi, non contiene regole di gioco.
+Regola: un autoload non dipende dalla scena corrente; la UI legge lo stato e invia comandi, non contiene regole di gioco.
 
 ---
 
-## 5. Flusso di avvio e scene
+## 5. Scene e flusso
 
 ```
 Boot ──► MainMenu ──► World (persistente)
-                        ├── Tile_x_y (additive, caricate/scaricate per distanza)
-                        └── Interior_Home / Interior_Shop (additive, su richiesta)
+                        ├── Chunk_x_y (caricati/scaricati per distanza)
+                        └── Interior_* (caricati su richiesta, D-14)
 ```
 
-- **Boot:** crea i servizi (`SaveService`, `TimeService`, `InventoryService`, `AnimalRegistry`, `QuestService`, …), carica impostazioni, passa al menu.
-- **World (persistente):** contiene Gioia, telecamere, luce sole/luna, gestore streaming, UI.
-- **Tile:** la mappa è divisa in celle (es. 128 × 128 m). Il `WorldStreamer` carica le celle entro un raggio dal giocatore e scarica quelle lontane (Addressables + scene additive). Ogni cella contiene terreno, vegetazione, props, NavMesh e *spawn point* degli animali.
-- **Interni:** caricati come scene additive con transizione breve; l'esterno viene messo in pausa/nascosto.
+- **World:** contiene Gioia, telecamera, sole/luna/cielo, gestore streaming, HUD.
+- **Chunk:** l'isola (2 × 2 km, D-05) è divisa in blocchi di 128 × 128 m. Il `WorldStreamer` carica in background (`ResourceLoader.load_threaded_request`) i blocchi entro un raggio dal giocatore e libera quelli lontani. Ogni blocco contiene terreno, vegetazione (MultiMeshInstance3D), oggetti, navigazione e punti di comparsa degli animali.
+- **Interni:** scene separate con dissolvenza; l'esterno viene sospeso.
 
 ---
 
-## 6. Sistemi principali
+## 6. Sistemi
 
-### 6.1 Servizi ed eventi
-- `GameServices`: registro statico minimale inizializzato da Boot (`GameServices.Get<IInventoryService>()`).
-- `EventBus` tipizzato leggero (`Publish<AnimalAdoptedEvent>(…)`) per disaccoppiare: es. il `QuestService` ascolta `AnimalAdoptedEvent` senza conoscere il sistema di adozione.
-- Ogni evento significativo per missioni/diario passa dal bus: `AnimalMet`, `AnimalAdopted`, `ItemCollected`, `RecipeCooked`, `PlantHarvested`, `FurniturePlaced`, `ZoneVisited`, `NpcTalked`.
+### 6.1 Tempo e giorno/notte
+- `core/time/GameTime`: minuti di gioco totali, conversioni giorno/ora, avanzamento in base al tempo reale (1 giorno = 24 min, D-06). Logica pura, testata.
+- `systems/world/DayNight`: ruota il sole (DirectionalLight3D) e la luna, interpola colori di cielo, luce e nebbia per fascia oraria, mostra le stelle di notte tramite shader del cielo.
+- Tutti i sistemi a tempo (bisogni, malattia, crescita piante) leggono `GameClock`: accelerando il tempo si testano in pochi secondi.
 
-### 6.2 Tempo (giorno/notte)
-- `TimeService` in Core: ora corrente, giorno, velocità, pausa. Emette eventi `HourChanged`, `DayStarted`.
-- `DayNightController` (Runtime): ruota sole/luna, aggiorna skybox, colore luce, nebbia e post-processing tramite curve/gradienti per fascia oraria; stelle con shader del cielo.
-- Tutti i sistemi a tempo (crescita piante, bisogni animali, routine) leggono il `TimeService` → si possono testare accelerando il tempo.
+### 6.2 Giocatore (Gioia)
+- `CharacterBody3D` con movimento relativo alla telecamera, accelerazione/decelerazione morbide, camminata/corsa analogica, salto piccolo (D-13), pendenze e gradini.
+- **Personalizzazione modulare:** un unico scheletro; ogni slot (capelli, maglia, …) è una mesh agganciata. I colori passano come parametri dello shader toon (maschere colore) → nessun materiale duplicato. L'aspetto è salvato come `{slot: item_id, colori}`.
+- `Interactor`: individua l'oggetto interagibile migliore davanti a Gioia (distanza + angolo + priorità) e mostra il suggerimento contestuale.
 
-### 6.3 Giocatore (Gioia)
-- `PlayerMotor` basato su **CharacterController** (prevedibile, niente fisica "scivolosa"), camminata/corsa analogica, gestione pendenze e gradini.
-- `PlayerAnimator`: blend tree 1D/2D per locomozione, layer per interazioni, IK piedi e look-at.
-- `Interactor`: rileva l'`IInteractable` più rilevante davanti a Gioia (sfera + priorità + angolo) e mostra il prompt; animali, oggetti, mobili, NPC implementano la stessa interfaccia.
-- **Personalizzazione modulare:** un unico scheletro; ogni slot (capelli, maglia, …) è uno `SkinnedMeshRenderer` agganciato allo scheletro. I colori sono applicati con **MaterialPropertyBlock** o maschere colore in uno shader dedicato → un solo materiale per parte, infinite combinazioni senza duplicare asset. L'aspetto è salvato come `CharacterAppearance { slotId → itemId, colori }`.
+### 6.3 Telecamera (D-02)
+- Perno che segue Gioia con smorzamento, `SpringArm3D` per non attraversare i muri, orbita con mouse/stick/trascinamento touch, zoom, limiti di inclinazione.
+- Modalità: esplorazione, interazione ravvicinata, costruzione dall'alto.
 
-### 6.4 Animali (cuore del gioco)
+### 6.4 Animali
+**Dati:** `SpeciesDefinition` (Resource): taglia, zone, orari, cibi, timidezza, difficoltà di adozione, parametri bisogni/salute, scena del modello, abilità da compagno.
 
-**Dati**
-- `SpeciesDefinition` (ScriptableObject): taglia, zone, orari, cibi, timidezza, varianti, prefab Addressable, set animazioni, parametri AI.
-- `AnimalState` (Core, serializzabile): id univoco, specie, variante, nome, personalità, amicizia, bisogni, luogo (casa/giardino/compagno/selvatico), statistiche.
-- `AnimalRegistry` (Core): elenco di tutti gli animali **noti** (adottati + selvatici con cui c'è un rapporto). Fonte unica di verità.
+**Stato:** `AnimalState` (core): id stabile, specie, variante, nome, personalità, amicizia, bisogni, salute, luogo (casa/giardino/compagno/selvatico).
 
-**Simulazione a livelli (LOD di simulazione)** — è ciò che permette adozioni senza limite rigido:
+**Simulazione a livelli** — permette adozioni senza limite rigido:
 
-| Livello | Quando | Costo | Cosa succede |
-|---------|--------|-------|--------------|
-| **Attivo** | Vicino al giocatore e visibile | Alto | GameObject completo, AI a stati, NavMesh, animazioni piene, IK |
-| **Ridotto** | Distanza media / fuori vista | Medio | Animazioni a frequenza ridotta, AI aggiornata a intervalli, niente IK |
-| **Virtuale** | Lontano / in una scena non caricata (es. animali a casa mentre esplori) | Quasi nullo | Nessun GameObject: solo dati. I bisogni si aggiornano matematicamente col tempo trascorso |
+| Livello | Quando | Cosa succede |
+|---------|--------|--------------|
+| Attivo | Vicino e visibile | Nodo completo, IA a stati, navigazione, animazioni |
+| Ridotto | Distanza media | IA aggiornata a intervalli, animazioni semplificate |
+| Virtuale | Lontano o in scena non caricata | Solo dati; bisogni e salute calcolati dal tempo trascorso |
 
-- Un `AnimalSimulationManager` promuove/declassa gli animali tra i livelli in base alla distanza, con un **budget massimo** di animali attivi (es. 25–40, da tarare per piattaforma).
-- Gli **animali selvatici** non sono persistenti: vengono generati dagli *spawn point* della cella secondo specie/ora/zona e rilasciati quando la cella si scarica (con **object pooling**). Diventano persistenti solo quando nasce un rapporto (fiducia > 0) o vengono adottati.
-- **AI:** macchina a stati semplice e leggibile (`Idle`, `Wander`, `Graze/Eat`, `Sleep`, `Flee`, `Curious`, `FollowPlayer`, `BeingPetted`, `Play`), con transizioni guidate da dati della specie e personalità. Niente behaviour tree complessi finché non servono.
-- **Compagni al seguito:** stato `FollowPlayer` con posizionamento in formazione morbida, teletrasporto discreto se restano troppo indietro, gestione ingresso/uscita dagli interni.
-- **Rendering:** LOD Group (3 livelli + impostore/cull), animatori con `cullingMode = CullUpdateTransforms`, GPU instancing per specie numerose.
-
-### 6.4.1 Salute e malattia (D-17)
-- `AnimalHealthModel` (Core, logica pura): stati `Sano → Malato(giorno 1..3) → Morto`, con `Convalescente` dopo la cura. Le soglie (quanto a lungo i bisogni a zero causano la malattia) sono dati della specie, quindi bilanciabili senza toccare il codice.
-- Calcolato dal `TimeService` anche per gli animali "virtuali" (a casa mentre Gioia esplora): nessun animale si ammala o guarisce "di nascosto" in modo diverso a seconda di cosa è caricato.
-- Eventi `AnimalNeedsWarning`, `AnimalFellSick`, `AnimalCured`, `AnimalDied` → notifiche, diario, missioni.
-- Interamente coperto da unit test (incluso il caso del tempo accelerato e del caricamento di un salvataggio).
+- Budget di animali attivi per piattaforma (mobile 10–15, PC 25–40).
+- I selvatici senza rapporto non vengono salvati: compaiono dai punti di comparsa e tornano nel pool.
+- **IA:** macchina a stati semplice (`Idle`, `Wander`, `Eat`, `Sleep`, `Flee`, `Curious`, `Follow`, `Petted`, `Play`, `Sick`).
+- **Salute (D-17, D-35, D-38, D-40):** `core/animals/AnimalHealth`: `Sano → Malato (giorno 1–3) → Morto`, `Convalescente` dopo la cura. Le soglie sono dati della specie. In Modalità serena la malattia non avanza oltre il giorno 3. Coperta da test.
 
 ### 6.5 Interazione e adozione
-- `AnimalInteractable` espone azioni disponibili in base allo stato (accarezza, dai cibo, gioca, spazzola, adotta).
-- `TrustModel` (Core): regole pure per amicizia/fiducia (bonus cibo preferito, penalità se Gioia corre vicino a specie timide, rendimenti decrescenti per azioni ripetute nello stesso giorno).
-- `AdoptionService`: verifica soglia, apre UI nome, crea/aggiorna `AnimalState`, assegna luogo di residenza, pubblica `AnimalAdopted`.
+- `TrustModel` (core): guadagno di fiducia per azione, bonus cibo preferito, penalità se Gioia corre vicino a specie timide, rendimenti decrescenti nello stesso giorno; soglie più alte e giorni di visita richiesti per i selvatici (D-16).
+- `Adoption`: verifica condizioni, scelta del nome, registrazione nell'`AnimalRegistry`, segnale `animal_adopted`.
+- Compagni: massimo 3 (D-04), stato `Follow` con formazione morbida e teletrasporto discreto se restano indietro.
 
-### 6.6 Inventario e oggetti
-- `ItemDefinition` (SO): id, categoria, icona, impilabile, valore, tag (cibo per…, ingrediente, decorazione).
-- `Inventory` (Core): mappa `itemId → quantità` + oggetti unici; operazioni atomiche `TryAdd/TryRemove`.
+### 6.6 Inventario, casa, giardino, cucina, missioni
+- `Inventory` (core): `item_id → quantità`, operazioni atomiche.
+- `HomeLayout` (core): stanze sbloccate + mobili `{id, stanza, cella, rotazione, colore}` su griglia (D-20).
+- `Garden` (core): parcelle con pianta, fase, ultima annaffiatura; crescita calcolata dal tempo.
+- `Cooking` (core): verifica e consumo ingredienti, ricette per Gioia/animali/medicine (D-36).
+- `QuestLog` (core): missioni data-driven composte da obiettivi standard (`meet_species`, `adopt`, `collect`, `cook`, `plant`, `place_furniture`, `visit_zone`, `talk`), aggiornate dai segnali dell'`EventBus`.
+- **Diario:** solo una vista su registro animali, scoperte, missioni e ricette → non può andare fuori sincrono.
 
-### 6.7 Casa e costruzione
-- `HomeLayout` (Core): stanze sbloccate + elenco mobili `{ furnitureId, stanza, cella griglia, rotazione, colore }`.
-- `BuildModeController`: telecamera dall'alto, griglia, anteprima "fantasma", validazione sovrapposizioni, annulla/ripeti.
-- Espansioni casa = prefab di stanza modulari attivati in base ai progressi.
-- Spazi animali sono mobili speciali con tag (`bed`, `scratching`, `pond`…) che gli animali in casa usano tramite *smart object*.
-
-### 6.8 Cucina e giardinaggio
-- `RecipeDefinition` (SO): ingredienti, risultato, destinatario (Gioia / specie), condizioni di sblocco.
-- `CookingService` (Core): verifica ingredienti, consuma, produce, pubblica `RecipeCooked`.
-- `PlantDefinition` (SO): fasi di crescita, ore per fase, acqua richiesta, raccolto.
-- `GardenState` (Core): parcelle con pianta, fase, ultimo innaffiamento. Crescita calcolata dal `TimeService` → funziona anche quando la scena del giardino non è caricata.
-
-### 6.9 Missioni
-- `QuestDefinition` (SO): titolo/descrizione (chiavi di localizzazione), prerequisiti, lista di `ObjectiveDefinition`, ricompense.
-- Obiettivi **data-driven** riutilizzabili: `MeetSpecies`, `AdoptAnimal`, `ReachFriendship`, `CollectItem`, `CookRecipe`, `PlantOrHarvest`, `PlaceFurniture`, `VisitZone`, `TalkToNpc`.
-- `QuestService` ascolta l'EventBus e aggiorna il progresso; nessuna missione richiede codice dedicato per i casi standard.
-
-### 6.10 Diario
-- Il diario **non ha stato proprio**: è una vista sopra `AnimalRegistry`, `DiscoveryLog`, `QuestService`, `CookingService`, statistiche. Così non può andare "fuori sincrono".
-- `DiscoveryLog` (Core): specie incontrate (prima volta, luogo, ora), luoghi scoperti, collezionabili.
-
-### 6.11 Salvataggio e caricamento
-- Un unico `SaveGame` radice con `schemaVersion` che raccoglie gli stati di tutti i servizi (`ISaveable` → `CaptureState()` / `RestoreState()`).
-- Scrittura **atomica** (file temporaneo → rinomina) + backup dell'ultimo salvataggio valido, per evitare salvataggi corrotti in caso di crash.
-- **Migrazioni** versionate (`v1 → v2 → …`) per non rompere i salvataggi quando il gioco cresce.
-- Riferimenti ai contenuti tramite **ID stringa stabili** (mai riferimenti diretti a asset o indici di lista).
-- Salvataggio automatico su eventi chiave + intervallo; scrittura asincrona per non bloccare il frame.
-- Astrazione `ISaveStorage` per supportare in futuro piattaforme con API di salvataggio proprie (console, cloud).
-
-### 6.12 UI
-- Schermate gestite da un `UIRouter` (stack: HUD → Diario → Dettaglio animale…), con focus/navigazione controller garantita.
-- Pattern **presentatore**: la UI osserva lo stato e chiama i servizi; nessuna regola di gioco nella UI.
-- Testi solo tramite chiavi di localizzazione.
+### 6.7 Salvataggi
+- Un dizionario radice con `schema_version`; ogni servizio implementa `to_dict()` / `from_dict()`.
+- Scrittura **atomica** (file temporaneo → rinomina) + copia di backup dell'ultimo salvataggio valido.
+- **Migrazioni** versionate per non rompere i salvataggi vecchi.
+- Riferimenti ai contenuti solo tramite **ID stringa stabili**.
+- Mobile: salvataggio automatico quando l'app va in background (`NOTIFICATION_APPLICATION_PAUSED`).
 
 ---
 
-## 7. Multipiattaforma: PC, console e mobile
+## 7. Multipiattaforma
 
-Il gioco esce su PC, console e mobile (D-01). Questo influenza l'architettura fin dal primo giorno:
+- **Tre profili di qualità:** Basso (mobile/web), Medio, Alto. Regolano risoluzione 3D, ombre, distanza di visibilità, densità della vegetazione, animali attivi.
+- **Input:** azioni InputMap con tre schemi; i controlli touch (joystick virtuale, trascinamento della telecamera, pulsanti) compaiono solo su dispositivi touch.
+- **UI adattiva:** ancore e contenitori, aree sicure (notch), bersagli touch grandi.
+- **Esportazioni:** Windows, Linux, Android e Web si generano da questo ambiente; macOS/iOS richiedono un Mac (D-42); console tramite società di porting (D-41).
 
-- **Livelli di qualità (quality tier):** `Low` (mobile), `Medium` (console portatili / PC modesti), `High` (PC e console di fascia alta). Ogni tier ha il proprio URP Asset: risoluzione di rendering, ombre, distanza di visibilità, densità vegetazione, numero di animali attivi, post-processing.
-- **Contenuti scalabili:** LOD per ogni modello, texture con varianti di risoluzione per piattaforma (Addressables per gruppo/piattaforma), vegetazione a densità configurabile.
-- **Input unico:** Input System con tre schemi (tastiera/mouse, controller, touch). Il gameplay legge *azioni* (`Move`, `Interact`, `Run`…), mai tasti o tocchi direttamente. UI touch (joystick virtuale, pulsanti) mostrata solo su dispositivi touch.
-- **UI adattiva:** layout che si adattano a 16:9, 16:10, 19.5:9 e tablet 4:3, aree sicure (notch), dimensione minima dei bersagli touch.
-- **Salvataggi:** `ISaveStorage` con implementazioni per file system (PC/mobile) e API di salvataggio delle console.
-- **Mobile:** gestione di pausa/ripresa dell'app (salvataggio automatico quando l'app va in background), limite di memoria più basso, attenzione a batteria e surriscaldamento (frame rate limitato a 30 come opzione).
-- **Console:** richiedono accordi con i produttori, kit di sviluppo e certificazione; i moduli specifici di piattaforma saranno isolati in `AnimalWorld.Runtime.Platform`.
+## 8. Budget di prestazioni (iniziali)
 
-> La piattaforma **più debole** fissa i limiti di base: per questo i test di prestazioni su un telefono di riferimento iniziano già dalla Fase 5.
-
-## 8. Prestazioni e memoria — budget iniziali [DA CONFERMARE con i dispositivi di riferimento]
-
-| Voce | Mobile (Low) | Console/PC (High) |
-|------|--------------|-------------------|
+| Voce | Mobile / Web | PC / Console |
+|------|--------------|--------------|
 | Frame rate | 30 fps stabili | 60 fps |
 | Draw call per frame | < 300 | < 1500 |
 | Triangoli a schermo | < 300k | < 1.5 M |
-| Animali attivi completi | 10–15 | 25–40 |
-| Gioia (LOD0) | ~10–15k triangoli | ~25–35k triangoli |
-| Animale medio (LOD0) | 3–5k triangoli | 5–12k triangoli |
-| Memoria totale | < 1.5 GB | secondo piattaforma |
-| GC per frame | 0 byte nel gameplay | 0 byte nel gameplay |
+| Animali attivi | 10–15 | 25–40 |
+| Memoria | < 1.5 GB | secondo piattaforma |
 
-Tecniche: streaming a celle, LOD + culling, occlusion culling negli interni, GPU instancing per vegetazione e rocce, baking della luce ambientale dove possibile, Animator culling, aggiornamenti AI distribuiti su più frame, profilazione regolare con Profiler e Memory Profiler su ogni piattaforma.
+Tecniche: blocchi caricati in streaming, LOD automatici delle mesh, visibility range, MultiMesh per la vegetazione, materiali condivisi da palette, IA distribuita su più frame, nessuna allocazione superflua in `_process`.
 
 ## 9. Qualità e verifica
 
-- **Unit test (EditMode)** su tutta la logica Core: inventario, amicizia, missioni, crescita piante, cucina, salvataggio/migrazioni.
-- **PlayMode test** su flussi chiave: movimento, interazione, adozione, entrata/uscita casa, salvataggio → caricamento.
-- **Scene Sandbox** per ogni sistema, giocabili da sole.
-- **Validatori editor**: controllano che ogni `SpeciesDefinition`, `ItemDefinition`, ecc. abbia ID univoco, icona, chiavi di localizzazione, prefab valido.
-- **Menu debug** in build di sviluppo: accelerare il tempo, teletrasporto, aggiungere oggetti, generare animali, sbloccare tutto.
-- Checklist QA per ogni fase (vedi [`PIANO_SVILUPPO.md`](PIANO_SVILUPPO.md)).
-
-> **Nota operativa:** l'ambiente in cui lavora Claude Code non dispone dell'editor Unity. Claude scrive codice, test e configurazioni, ma la compilazione nell'editor, i test PlayMode e le verifiche visive devono essere eseguiti sul computer di sviluppo. Per questo ogni consegna includerà istruzioni di verifica precise. Si può valutare una pipeline CI (es. GameCI su GitHub Actions) per compilare ed eseguire i test automaticamente a ogni commit — vedi D-32.
-
----
+- **Test automatici** (`tests/`), eseguiti headless:
+  `godot --headless --path . -s res://tests/run_tests.gd`
+- **Scene sandbox** per ogni sistema.
+- **Screenshot automatici** di controllo (`tools/screenshot.gd`) eseguiti su display virtuale con rendering software, per verificare l'aspetto visivo.
+- **Build web** giocabile nel browser per il committente.
+- **Menu debug** nelle build di sviluppo: tempo accelerato, teletrasporto, oggetti, animali.
 
 ## 10. Convenzioni di codice
 
-- C# standard Microsoft: `PascalCase` per tipi/metodi/proprietà, `_camelCase` per campi privati, `camelCase` per locali/parametri.
-- Namespace = assembly (`AnimalWorld.Animals`, …).
-- `[SerializeField] private` invece di campi pubblici.
-- Niente `FindObjectOfType`/`GameObject.Find` nel gameplay; niente `Update` vuoti; niente stringhe "magiche" (costanti o ID tipizzati).
-- Commenti XML sui tipi pubblici e commenti solo dove il *perché* non è ovvio.
-- Un file per tipo; file < ~400 righe come segnale di allarme per suddividere.
+- `snake_case` per file, funzioni e variabili; `PascalCase` per `class_name` e nodi; `UPPER_CASE` per costanti.
+- Un file = una classe; `class_name` per le classi riutilizzabili.
+- Tipizzazione statica obbligatoria; niente `get_node("../../..")`: riferimenti con `@export` o `%NomeUnico`.
+- Segnali al passato (`adopted`, `item_collected`).
+- Commenti `##` (documentazione) sulle classi e funzioni pubbliche; commenti normali solo dove il *perché* non è ovvio.

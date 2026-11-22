@@ -1,0 +1,84 @@
+# Integrazione continua di Animal World (D-32).
+# A ogni push: esegue tutti i test automatici e genera la versione web.
+# Sul branch predefinito pubblica la versione web su GitHub Pages, così il gioco
+# si può provare dal browser (anche da telefono) senza installare nulla.
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache di Godot e dei template di esportazione
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Scarica Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot ~/.local/share/godot/export_templates
+          cd ~/godot
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && rm godot.zip
+          curl -sSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q templates.tpz && rm templates.tpz
+          # Teniamo solo i template web per non riempire la cache.
+          mkdir -p ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv templates/version.txt templates/web_nothreads_release.zip templates/web_nothreads_debug.zip \
+             ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable/
+          rm -rf templates
+
+      - name: Prepara Godot
+        run: sudo ln -sf ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 /usr/local/bin/godot
+
+      - name: Importa il progetto
+        run: godot --headless --path . --import
+
+      - name: Test automatici
+        run: godot --headless --path . -s res://tests/run_tests.gd
+
+      - name: Esporta la versione web
+        run: |
+          mkdir -p build/web
+          godot --headless --path . --export-release "Web" build/web/index.html
+          test -f build/web/index.wasm
+
+      - name: Carica la versione web come artefatto Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy-web:
+    needs: test-and-build
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Pubblica su GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

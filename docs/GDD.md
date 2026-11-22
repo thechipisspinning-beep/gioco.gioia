@@ -1,11 +1,11 @@
 # Animal World — Game Design Document
 
-> **Versione:** 0.2
+> **Versione:** 1.0
 > **Stato:** in revisione con il committente
 > **Ultimo aggiornamento:** 2026-11-22
 >
 > Questo documento è la fonte di verità per il design del gioco. Ogni decisione approvata viene registrata qui; quelle ancora aperte sono in [`DECISIONI_APERTE.md`](DECISIONI_APERTE.md).
-> Le voci marcate **[PROPOSTA]** sono suggerimenti del team, non ancora approvati.
+> Dal 2026-11-22 tutte le decisioni sono prese (il committente le ha delegate al team): il dettaglio e le motivazioni sono in `DECISIONI_APERTE.md`.
 
 ---
 
@@ -45,9 +45,9 @@ Ogni funzionalità deve rafforzare almeno uno di questi pilastri. Se non lo fa, 
 | Protagonista | Gioia |
 | Genere | Simulazione di vita, esplorazione, cura degli animali |
 | Modalità | Single-player |
-| Motore | Unity (C#) |
-| Piattaforma | **PC, console e mobile** (deciso, D-01). Quali console: da decidere (D-34) |
-| Pubblico | **Da decidere** (vedi D-03) — [PROPOSTA] tutti, con particolare attenzione a 8+ anni |
+| Motore | **Godot 4.7** (GDScript) — D-30 |
+| Piattaforma | **PC e mobile (Android, iOS)** al lancio, **console** in seguito; versione web per i test (D-01, D-34, D-39) |
+| Pubblico | Tutti, dai 7 anni (D-03) |
 | Durata obiettivo | Decine di ore di gioco, con contenuto aperto e senza "fine" obbligata |
 
 ---
@@ -59,8 +59,8 @@ Ogni funzionalità deve rafforzare almeno uno di questi pilastri. Se non lo fa, 
 - **Identità visiva originale**: nessun personaggio, modello, texture, musica o elemento riconoscibile di altri giochi.
 - Animali **realistici nell'anatomia e nel comportamento** (sono animali veri), ma **stilizzati nella forma** e molto **espressivi** (occhi, orecchie, coda, postura).
 
-### 3.2 [PROPOSTA] Regole tecniche dello stile
-- **Shading:** toon/cel morbido a 2–3 bande con rim light leggera, oppure PBR semplificato con palette controllata (decisione D-08).
+### 3.2 Regole tecniche dello stile
+- **Shading:** toon/cel morbido a 2–3 bande con rim light leggera (D-08).
 - **Texture:** prevalentemente colori piatti / gradienti da *palette texture* (atlante colori condiviso) → pochi materiali, ottime prestazioni, coerenza cromatica.
 - **Palette per zona:** ogni bioma ha 5–7 colori dominanti definiti in una "scheda zona".
 - **Post-processing:** bloom leggero, color grading per fascia oraria, nebbia atmosferica per la profondità.
@@ -75,7 +75,7 @@ Ogni funzionalità deve rafforzare almeno uno di questi pilastri. Se non lo fa, 
 ## 4. La protagonista: Gioia
 
 ### 4.1 Ruolo
-Gioia è il personaggio controllato dal giocatore. Arriva sull'isola (o vi abita già — vedi D-12, *premessa narrativa*) e la sua storia è legata alla scoperta e alla cura degli animali.
+Gioia è il personaggio controllato dal giocatore. Eredita dalla nonna un **vecchio rifugio per animali** sull'isola, ormai in rovina, e lo fa rinascere (D-12). La sua storia è legata alla scoperta e alla cura degli animali.
 
 ### 4.2 Personalizzazione
 Il sistema è **modulare**: ogni categoria è uno slot, ogni slot accetta oggetti compatibili.
@@ -94,15 +94,15 @@ Il sistema è **modulare**: ogni categoria è uno slot, ogni slot accetta oggett
 
 - La personalizzazione è accessibile all'inizio (creazione) e in seguito da uno **specchio/armadio** in casa.
 - Nuovi capi si ottengono da missioni, negozi, scoperte.
-- **Da decidere:** opzioni di corporatura/altezza (D-10).
+- **Altezza:** 3 preset; nessuna variante di corporatura (D-10).
 
 ### 4.3 Movimento e animazioni
 | Azione | Note |
 |--------|------|
 | Idle | Con varianti "idle fidget" dopo alcuni secondi di inattività |
 | Camminata | Velocità analogica (stick) o tasto |
-| Corsa | Tasto/stick premuto a fondo. [PROPOSTA] Nessuna stamina, per restare rilassante |
-| Salto | **Da decidere** (D-13) — utile per esplorazione verticale ma non indispensabile |
+| Corsa | Tasto/stick premuto a fondo. Nessuna stamina, per restare rilassante |
+| Salto | Piccolo salto; niente nuoto: l'acqua profonda respinge dolcemente (D-13) |
 | Accarezzare | Altezze diverse (animale piccolo a terra / animale grande) |
 | Dare da mangiare | Ciotola a terra o dalla mano |
 | Spazzolare / lavare | Per la cura |
@@ -120,8 +120,8 @@ Il sistema è **modulare**: ogni categoria è uno slot, ogni slot accetta oggett
 
 ### 5.1 Struttura
 - **Un'unica isola enorme**, esplorabile liberamente e senza caricamenti visibili durante l'esplorazione (streaming a celle — vedi Architettura).
-- **[PROPOSTA] Dimensione:** circa 2 × 2 km per la versione 1.0 (equivalente a 20–30 minuti per attraversarla a piedi correndo). È già molto grande per un gioco di questo genere; si può espandere in seguito. Decisione D-05.
-- Gli interni (casa, negozi) sono **[PROPOSTA]** scene separate con breve transizione, per prestazioni migliori. Decisione D-14.
+- **Dimensione (D-05):** circa 2 × 2 km per la versione 1.0 (5–8 minuti correndo in linea retta da costa a costa, ma con rilievi, sentieri e punti di interesse ogni poche decine di metri). È già grande per il genere; si può espandere in seguito.
+- Gli interni (casa, negozi) sono scene separate con breve dissolvenza, per prestazioni migliori (D-14).
 
 ### 5.2 Zone (prima proposta)
 | Zona | Atmosfera | Animali tipici (esempi) | Elementi caratteristici |
@@ -135,18 +135,18 @@ Il sistema è **modulare**: ogni categoria è uno slot, ogni slot accetta oggett
 | **Prati fioriti / colline** | Colorata, primaverile | Lepri, farfalle, api, cavalli selvatici | Fiori rari, arnie, mongolfiera? |
 
 - Ogni zona ha: palette colori, musica, suoni ambientali, set di vegetazione, set di animali, punti di interesse, segreti/collezionabili.
-- Le zone si **sbloccano progressivamente** (es. un ponte da riparare, un sentiero da liberare) — **[PROPOSTA]**, decisione D-15.
+- Le zone si **sbloccano progressivamente** (es. un ponte da riparare, un sentiero da liberare) (D-15).
 
 ### 5.3 Ciclo giorno/notte
 - Sole e luna con traiettorie, cielo con stelle di notte, transizioni di colore (alba, giorno, tramonto, notte).
 - **Gli animali reagiscono all'ora**: specie diurne/notturne (es. gufi e ricci di notte), routine (dormire, mangiare).
-- **[PROPOSTA] Durata:** 1 giorno di gioco = 24 minuti reali (1 ora = 1 minuto). Decisione D-06.
+- **Durata (D-06):** 1 giorno di gioco = 24 minuti reali (1 ora = 1 minuto). Il tempo non scorre a gioco chiuso.
 - Possibilità di dormire nel letto per passare alla mattina successiva.
-- **Da decidere:** meteo (pioggia, vento, neve in montagna) e stagioni (D-07).
+- **Meteo (D-07):** sereno, nuvoloso, pioggia; neve solo in vetta. Le stagioni arriveranno in un aggiornamento successivo.
 
 ### 5.4 Senso di mondo vivo
 - Animali selvatici che vagano, si incontrano, reagiscono a Gioia.
-- Abitanti del villaggio (NPC) — **da decidere** se umani, quanti e con che ruolo (D-11).
+- **8 abitanti** del villaggio con dialoghi semplici e missioni (D-11).
 - Elementi ambientali animati: erba e alberi mossi dal vento, farfalle, foglie, acqua.
 - Eventi casuali leggeri (es. "un cervo si è avvicinato al ruscello", "stormo di anatre in volo al tramonto").
 
@@ -182,7 +182,7 @@ Avvistamento → Avvicinamento → Fiducia → Amicizia → Adozione → Vita a 
 4. **Amicizia:** raggiunta la soglia, l'animale può essere adottato.
 5. **Adozione:** il giocatore sceglie un nome. L'animale entra nella "famiglia".
 
-- **Tutti gli animali sono adottabili**, anche i selvatici, ma **i selvatici sono più difficili** (deciso, D-16). [PROPOSTA] La difficoltà si ottiene con:
+- **Tutti gli animali sono adottabili**, anche i selvatici, ma **i selvatici sono più difficili** (D-16). La difficoltà si ottiene con:
   - soglia di amicizia più alta e guadagno di fiducia più lento;
   - più giorni di visite consecutive prima di poter adottare;
   - cibi specifici (spesso da cucinare) e condizioni particolari (ora del giorno, meteo, avvicinarsi senza correre);
@@ -190,26 +190,26 @@ Avvistamento → Avvicinamento → Fiducia → Amicizia → Adozione → Vita a 
 
 ### 6.4 Animali adottati
 - Ogni animale adottato ha: **nome**, specie, variante colore, personalità, livello di amicizia, stato dei bisogni, data di adozione, preferenze scoperte.
-- **[PROPOSTA] Bisogni semplici:** Fame, Felicità, Pulizia (massimo 3, per non trasformare il gioco in una gestione stressante).
+- **Bisogni:** Fame, Felicità, Pulizia (massimo 3, per non trasformare il gioco in una gestione stressante).
 - Gli animali **vivono a casa** (interno, giardino, spazi dedicati).
 - Il giocatore sceglie **quali animali seguono Gioia** durante l'esplorazione; gli altri restano a casa.
 - **Numero di adozioni:** nessun limite rigido di gameplay. Tecnicamente il sistema simula in modo completo solo gli animali vicini al giocatore (vedi Architettura § Animali).
 - **Compagni al seguito:** massimo **3** contemporaneamente (deciso, D-04). È una scelta di leggibilità e prestazioni, non un limite alle adozioni.
-- I compagni al seguito possono **aiutare** (es. un cane trova oggetti nascosti, un gatto segnala animali vicini) — **[PROPOSTA]**, D-18.
+- I compagni al seguito possono **aiutare** (es. un cane trova oggetti nascosti, un gatto segnala animali vicini) (D-18).
 
-### 6.5 Personalità [PROPOSTA]
+### 6.5 Personalità
 Ogni animale riceve 1–2 tratti casuali che modificano animazioni e reazioni: *Giocherellone, Dormiglione, Goloso, Timido, Curioso, Affettuoso, Indipendente*.
 
-### 6.6 Prima lista specie [PROPOSTA per la v1.0 — circa 20–25 specie]
+### 6.6 Lista specie v1.0 (~25 specie, D-09)
 - **Domestici:** cane (più razze/varianti), gatto, coniglio, criceto, pappagallino.
 - **Fattoria:** mucca, pecora, capra, maiale, gallina, cavallo, asino, anatra.
 - **Selvatici:** volpe, cervo, scoiattolo, riccio, gufo, tartaruga, rana, lontra, marmotta, stambecco, gabbiano, foca.
-- Decisione definitiva D-09. Ogni specie è un costo significativo (modello + rig + animazioni): conviene iniziare con poche specie fatte molto bene.
+- **Primo animale: cane. Seconda specie: volpe** (selvatica). Ogni specie è un costo significativo (modello + rig + animazioni): conviene iniziare con poche specie fatte molto bene.
 
 ### 6.7 Salute, malattia e morte (deciso, D-17)
 **Regola approvata:** se un animale adottato viene trascurato **si ammala**; se resta senza cure, **muore entro 3 giorni** dall'inizio della malattia.
 
-[PROPOSTA] Funzionamento:
+Funzionamento:
 ```
 Sano ──(bisogni a zero per troppo tempo)──► Malato: giorno 1 → giorno 2 → giorno 3 ──► Muore
                                                │
@@ -219,7 +219,12 @@ Sano ──(bisogni a zero per troppo tempo)──► Malato: giorno 1 → giorn
 - **Durante la malattia:** l'animale non segue Gioia, non gioca, resta nella cuccia; avvisi sempre più evidenti ogni giorno.
 - **Morte:** momento delicato e rispettoso (nessuna scena cruda). L'animale resta nel diario con un ricordo.
 
-Punti ancora da decidere (vedi DECISIONI_APERTE): come si cura (D-36), se i 3 giorni sono di gioco o reali e cosa succede a gioco chiuso (D-35), come gestire la cura con molti animali adottati (D-37), se la morte si può disattivare dalle opzioni (D-38).
+Decisioni collegate:
+- I 3 giorni sono **giorni di gioco** (~72 minuti); a gioco chiuso il tempo è fermo (D-35).
+- Cura: ambulatorio veterinario + medicine preparate in cucina con erbe del giardino (D-36).
+- Con molti animali: mangiatoie/abbeveratoi automatici (durano 2–3 giorni) e un custode sbloccabile (D-37).
+- **Modalità serena** opzionale a inizio partita: gli animali si ammalano ma non muoiono; predefinita la morte attiva (D-38).
+- Solo gli animali adottati possono ammalarsi (D-40).
 
 ---
 
@@ -227,7 +232,7 @@ Punti ancora da decidere (vedi DECISIONI_APERTE): come si cura (D-36), se i 3 gi
 
 ### 7.1 Esplorazione
 - Movimento libero, scoperta di zone, punti panoramici, oggetti raccoglibili, segreti.
-- Mappa dell'isola che si completa man mano (fog of war leggero) — **[PROPOSTA]**.
+- Mappa dell'isola che si completa man mano (fog of war leggero).
 - Indicatori discreti per punti di interesse scoperti.
 
 ### 7.2 Ricerca e adozione degli animali
@@ -241,7 +246,7 @@ Vedi § 6.3.
 | Spazzolare / lavare | Pulizia ↑ |
 | Giocare | Felicità ↑↑ |
 | Portare a passeggio | Felicità ↑, scoperte |
-| Curare un animale malato | Ferma la malattia (modalità da decidere: veterinario, medicine, cure a casa — D-36) |
+| Curare un animale malato | Ferma la malattia (ambulatorio veterinario al villaggio o medicine preparate in cucina — D-36) |
 
 ### 7.4 Costruzione e personalizzazione della casa
 Vedi § 8.
@@ -253,7 +258,7 @@ Vedi § 9.
 - Zappare, piantare semi, innaffiare, raccogliere.
 - Piante: fiori (decorazione, missioni, felicità animali), ortaggi e frutta (ingredienti di cucina), erbe (ricette per animali).
 - Le piante crescono nel tempo di gioco (fasi visive).
-- **[PROPOSTA]** Nessuna pianta "muore": se non innaffiata, semplicemente non cresce.
+- Nessuna pianta "muore": se non innaffiata, semplicemente non cresce.
 - Alcuni animali interagiscono col giardino (galline, api…).
 
 ### 7.7 Missioni e obiettivi
@@ -262,7 +267,7 @@ Vedi § 10.
 ### 7.8 Raccolta di oggetti e ricompense
 - Raccoglibili: conchiglie, sassi colorati, fiori, piume, funghi, frutti, legna…
 - Usati per: ricette, costruzione/arredamento, missioni, scambio con NPC.
-- **Valuta di gioco:** **da decidere** (D-19). [PROPOSTA] una sola valuta semplice (es. "monete") + materiali.
+- **Valuta di gioco (D-19):** monete + materiali; negozi al villaggio.
 
 ---
 
@@ -271,23 +276,23 @@ Vedi § 10.
 - La casa parte **piccola** (1 stanza) e si **espande** per fasi: nuove stanze, piano superiore, giardino più grande, spazi per animali.
 - **Stanze previste:** soggiorno, camera da letto, cucina, bagno, stanza degli animali, + stanze extra sbloccabili.
 - **Spazi animali:** cucce, cuscini, tiragraffi, gabbie aperte/voliere, recinto, stalla, stagno, pollaio.
-- **Arredamento:** posizionamento su **griglia** con rotazione a 90° — **[PROPOSTA]** (semplice, chiaro, compatibile con mouse e controller). Decisione D-20.
+- **Arredamento:** posizionamento su **griglia** con rotazione a 90° (semplice, chiaro, compatibile con mouse, controller e touch — D-20).
 - **Personalizzazione:** carta da parati, pavimenti, colori, mobili, decorazioni, luci.
 - **Sblocchi:** mobili e decorazioni da missioni, negozi, scoperte, ricette.
 - Modalità di costruzione con telecamera dall'alto dedicata.
-- **Da decidere:** esterno della casa personalizzabile (tetto, colore pareti, recinzioni) e se si può scegliere dove costruirla (D-21).
+- **Esterno** personalizzabile (tetto, colore pareti, recinzioni); posizione della casa fissa (D-21).
 
 ---
 
 ## 9. Cucina
 
-- Si cucina in casa (fornello/bancone) — **[PROPOSTA]** anche fuochi da campo in alcune zone.
+- Si cucina in casa (fornello/bancone) — anche fuochi da campo in alcune zone.
 - **Due famiglie di ricette:**
-  - **Per Gioia:** [PROPOSTA] effetto cosmetico o di comodità (es. corsa più veloce temporanea, "buonumore" che fa avvicinare gli animali più facilmente). Decisione D-22 — Gioia ha bisogno di mangiare? [PROPOSTA] No, nessuna fame obbligatoria per Gioia.
+  - **Per Gioia:** effetto cosmetico o di comodità (es. corsa più veloce temporanea, "buonumore" che fa avvicinare gli animali più facilmente). Gioia non ha bisogni propri né fame obbligatoria (D-22).
   - **Per gli animali:** cibi specifici per specie, aumentano fame/felicità/amicizia; alcuni sono necessari per conquistare animali timidi.
 - **Ricette sbloccabili:** da missioni, NPC, libri trovati nel mondo, sperimentazione.
-- **[PROPOSTA] Interazione:** scelta ingredienti + mini-gioco leggero e facoltativo (es. mescolare a tempo), saltabile. Decisione D-23.
-- Ingredienti: dal giardino, raccolti nel mondo, comprati, prodotti dagli animali della fattoria (uova, latte, lana per artigianato?) — vedi D-24.
+- **Interazione:** scelta ingredienti + mini-gioco leggero e facoltativo (es. mescolare a tempo), saltabile (D-23).
+- Ingredienti: dal giardino, raccolti nel mondo, comprati, prodotti dagli animali della fattoria (uova, latte, lana, miele — D-24).
 
 ---
 
@@ -298,7 +303,7 @@ Vedi § 10.
 |------|-------------|--------|
 | **Principali** | Guidano la progressione e sbloccano zone/funzioni | "Ripara il ponte verso la foresta", "Costruisci la stanza degli animali" |
 | **Secondarie** | Richieste di NPC, obiettivi di zona | "Trova il gatto della fornaia", "Pianta 5 girasoli" |
-| **Giornaliere [PROPOSTA]** | Piccoli obiettivi rinnovati ogni giorno di gioco | "Accarezza 3 animali", "Cucina un piatto" |
+| **Giornaliere** | Piccoli obiettivi rinnovati ogni giorno di gioco | "Accarezza 3 animali", "Cucina un piatto" |
 | **Traguardi** | Obiettivi di lungo termine | "Incontra tutti gli animali della spiaggia" |
 
 ### 10.2 Struttura di una missione
@@ -316,7 +321,7 @@ Composta da **obiettivi** standard e riutilizzabili:
 ### 10.3 Ricompense
 Oggetti, decorazioni, mobili, vestiti, ricette, semi, valuta, espansioni della casa, accesso a nuove zone.
 
-### 10.4 Curva di progressione [PROPOSTA]
+### 10.4 Curva di progressione
 1. **Primo giorno (tutorial, ~30 min):** arrivo, prima casa, primo animale (cane o gatto), prima ricetta, primo seme.
 2. **Prime ore:** villaggio + campagna, prime adozioni, prima espansione della casa.
 3. **Metà gioco:** sblocco di foresta, spiaggia, lago; ricette per animali selvatici.
@@ -337,7 +342,7 @@ Il diario è un menu "libro" con schede:
 | **Ricette** | Ricette conosciute e ingredienti |
 | **Scoperte** | Luoghi, collezionabili, segreti |
 | **Progressi** | Statistiche e traguardi |
-| **Foto [PROPOSTA]** | Galleria della modalità foto (D-25) |
+| **Foto** | Galleria della modalità foto (D-25) |
 
 - Le **curiosità reali** sugli animali danno anche un valore educativo leggero.
 
@@ -351,14 +356,16 @@ Il diario è un menu "libro" con schede:
 - Tutti i menu navigabili **sia con mouse sia con controller**.
 - Testo grande e leggibile; opzioni di accessibilità (dimensione testo, sottotitoli, daltonismo).
 
-### 12.2 Controlli [PROPOSTA]
+### 12.2 Controlli
 Il gioco esce su PC, console e mobile: ogni azione deve funzionare con **tastiera/mouse, controller e touch**.
 
 | Azione | Tastiera/mouse | Controller | Touch (mobile) |
 |--------|----------------|-----------|----------------|
 | Muoversi | WASD | Stick sinistro | Joystick virtuale a sinistra |
 | Telecamera | Mouse | Stick destro | Trascinare a destra dello schermo |
-| Correre | Shift (tenere) | Stick a fondo / grilletto | Joystick spinto fino al bordo |
+| Correre | Shift (tenere) | R2 / clic stick sinistro | Joystick spinto fino al bordo |
+| Saltare (piccolo salto) | Spazio | X / □ | Pulsante in basso a destra |
+| Zoom telecamera | Rotella | L1 / R1 | — |
 | Interagire | E | A / ✕ | Pulsante contestuale grande / tocco sull'animale |
 | Annulla/indietro | Esc | B / ◯ | Pulsante indietro |
 | Diario | J / Tab | Menu/Start | Icona in alto |
@@ -367,8 +374,8 @@ Il gioco esce su PC, console e mobile: ogni azione deve funzionare con **tastier
 
 - Su mobile l'interfaccia usa pulsanti grandi, si adatta a schermi piccoli e a notch/aree sicure.
 
-### 12.3 Telecamera [PROPOSTA]
-Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, zoom ravvicinato durante le interazioni con gli animali. Decisione D-02.
+### 12.3 Telecamera (D-02)
+Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, zoom ravvicinato durante le interazioni con gli animali, vista dall'alto in modalità costruzione.
 
 ---
 
@@ -376,19 +383,19 @@ Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, 
 - Musica diversa per zona e fascia oraria, morbida e acustica.
 - Suoni ambientali per bioma (onde, uccelli, vento, grilli di notte).
 - Versi animali realistici ma "puliti".
-- **Da decidere:** voci/borbottii per NPC e Gioia (D-26), fonte degli asset audio (D-27).
+- Voci: borbottii espressivi + testo, nessun doppiaggio (D-26). Audio generato dal team o da librerie CC0 (D-27).
 
 ---
 
 ## 14. Salvataggio
-- **[PROPOSTA]** Salvataggio automatico (cambio zona, dormire, ogni N minuti) + salvataggio manuale in casa.
-- **[PROPOSTA]** 3 slot di salvataggio.
+- Salvataggio automatico (cambio zona, dormire, ogni N minuti) + salvataggio manuale in casa.
+- 3 slot di salvataggio (D-31).
 - Il salvataggio contiene: aspetto di Gioia, posizione, ora/giorno, inventario, casa, giardino, animali adottati, missioni, diario, impostazioni.
 
 ---
 
 ## 15. Localizzazione
-- **Da decidere:** lingue al lancio (D-28). [PROPOSTA] Italiano e inglese, con sistema di localizzazione predisposto fin dall'inizio (nessun testo scritto direttamente nel codice).
+- Italiano e inglese al lancio (D-28), con sistema di localizzazione predisposto fin dall'inizio (nessun testo scritto direttamente nel codice).
 
 ---
 
@@ -397,3 +404,4 @@ Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, 
 |----------|------|----------|
 | 0.1 | 2026-11-22 | Prima stesura dal brief del committente |
 | 0.2 | 2026-11-22 | Decise: piattaforme PC + console + mobile (D-01), 3 compagni (D-04), selvatici adottabili ma più difficili (D-16), malattia e morte in 3 giorni per trascuratezza (D-17). Aggiunti § 6.7 e controlli touch |
+| 1.0 | 2026-11-22 | Tutte le decisioni prese dal team su delega del committente; motore cambiato da Unity a Godot 4.7 (D-30) |

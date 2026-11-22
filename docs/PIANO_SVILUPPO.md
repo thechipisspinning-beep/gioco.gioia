@@ -1,18 +1,18 @@
 # Animal World — Piano di sviluppo
 
-> **Versione:** 0.2 · **Ultimo aggiornamento:** 2026-11-22
+> **Versione:** 1.0 · **Ultimo aggiornamento:** 2026-11-22
 >
 > Regola d'oro: **ogni fase si chiude solo quando i suoi criteri di completamento sono verificati.** Non si passa alla successiva con sistemi "quasi funzionanti".
 
 ## Ipotesi per le stime
 
-Le durate sono **indicative** e valgono per: 1 sviluppatore a tempo pieno che lavora con Claude Code + supporto artistico per gli asset 3D. Con tempo parziale, raddoppiarle. Il fattore che più influenza i tempi è la **produzione degli asset 3D** (decisione D-29), non il codice.
+Dal 2026-11-22 lo sviluppo è svolto interamente dal team (Claude Code) in **Godot 4.7** (D-30), con asset 3D generati via codice (D-29). Le durate indicate sono stime di lavoro equivalente e servono a confrontare le fasi tra loro.
 
 ## Milestone
 
 | Milestone | Fasi | Obiettivo |
 |-----------|------|-----------|
-| **M0 — Fondamenta** | 1–2 | Design approvato, progetto Unity pronto |
+| **M0 — Fondamenta** | 1–2 | Design approvato, progetto Godot pronto |
 | **M1 — "Si muove bene"** | 3–4 | Gioia cammina e corre in modo piacevole |
 | **M2 — Primo incontro** | 5–7 | Una zona, un animale, adozione completa |
 | **M3 — Vertical slice** | 8–11 | Un piccolo pezzo del gioco con *tutti* i sistemi, rifinito come il prodotto finale |
@@ -23,24 +23,24 @@ Il **vertical slice (M3)** è il momento chiave: dimostra che il gioco è divert
 
 ---
 
-## Fase 1 — Concept e Game Design Document ✅ in corso
+## Fase 1 — Concept e Game Design Document ✅ completata
 **Durata:** 1 settimana
 - GDD, architettura, decisioni aperte, piano (questo documento).
 - **Completata quando:** il committente ha letto i documenti e preso le decisioni 🔴.
 
-## Fase 2 — Architettura tecnica e setup del progetto
+## Fase 2 — Architettura tecnica e setup del progetto ✅ completata
 **Durata:** 1–2 settimane
-- Progetto Unity 6 LTS + URP, Input System, Cinemachine, Addressables, Localization, Test Framework.
-- Struttura cartelle e Assembly Definition, `.gitignore`, Git LFS.
-- `GameServices`, `EventBus`, `TimeService`, scena Boot, menu debug base.
+- Progetto Godot 4.7 (Forward+ / Mobile / Compatibility), mappa degli input, traduzioni IT/EN.
+- Struttura cartelle, `.gitignore`.
+- Autoload `EventBus`, `GameClock` (logica in `GameTime`), `DevTools`, scena Boot.
 - Livelli di qualità (Low/Medium/High) e build di prova su PC, Android e iOS.
-- Prima suite di unit test e (se approvata) CI con GameCI.
-- **Completata quando:** il progetto si apre senza errori, Boot → scena di test funziona, i test passano.
+- Runner di test interno e CI su GitHub Actions (test + versione web pubblicata su GitHub Pages).
+- **Completata quando:** il progetto si importa senza errori, Boot → scena di test funziona, i test passano.
 
-## Fase 3 — Prototipo movimento e telecamera
+## Fase 3 — Prototipo movimento e telecamera ✅ completata (in attesa di prova del committente)
 **Durata:** 2 settimane
 - `PlayerMotor` (camminata, corsa, pendenze, gradini, eventuale salto).
-- Telecamera Cinemachine orbit con collisioni e zoom.
+- Telecamera in terza persona con orbita, SpringArm (collisioni) e zoom.
 - Input tastiera/mouse, controller e **touch** (joystick virtuale, telecamera a trascinamento).
 - Scena *greybox* con salite, scale, ostacoli, acqua.
 - **Completata quando:** movimento fluido a 60 fps, nessun incastro nella geometria, telecamera che non attraversa i muri, controller, tastiera e touch equivalenti; provato anche su un telefono reale. Test di "sensazione" con il committente.
@@ -48,7 +48,7 @@ Il **vertical slice (M3)** è il momento chiave: dimostra che il gioco è divert
 ## Fase 4 — Creazione della protagonista Gioia
 **Durata:** 3–5 settimane (dipende dagli asset)
 - Modello base con scheletro, sistema di parti modulari, shader con maschere colore.
-- Animator: idle, camminata, corsa, transizioni, IK piedi e sguardo.
+- AnimationTree: idle, camminata, corsa, transizioni, IK piedi e sguardo.
 - Schermata di creazione/personalizzazione con anteprima.
 - Salvataggio dell'aspetto.
 - **Completata quando:** almeno 3 acconciature, 3 parti superiori, 3 inferiori, 2 scarpe, 2 accessori combinabili con colori liberi, senza compenetrazioni evidenti; l'aspetto sopravvive a salvataggio/caricamento.
@@ -132,5 +132,5 @@ Sessione di gioco di 45–60 minuti con giocatori esterni. Si misura: divertimen
 1. **Pianificazione:** elenco attività in [`STATO_LAVORI.md`](STATO_LAVORI.md), decisioni necessarie chiarite.
 2. **Sviluppo:** piccoli commit su branch dedicato, codice + test.
 3. **Verifica tecnica:** test automatici + istruzioni di verifica manuale nell'editor.
-4. **Verifica del committente:** prova in Unity e approvazione.
+4. **Verifica del committente:** prova della versione web (browser o telefono) e approvazione.
 5. **Chiusura:** aggiornamento di GDD, Stato lavori, registro modifiche.

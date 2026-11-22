@@ -1,0 +1,7 @@
+keys,it,en
+GAME_TITLE,Animal World,Animal World
+HUD_DAY,Giorno %d,Day %d
+TOUCH_JUMP,Salta,Jump
+HINT_CONTROLS_DESKTOP,"WASD: muoviti · Shift: corri · Spazio: salta · Clic: controlla la telecamera · Rotella: zoom · Esc: libera il mouse","WASD: move · Shift: run · Space: jump · Click: control camera · Wheel: zoom · Esc: release mouse"
+HINT_CONTROLS_PAD,"Stick sinistro: muoviti · R2: corri · X/□: salta · Stick destro: telecamera · L1/R1: zoom","Left stick: move · R2: run · X/□: jump · Right stick: camera · L1/R1: zoom"
+HINT_CONTROLS_TOUCH,"Joystick: muoviti (fino al bordo per correre) · Trascina a destra: telecamera","Joystick: move (push to the edge to run) · Drag on the right: camera"
