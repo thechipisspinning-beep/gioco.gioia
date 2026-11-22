@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 10 completata → prossima: 4 (Gioia definitiva e personalizzazione). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** 4 completata → prossima: 5 (prima area esplorabile e ciclo giorno/notte). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -12,7 +12,7 @@
 | 1 — Concept e GDD | ✅ |
 | 2 — Architettura e setup progetto | ✅ |
 | 3 — Movimento e telecamera | ✅ (da provare dal committente) |
-| 4 — Protagonista Gioia | ⏳ |
+| 4 — Protagonista Gioia | ✅ |
 | 5 — Prima area esplorabile | ⏳ |
 | 6 — Primo animale e interazione | ✅ |
 | 7 — Adozione | ✅ (mangiatoie automatiche D-37 rimandate alla Fase 8, con la casa) |
@@ -87,6 +87,18 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Test automatici:** 88 superati, 0 falliti.
 
+## Fase 4 — Protagonista Gioia ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| `CharacterAppearance` + `CharacterCatalog`: 6 toni di pelle, 6 acconciature × 8 colori, 5 vestiti × 8 colori, 3 scarpe × 5 colori, 6 accessori × 5 colori, 3 stature | ✅ | 6 test unitari |
+| Stili sbloccabili (impermeabile, stivaletti, corona di fiori, zainetto) saltati finché bloccati | ✅ | Test |
+| Modello di Gioia ricostruito dall'aspetto, con viso (occhi, guance, sorriso) | ✅ | Test: ogni stile si costruisce; screenshot |
+| Gesti animati: accarezzare (si accovaccia), porgere il cibo, lanciare la pallina, spazzolare; Gioia si gira verso l'animale | ✅ | Test |
+| Schermata di personalizzazione con anteprima dal vivo, "Sorprendimi", "Ruota"; telecamera in modalità ritratto che nasconde gli animali | ✅ | Screenshot, navigazione con tasto di conferma |
+| Si apre a inizio partita e dallo specchio vicino alla casetta; aspetto salvato | ✅ | Test di ripristino |
+
+**Test automatici:** 97 superati, 0 falliti.
+
 ## Da fare / limiti noti
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri; il budget verrà verificato in Fase 5.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
@@ -105,4 +117,5 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | Curare un animale lo faceva riammalare subito | Il tempo non ancora simulato veniva calcolato dopo la cura | La cura aggiorna prima lo stato all'ora attuale |
 | Un animale malato che dormiva non si poteva curare | Nessuna azione disponibile durante il sonno | La medicina si può dare anche mentre dorme |
 | Un compagno poteva comparire nella scena sbagliata durante un cambio di scena | Anche il gestore della scena in uscita reagiva | Agisce solo il gestore della scena corrente |
+| Pannello della personalizzazione schiacciato | Lo ScrollContainer non trasmette l'altezza del contenuto | Altezza calcolata dal contenuto |
 | Diario e pausa in alto a sinistra senza sfondo | I pannelli creati da codice restavano di dimensione zero | Ancoraggi e margini impostati insieme (`set_anchors_and_offsets_preset`) |

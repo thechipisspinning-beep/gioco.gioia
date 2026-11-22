@@ -37,6 +37,9 @@ extends Node3D
 
 var _yaw: float = 0.0
 var _pitch: float = 0.0
+## Modalità ritratto (personalizzazione): Gioia inquadrata di fronte, a sinistra dello schermo.
+var _portrait: bool = false
+var _saved_view: Vector4 = Vector4.ZERO  # yaw, pitch, distanza, altezza
 var _target_distance: float = 5.0
 var _time_since_manual_look: float = 100.0
 
@@ -58,7 +61,30 @@ func _ready() -> void:
 	_apply_rotation()
 
 
+## Attiva/disattiva la modalità ritratto.
+func set_portrait(enabled: bool) -> void:
+	if enabled == _portrait:
+		return
+	_portrait = enabled
+	# Nel ritratto gli animali non coprono Gioia.
+	_camera.set_cull_mask_value(QuadrupedVisual.RENDER_LAYER, not enabled)
+	if enabled:
+		_saved_view = Vector4(_yaw, _pitch, _target_distance, focus_height)
+		_yaw = target.global_rotation.y if target != null else _yaw
+		_pitch = deg_to_rad(-6.0)
+		_target_distance = 2.4
+		focus_height = 0.72
+	else:
+		_yaw = _saved_view.x
+		_pitch = _saved_view.y
+		_target_distance = _saved_view.z
+		focus_height = _saved_view.w
+	_time_since_manual_look = 0.0
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if _portrait:
+		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var motion: InputEventMouseMotion = event as InputEventMouseMotion
 		add_look(-motion.relative.x * mouse_sensitivity, -motion.relative.y * mouse_sensitivity)
@@ -75,6 +101,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	var stick: Vector2 = Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	if _portrait:
+		stick = Vector2.ZERO
 	if stick.length_squared() > 0.0:
 		add_look(-stick.x * stick_speed_degrees * delta, -stick.y * stick_speed_degrees * delta * 0.7)
 
@@ -119,11 +147,14 @@ func _follow_target(delta: float) -> void:
 	if target == null:
 		return
 	var focus: Vector3 = target.global_position + Vector3.UP * focus_height
+	if _portrait:
+		# Sposta l'inquadratura così Gioia sta a sinistra e il pannello a destra.
+		focus += global_transform.basis.x * 0.55
 	global_position = global_position.lerp(focus, 1.0 - exp(-follow_smoothing * delta))
 
 
 func _auto_align(delta: float) -> void:
-	if not auto_align_enabled or target == null or _time_since_manual_look < auto_align_delay:
+	if _portrait or not auto_align_enabled or target == null or _time_since_manual_look < auto_align_delay:
 		return
 	var body: CharacterBody3D = target as CharacterBody3D
 	if body == null:

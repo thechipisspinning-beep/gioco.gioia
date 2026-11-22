@@ -33,3 +33,9 @@ signal companions_changed
 ## È cambiata la salute di un animale (ammalato, guarito, morto).
 @warning_ignore("unused_signal")
 signal animal_health_changed(animal_id: StringName, health: int)
+## Gioia esegue un gesto verso un animale (&"pet", &"feed", &"throw", &"brush").
+@warning_ignore("unused_signal")
+signal player_gesture(gesture: StringName)
+## Apri la schermata di personalizzazione di Gioia (es. dallo specchio).
+@warning_ignore("unused_signal")
+signal customization_requested

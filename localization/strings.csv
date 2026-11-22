@@ -117,3 +117,39 @@ JOURNAL_SERENE_ON,Modalità serena attiva,Serene mode on
 NEED_HUNGER,Pancia piena,Full tummy
 NEED_HAPPINESS,Felicità,Happiness
 NEED_CLEANLINESS,Pulizia,Cleanliness
+CREATOR_TITLE,Personalizza Gioia,Customise Gioia
+CREATOR_ROTATE,Ruota,Turn
+CREATOR_RANDOM,Sorprendimi,Surprise me
+CREATOR_DONE,Fatto!,Done!
+CREATOR_COLOR,Colore,Colour
+CREATOR_SLOT_HAIR,Capelli,Hair
+CREATOR_SLOT_OUTFIT,Vestito,Outfit
+CREATOR_SLOT_SHOES,Scarpe,Shoes
+CREATOR_SLOT_ACCESSORY,Accessorio,Accessory
+CREATOR_SLOT_SKIN,Pelle,Skin
+CREATOR_SLOT_HEIGHT,Statura,Height
+CREATOR_HEIGHT_SHORT,Piccola,Short
+CREATOR_HEIGHT_MEDIUM,Media,Medium
+CREATOR_HEIGHT_TALL,Alta,Tall
+STYLE_PONYTAIL,Coda di cavallo,Ponytail
+STYLE_BOB,Caschetto,Bob
+STYLE_PIGTAILS,Codini,Pigtails
+STYLE_LONG,Lunghi,Long
+STYLE_BUN,Chignon,Bun
+STYLE_SHORT,Corti,Short
+STYLE_DRESS,Vestitino,Dress
+STYLE_TSHIRT_SHORTS,Maglietta e short,T-shirt and shorts
+STYLE_OVERALLS,Salopette,Overalls
+STYLE_SWEATER_SKIRT,Maglione e gonna,Sweater and skirt
+STYLE_RAINCOAT,Impermeabile,Raincoat
+STYLE_SNEAKERS,Scarpe da ginnastica,Sneakers
+STYLE_BOOTS,Stivaletti,Boots
+STYLE_SANDALS,Sandali,Sandals
+STYLE_NONE,Nessuno,None
+STYLE_BOW,Fiocco,Bow
+STYLE_STRAW_HAT,Cappello di paglia,Straw hat
+STYLE_GLASSES,Occhiali,Glasses
+STYLE_FLOWER_CROWN,Corona di fiori,Flower crown
+STYLE_BACKPACK,Zainetto,Backpack
+MIRROR_TITLE,Specchio,Mirror
+MIRROR_CUSTOMIZE,Cambia aspetto,Change look

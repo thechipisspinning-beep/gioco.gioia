@@ -94,6 +94,13 @@ func teleport_to(position_global: Vector3) -> void:
 	_last_safe_position = position_global
 
 
+## Gira Gioia verso un punto (es. l'animale con cui interagisce).
+func face_towards(point: Vector3) -> void:
+	var to: Vector3 = point - global_position
+	if Vector2(to.x, to.z).length() > 0.05:
+		rotation.y = atan2(to.x, to.z)
+
+
 func _update_timers(delta: float) -> void:
 	if is_on_floor():
 		_coyote_timer = coyote_time

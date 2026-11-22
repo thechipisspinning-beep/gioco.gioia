@@ -180,18 +180,22 @@ func perform_interaction(action_id: String) -> void:
 		_sync_with_data()
 		return
 	if action_id == "medicine":
+		EventBus.player_gesture.emit(&"feed")
 		if AnimalCare.give_medicine(data):
 			Emote.spawn(self, global_position + Vector3.UP * 0.95, Emote.Kind.BIG_HEARTS)
 			_enter(State.PETTED)
 		return
 	if action_id == "pet":
+		EventBus.player_gesture.emit(&"pet")
 		_apply_trust(TrustModel.Action.PET, day)
 		_enter(State.PETTED)
 	elif action_id == "brush":
+		EventBus.player_gesture.emit(&"brush")
 		_apply_trust(TrustModel.Action.BRUSH, day)
 		_enter(State.PETTED)
 	elif action_id.begins_with("feed:"):
 		var item_id: StringName = StringName(action_id.trim_prefix("feed:"))
+		EventBus.player_gesture.emit(&"feed")
 		var pref: int = species.food_preference(item_id)
 		if pref == 0:
 			TrustModel.interact(data, species, TrustModel.Action.FEED, day, 0)
@@ -206,6 +210,7 @@ func perform_interaction(action_id: String) -> void:
 			GameState.discoveries.mark_favorite_food(species.id, item_id)
 		_enter(State.EAT)
 	elif action_id == "play":
+		EventBus.player_gesture.emit(&"throw")
 		_start_fetch()
 
 

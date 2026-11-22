@@ -272,8 +272,13 @@ func _pivot(parent: Node3D, pos: Vector3) -> Node3D:
 	return n
 
 
+## Layer di rendering degli animali (la telecamera può nasconderli, es. nel ritratto).
+const RENDER_LAYER: int = 2
+
+
 func _mesh(parent: Node3D, mesh: Mesh, color: Color, pos: Vector3) -> MeshInstance3D:
 	var mi: MeshInstance3D = MeshInstance3D.new()
+	mi.layers = RENDER_LAYER
 	mi.mesh = mesh
 	mi.material_override = ToonMaterials.get_material(color)
 	mi.position = pos

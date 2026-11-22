@@ -211,6 +211,9 @@ func _spawn_player() -> void:
 	var hud: Node = HUD_SCENE.instantiate()
 	add_child(hud)
 	hud.call("setup", player, camera_rig)
+	# Nuova partita: prima di tutto si sceglie l'aspetto di Gioia.
+	if SaveManager.current_slot > 0 and not GameState.flags.get("appearance_done", false):
+		hud.call_deferred("open_customization")
 
 	# Animali: un cane socievole nel prato e una volpe timida vicino al laghetto.
 	AnimalSpawner.spawn(self, &"sandbox_dog", &"dog", Vector3(-2.0, 0.1, 3.0))
@@ -220,6 +223,9 @@ func _spawn_player() -> void:
 	var companions: CompanionManager = CompanionManager.new()
 	companions.home_yard = Vector3(7.0, 0.1, -9.0)
 	add_child(companions)
+	var mirror: Mirror = Mirror.new()
+	mirror.position = Vector3(10.2, 0.0, -11.8)
+	add_child(mirror)
 	var kiosk: VetKiosk = VetKiosk.new()
 	kiosk.position = Vector3(3.6, 0.0, -11.5)
 	add_child(kiosk)

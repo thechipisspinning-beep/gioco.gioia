@@ -9,6 +9,8 @@ var inventory: Inventory = Inventory.new()
 var discoveries: DiscoveryLog = DiscoveryLog.new()
 ## Modalità serena (D-38): gli animali si ammalano ma non muoiono.
 var serene_mode: bool = false
+## Aspetto di Gioia (personalizzazione, Fase 4).
+var appearance: CharacterAppearance = CharacterAppearance.new()
 ## Piccoli valori di progressione (es. ultimo giorno in cui si è presa la medicina).
 var flags: Dictionary = {}
 
@@ -23,6 +25,7 @@ func start_new_game(serene: bool = false) -> void:
 	discoveries = DiscoveryLog.new()
 	serene_mode = serene
 	flags = {}
+	appearance.from_dict(CharacterAppearance.new().to_dict())
 	# Dotazione iniziale di Gioia.
 	inventory.add(&"kibble", 10)
 	inventory.add(&"apple", 5)
@@ -40,6 +43,7 @@ func to_dict() -> Dictionary:
 		"discoveries": discoveries.to_dict(),
 		"serene_mode": serene_mode,
 		"flags": flags.duplicate(true),
+		"appearance": appearance.to_dict(),
 	}
 
 
@@ -52,6 +56,8 @@ func from_dict(d: Dictionary) -> void:
 	discoveries.from_dict(d.get("discoveries", {}) as Dictionary)
 	serene_mode = bool(d.get("serene_mode", false))
 	flags = (d.get("flags", {}) as Dictionary).duplicate(true)
+	# Lo stesso oggetto viene aggiornato (non sostituito): il modello di Gioia lo osserva.
+	appearance.from_dict(d.get("appearance", {}) as Dictionary)
 
 
 func current_day() -> int:

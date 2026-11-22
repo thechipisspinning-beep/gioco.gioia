@@ -19,6 +19,8 @@ var _adopting: AnimalAgent
 var _pause: PauseMenu
 var _journal: Journal
 var _top_buttons: HBoxContainer
+var _creator: CharacterCreator
+var _camera_rig: CameraRig
 var _mouse_was_captured: bool = false
 var _device: String = ""
 
@@ -46,6 +48,10 @@ func _ready() -> void:
 	_pause.closed.connect(_on_overlay_closed)
 	_pause.journal_requested.connect(_open_journal)
 	_build_top_buttons()
+	_creator = CharacterCreator.new()
+	_root.add_child(_creator)
+	_creator.closed.connect(func() -> void: _set_ui_locked(false))
+	EventBus.customization_requested.connect(open_customization)
 	_touch.interact_pressed.connect(_on_touch_interact)
 	GameClock.hour_changed.connect(func(_d: int, _h: int) -> void: _refresh_clock())
 	_refresh_clock()
@@ -55,7 +61,10 @@ func _ready() -> void:
 ## Collega l'HUD a Gioia e alla telecamera.
 func setup(player: PlayerController, camera_rig: CameraRig) -> void:
 	_player = player
+	_camera_rig = camera_rig
 	_touch.camera_rig = camera_rig
+	_creator.camera_rig = camera_rig
+	_creator.player = player
 	_interactor = player.get_node("Interactor") as Interactor
 	_interactor.focus_changed.connect(_on_focus_changed)
 	_interactor.interact_requested.connect(_open_menu)
@@ -67,11 +76,11 @@ func _process(_delta: float) -> void:
 	var area: Vector2 = _root.size
 	_top_buttons.size = _top_buttons.get_combined_minimum_size()
 	_top_buttons.position = Vector2(area.x - _top_buttons.size.x - 20.0, 20.0)
-	_top_buttons.visible = not (_pause.visible or _journal.visible)
+	_top_buttons.visible = not (_pause.visible or _journal.visible or _creator.visible)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible:
+	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible or _creator.visible:
 		return
 	if event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
@@ -83,6 +92,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("journal"):
 		get_viewport().set_input_as_handled()
 		_open_journal()
+
+
+## Apre la personalizzazione di Gioia (inizio partita o specchio).
+func open_customization() -> void:
+	_set_ui_locked(true)
+	_card.visible = false
+	_creator.open()
 
 
 func _open_pause() -> void:
@@ -150,13 +166,14 @@ func _open_menu(target: Node3D) -> void:
 
 func _on_action_chosen(action_id: String) -> void:
 	if _menu_target != null and is_instance_valid(_menu_target):
+		_player.face_towards(_menu_target.global_position)
 		_menu_target.call("perform_interaction", action_id)
 
 
 func _on_menu_closed() -> void:
 	_menu_target = null
 	# Se l'azione scelta ha aperto un'altra finestra (es. il nome), resta bloccato.
-	if not _name_dialog.visible:
+	if not _name_dialog.visible and not _creator.visible:
 		_set_ui_locked(false)
 
 
