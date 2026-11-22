@@ -1,6 +1,6 @@
 # Animal World — Architettura tecnica (Unity)
 
-> **Versione:** 0.1 (proposta) · **Ultimo aggiornamento:** 2026-11-22
+> **Versione:** 0.2 (proposta) · **Ultimo aggiornamento:** 2026-11-22
 > Le scelte marcate **[DA CONFERMARE]** dipendono da decisioni aperte (vedi [`DECISIONI_APERTE.md`](DECISIONI_APERTE.md)).
 
 ---
@@ -81,6 +81,7 @@ AnimalWorld.Runtime.Activities — cucina, giardinaggio, raccolta
 AnimalWorld.Runtime.Quests  — missioni, obiettivi, ricompense
 AnimalWorld.Runtime.Save    — serializzazione, slot, migrazioni
 AnimalWorld.Runtime.UI      — HUD, menu, diario
+AnimalWorld.Runtime.Platform — codice specifico per piattaforma (salvataggi console, touch, ciclo di vita mobile)
 AnimalWorld.Editor          — strumenti editor
 AnimalWorld.Tests.EditMode / AnimalWorld.Tests.PlayMode
 ```
@@ -143,6 +144,12 @@ Boot ──► MainMenu ──► World (persistente)
 - **Compagni al seguito:** stato `FollowPlayer` con posizionamento in formazione morbida, teletrasporto discreto se restano troppo indietro, gestione ingresso/uscita dagli interni.
 - **Rendering:** LOD Group (3 livelli + impostore/cull), animatori con `cullingMode = CullUpdateTransforms`, GPU instancing per specie numerose.
 
+### 6.4.1 Salute e malattia (D-17)
+- `AnimalHealthModel` (Core, logica pura): stati `Sano → Malato(giorno 1..3) → Morto`, con `Convalescente` dopo la cura. Le soglie (quanto a lungo i bisogni a zero causano la malattia) sono dati della specie, quindi bilanciabili senza toccare il codice.
+- Calcolato dal `TimeService` anche per gli animali "virtuali" (a casa mentre Gioia esplora): nessun animale si ammala o guarisce "di nascosto" in modo diverso a seconda di cosa è caricato.
+- Eventi `AnimalNeedsWarning`, `AnimalFellSick`, `AnimalCured`, `AnimalDied` → notifiche, diario, missioni.
+- Interamente coperto da unit test (incluso il caso del tempo accelerato e del caricamento di un salvataggio).
+
 ### 6.5 Interazione e adozione
 - `AnimalInteractable` espone azioni disponibili in base allo stato (accarezza, dai cibo, gioca, spazzola, adotta).
 - `TrustModel` (Core): regole pure per amicizia/fiducia (bonus cibo preferito, penalità se Gioia corre vicino a specie timide, rendimenti decrescenti per azioni ripetute nello stesso giorno).
@@ -188,24 +195,36 @@ Boot ──► MainMenu ──► World (persistente)
 
 ---
 
-## 7. Prestazioni e memoria — budget iniziali [DA CONFERMARE con la piattaforma]
+## 7. Multipiattaforma: PC, console e mobile
 
-| Voce | Budget indicativo (PC medio / console) |
-|------|---------------------------------------|
-| Frame rate | 60 fps PC, 30 fps stabili su hardware modesto |
-| Draw call / SetPass | < 1500 / < 250 per frame |
-| Triangoli a schermo | < 1.5 M |
-| Animali attivi completi | 25–40 |
-| Gioia | ~25–35k triangoli (LOD0) |
-| Animale medio | 5–12k triangoli (LOD0) |
-| Memoria texture | Atlanti/palette condivise, mip-map sempre attive |
-| GC per frame | 0 byte nel gameplay normale (pooling, niente LINQ/allocazioni in Update) |
+Il gioco esce su PC, console e mobile (D-01). Questo influenza l'architettura fin dal primo giorno:
 
-Tecniche: streaming a celle, LOD + culling, occlusion culling negli interni, GPU instancing per vegetazione e rocce, baking della luce ambientale dove possibile, Animator culling, aggiornamenti AI distribuiti su più frame, profilazione regolare con Profiler e Memory Profiler.
+- **Livelli di qualità (quality tier):** `Low` (mobile), `Medium` (console portatili / PC modesti), `High` (PC e console di fascia alta). Ogni tier ha il proprio URP Asset: risoluzione di rendering, ombre, distanza di visibilità, densità vegetazione, numero di animali attivi, post-processing.
+- **Contenuti scalabili:** LOD per ogni modello, texture con varianti di risoluzione per piattaforma (Addressables per gruppo/piattaforma), vegetazione a densità configurabile.
+- **Input unico:** Input System con tre schemi (tastiera/mouse, controller, touch). Il gameplay legge *azioni* (`Move`, `Interact`, `Run`…), mai tasti o tocchi direttamente. UI touch (joystick virtuale, pulsanti) mostrata solo su dispositivi touch.
+- **UI adattiva:** layout che si adattano a 16:9, 16:10, 19.5:9 e tablet 4:3, aree sicure (notch), dimensione minima dei bersagli touch.
+- **Salvataggi:** `ISaveStorage` con implementazioni per file system (PC/mobile) e API di salvataggio delle console.
+- **Mobile:** gestione di pausa/ripresa dell'app (salvataggio automatico quando l'app va in background), limite di memoria più basso, attenzione a batteria e surriscaldamento (frame rate limitato a 30 come opzione).
+- **Console:** richiedono accordi con i produttori, kit di sviluppo e certificazione; i moduli specifici di piattaforma saranno isolati in `AnimalWorld.Runtime.Platform`.
 
----
+> La piattaforma **più debole** fissa i limiti di base: per questo i test di prestazioni su un telefono di riferimento iniziano già dalla Fase 5.
 
-## 8. Qualità e verifica
+## 8. Prestazioni e memoria — budget iniziali [DA CONFERMARE con i dispositivi di riferimento]
+
+| Voce | Mobile (Low) | Console/PC (High) |
+|------|--------------|-------------------|
+| Frame rate | 30 fps stabili | 60 fps |
+| Draw call per frame | < 300 | < 1500 |
+| Triangoli a schermo | < 300k | < 1.5 M |
+| Animali attivi completi | 10–15 | 25–40 |
+| Gioia (LOD0) | ~10–15k triangoli | ~25–35k triangoli |
+| Animale medio (LOD0) | 3–5k triangoli | 5–12k triangoli |
+| Memoria totale | < 1.5 GB | secondo piattaforma |
+| GC per frame | 0 byte nel gameplay | 0 byte nel gameplay |
+
+Tecniche: streaming a celle, LOD + culling, occlusion culling negli interni, GPU instancing per vegetazione e rocce, baking della luce ambientale dove possibile, Animator culling, aggiornamenti AI distribuiti su più frame, profilazione regolare con Profiler e Memory Profiler su ogni piattaforma.
+
+## 9. Qualità e verifica
 
 - **Unit test (EditMode)** su tutta la logica Core: inventario, amicizia, missioni, crescita piante, cucina, salvataggio/migrazioni.
 - **PlayMode test** su flussi chiave: movimento, interazione, adozione, entrata/uscita casa, salvataggio → caricamento.
@@ -218,7 +237,7 @@ Tecniche: streaming a celle, LOD + culling, occlusion culling negli interni, GPU
 
 ---
 
-## 9. Convenzioni di codice
+## 10. Convenzioni di codice
 
 - C# standard Microsoft: `PascalCase` per tipi/metodi/proprietà, `_camelCase` per campi privati, `camelCase` per locali/parametri.
 - Namespace = assembly (`AnimalWorld.Animals`, …).

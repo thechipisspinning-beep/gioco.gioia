@@ -1,6 +1,6 @@
 # Animal World — Game Design Document
 
-> **Versione:** 0.1 (bozza iniziale)
+> **Versione:** 0.2
 > **Stato:** in revisione con il committente
 > **Ultimo aggiornamento:** 2026-11-22
 >
@@ -23,7 +23,7 @@ Ogni funzionalità deve rafforzare almeno uno di questi pilastri. Se non lo fa, 
 |---|----------|----------------------|
 | 1 | **Gli animali sono il cuore** | Ogni sistema (casa, cucina, giardino, missioni) ha un collegamento con gli animali. |
 | 2 | **Un'isola viva da scoprire** | Ogni zona ha animali, piante, segreti e atmosfera propri; il mondo cambia con l'ora del giorno. |
-| 3 | **Accoglienza e relax** | Nessuna punizione dura, nessuna fretta, nessun combattimento. Il giocatore gioca al proprio ritmo. |
+| 3 | **Accoglienza e responsabilità** | Nessun combattimento, nessuna fretta nell'esplorazione. Prendersi cura degli animali è però una responsabilità vera: se vengono trascurati si ammalano e possono morire (§ 6.7). |
 | 4 | **Espressione personale** | Gioia, la casa e il giardino riflettono i gusti del giocatore. |
 | 5 | **Progressione gratificante** | C'è sempre un prossimo obiettivo piccolo e uno grande all'orizzonte. |
 
@@ -46,7 +46,7 @@ Ogni funzionalità deve rafforzare almeno uno di questi pilastri. Se non lo fa, 
 | Genere | Simulazione di vita, esplorazione, cura degli animali |
 | Modalità | Single-player |
 | Motore | Unity (C#) |
-| Piattaforma | **Da decidere** (vedi D-01) |
+| Piattaforma | **PC, console e mobile** (deciso, D-01). Quali console: da decidere (D-34) |
 | Pubblico | **Da decidere** (vedi D-03) — [PROPOSTA] tutti, con particolare attenzione a 8+ anni |
 | Durata obiettivo | Decine di ore di gioco, con contenuto aperto e senza "fine" obbligata |
 
@@ -158,7 +158,7 @@ Il sistema è **modulare**: ogni categoria è uno slot, ogni slot accetta oggett
 - Specie **reali e comuni**, domestiche e selvatiche.
 - **Solo adulti.**
 - Ogni specie ha comportamento credibile e personalità individuale.
-- Gli animali **non muoiono**, non soffrono in modo esplicito e non ci sono punizioni pesanti (pilastro 3). Decisione su conseguenze della trascuratezza: D-17.
+- La cura ha conseguenze reali: un animale adottato trascurato **si ammala** e, se non curato, **muore in 3 giorni** (deciso, D-17). Dettagli in § 6.7.
 
 ### 6.2 Dati di ogni specie (definizione)
 - Nome specie, categoria (domestico / da fattoria / selvatico), zone in cui appare, orari di attività.
@@ -182,7 +182,11 @@ Avvistamento → Avvicinamento → Fiducia → Amicizia → Adozione → Vita a 
 4. **Amicizia:** raggiunta la soglia, l'animale può essere adottato.
 5. **Adozione:** il giocatore sceglie un nome. L'animale entra nella "famiglia".
 
-- **Da decidere:** tutti gli animali sono adottabili o solo alcuni? (es. animali selvatici come cervi o aquile potrebbero essere solo "amici" che vengono a trovarti, mentre i domestici si adottano — D-16).
+- **Tutti gli animali sono adottabili**, anche i selvatici, ma **i selvatici sono più difficili** (deciso, D-16). [PROPOSTA] La difficoltà si ottiene con:
+  - soglia di amicizia più alta e guadagno di fiducia più lento;
+  - più giorni di visite consecutive prima di poter adottare;
+  - cibi specifici (spesso da cucinare) e condizioni particolari (ora del giorno, meteo, avvicinarsi senza correre);
+  - spazio adatto già pronto in casa/giardino (es. stagno per la lontra, recinto ampio per il cervo).
 
 ### 6.4 Animali adottati
 - Ogni animale adottato ha: **nome**, specie, variante colore, personalità, livello di amicizia, stato dei bisogni, data di adozione, preferenze scoperte.
@@ -190,7 +194,7 @@ Avvistamento → Avvicinamento → Fiducia → Amicizia → Adozione → Vita a 
 - Gli animali **vivono a casa** (interno, giardino, spazi dedicati).
 - Il giocatore sceglie **quali animali seguono Gioia** durante l'esplorazione; gli altri restano a casa.
 - **Numero di adozioni:** nessun limite rigido di gameplay. Tecnicamente il sistema simula in modo completo solo gli animali vicini al giocatore (vedi Architettura § Animali).
-- **[PROPOSTA] Compagni al seguito:** massimo 3 contemporaneamente (decisione D-04). È una scelta di leggibilità e prestazioni, non di adozione.
+- **Compagni al seguito:** massimo **3** contemporaneamente (deciso, D-04). È una scelta di leggibilità e prestazioni, non un limite alle adozioni.
 - I compagni al seguito possono **aiutare** (es. un cane trova oggetti nascosti, un gatto segnala animali vicini) — **[PROPOSTA]**, D-18.
 
 ### 6.5 Personalità [PROPOSTA]
@@ -201,6 +205,21 @@ Ogni animale riceve 1–2 tratti casuali che modificano animazioni e reazioni: *
 - **Fattoria:** mucca, pecora, capra, maiale, gallina, cavallo, asino, anatra.
 - **Selvatici:** volpe, cervo, scoiattolo, riccio, gufo, tartaruga, rana, lontra, marmotta, stambecco, gabbiano, foca.
 - Decisione definitiva D-09. Ogni specie è un costo significativo (modello + rig + animazioni): conviene iniziare con poche specie fatte molto bene.
+
+### 6.7 Salute, malattia e morte (deciso, D-17)
+**Regola approvata:** se un animale adottato viene trascurato **si ammala**; se resta senza cure, **muore entro 3 giorni** dall'inizio della malattia.
+
+[PROPOSTA] Funzionamento:
+```
+Sano ──(bisogni a zero per troppo tempo)──► Malato: giorno 1 → giorno 2 → giorno 3 ──► Muore
+                                               │
+                                               └──(cura)──► Convalescente ──► Sano
+```
+- **Segnali chiari prima della malattia:** icona sopra l'animale, animazioni tristi, notifica, avviso nel diario. Il giocatore non deve mai essere colto di sorpresa.
+- **Durante la malattia:** l'animale non segue Gioia, non gioca, resta nella cuccia; avvisi sempre più evidenti ogni giorno.
+- **Morte:** momento delicato e rispettoso (nessuna scena cruda). L'animale resta nel diario con un ricordo.
+
+Punti ancora da decidere (vedi DECISIONI_APERTE): come si cura (D-36), se i 3 giorni sono di gioco o reali e cosa succede a gioco chiuso (D-35), come gestire la cura con molti animali adottati (D-37), se la morte si può disattivare dalle opzioni (D-38).
 
 ---
 
@@ -222,7 +241,7 @@ Vedi § 6.3.
 | Spazzolare / lavare | Pulizia ↑ |
 | Giocare | Felicità ↑↑ |
 | Portare a passeggio | Felicità ↑, scoperte |
-| Visita dal veterinario | **Da decidere** (D-17) |
+| Curare un animale malato | Ferma la malattia (modalità da decidere: veterinario, medicine, cure a casa — D-36) |
 
 ### 7.4 Costruzione e personalizzazione della casa
 Vedi § 8.
@@ -332,16 +351,21 @@ Il diario è un menu "libro" con schede:
 - Tutti i menu navigabili **sia con mouse sia con controller**.
 - Testo grande e leggibile; opzioni di accessibilità (dimensione testo, sottotitoli, daltonismo).
 
-### 12.2 Controlli [PROPOSTA — da confermare con la piattaforma]
-| Azione | Tastiera/mouse | Controller |
-|--------|----------------|-----------|
-| Muoversi | WASD | Stick sinistro |
-| Telecamera | Mouse | Stick destro |
-| Correre | Shift (tenere) | Stick a fondo / grilletto |
-| Interagire | E | A / ✕ |
-| Annulla/indietro | Esc | B / ◯ |
-| Diario | J / Tab | Menu/Start |
-| Scegli strumento/cibo | Rotella / 1–9 | Croce direzionale |
+### 12.2 Controlli [PROPOSTA]
+Il gioco esce su PC, console e mobile: ogni azione deve funzionare con **tastiera/mouse, controller e touch**.
+
+| Azione | Tastiera/mouse | Controller | Touch (mobile) |
+|--------|----------------|-----------|----------------|
+| Muoversi | WASD | Stick sinistro | Joystick virtuale a sinistra |
+| Telecamera | Mouse | Stick destro | Trascinare a destra dello schermo |
+| Correre | Shift (tenere) | Stick a fondo / grilletto | Joystick spinto fino al bordo |
+| Interagire | E | A / ✕ | Pulsante contestuale grande / tocco sull'animale |
+| Annulla/indietro | Esc | B / ◯ | Pulsante indietro |
+| Diario | J / Tab | Menu/Start | Icona in alto |
+| Scegli strumento/cibo | Rotella / 1–9 | Croce direzionale | Barra rapida a scorrimento |
+| Costruzione: sposta/ruota | Mouse + R | Stick + dorsali | Trascina + pulsante ruota |
+
+- Su mobile l'interfaccia usa pulsanti grandi, si adatta a schermi piccoli e a notch/aree sicure.
 
 ### 12.3 Telecamera [PROPOSTA]
 Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, zoom ravvicinato durante le interazioni con gli animali. Decisione D-02.
@@ -372,3 +396,4 @@ Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, 
 | Versione | Data | Modifica |
 |----------|------|----------|
 | 0.1 | 2026-11-22 | Prima stesura dal brief del committente |
+| 0.2 | 2026-11-22 | Decise: piattaforme PC + console + mobile (D-01), 3 compagni (D-04), selvatici adottabili ma più difficili (D-16), malattia e morte in 3 giorni per trascuratezza (D-17). Aggiunti § 6.7 e controlli touch |

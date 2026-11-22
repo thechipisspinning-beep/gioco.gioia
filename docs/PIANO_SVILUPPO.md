@@ -1,6 +1,6 @@
 # Animal World — Piano di sviluppo
 
-> **Versione:** 0.1 · **Ultimo aggiornamento:** 2026-11-22
+> **Versione:** 0.2 · **Ultimo aggiornamento:** 2026-11-22
 >
 > Regola d'oro: **ogni fase si chiude solo quando i suoi criteri di completamento sono verificati.** Non si passa alla successiva con sistemi "quasi funzionanti".
 
@@ -33,6 +33,7 @@ Il **vertical slice (M3)** è il momento chiave: dimostra che il gioco è divert
 - Progetto Unity 6 LTS + URP, Input System, Cinemachine, Addressables, Localization, Test Framework.
 - Struttura cartelle e Assembly Definition, `.gitignore`, Git LFS.
 - `GameServices`, `EventBus`, `TimeService`, scena Boot, menu debug base.
+- Livelli di qualità (Low/Medium/High) e build di prova su PC, Android e iOS.
 - Prima suite di unit test e (se approvata) CI con GameCI.
 - **Completata quando:** il progetto si apre senza errori, Boot → scena di test funziona, i test passano.
 
@@ -40,9 +41,9 @@ Il **vertical slice (M3)** è il momento chiave: dimostra che il gioco è divert
 **Durata:** 2 settimane
 - `PlayerMotor` (camminata, corsa, pendenze, gradini, eventuale salto).
 - Telecamera Cinemachine orbit con collisioni e zoom.
-- Input tastiera/mouse e controller.
+- Input tastiera/mouse, controller e **touch** (joystick virtuale, telecamera a trascinamento).
 - Scena *greybox* con salite, scale, ostacoli, acqua.
-- **Completata quando:** movimento fluido a 60 fps, nessun incastro nella geometria, telecamera che non attraversa i muri, controller e tastiera equivalenti. Test di "sensazione" con il committente.
+- **Completata quando:** movimento fluido a 60 fps, nessun incastro nella geometria, telecamera che non attraversa i muri, controller, tastiera e touch equivalenti; provato anche su un telefono reale. Test di "sensazione" con il committente.
 
 ## Fase 4 — Creazione della protagonista Gioia
 **Durata:** 3–5 settimane (dipende dagli asset)
@@ -59,7 +60,7 @@ Il **vertical slice (M3)** è il momento chiave: dimostra che il gioco è divert
 - Ciclo giorno/notte completo: sole, luna, stelle, illuminazione per fascia oraria.
 - Vegetazione con instancing, audio ambientale.
 - Definizione dello stile visivo definitivo (shader, palette, post-processing).
-- **Completata quando:** la zona è attraversabile senza scatti, il ciclo giorno/notte è bello in ogni fascia oraria, i budget di prestazioni sono rispettati sulla macchina di riferimento.
+- **Completata quando:** la zona è attraversabile senza scatti, il ciclo giorno/notte è bello in ogni fascia oraria, i budget di prestazioni sono rispettati sia su PC sia sul telefono di riferimento.
 
 ## Fase 6 — Primo animale e sistema di interazione
 **Durata:** 3 settimane
@@ -74,8 +75,9 @@ Il **vertical slice (M3)** è il momento chiave: dimostra che il gioco è divert
 **Durata:** 2 settimane
 - Soglia di amicizia, schermata nome, `AdoptionService`, `AnimalRegistry`.
 - Compagni al seguito (attiva/disattiva), animali che vanno a casa.
-- Seconda specie (selvatica e timida, es. **volpe** o **coniglio**) per validare la generalità del sistema.
-- **Completata quando:** si può adottare, nominare, far seguire, mandare a casa; il sistema regge 100+ animali adottati in un salvataggio di test senza cali di prestazioni.
+- Seconda specie **selvatica** (es. **volpe**) con adozione più difficile, per validare la generalità del sistema.
+- Bisogni, **malattia, cura e morte** (D-17) con avvisi chiari; aiuti alla cura per molti animali (D-37).
+- **Completata quando:** si può adottare, nominare, far seguire (max 3), mandare a casa; un animale trascurato si ammala, si può curare, e muore dopo 3 giorni senza cure; il sistema regge 100+ animali adottati in un salvataggio di test senza cali di prestazioni.
 
 ## Fase 8 — Casa e personalizzazione
 **Durata:** 4–5 settimane
@@ -120,7 +122,8 @@ Sessione di gioco di 45–60 minuti con giocatori esterni. Si misura: divertimen
 - Profilazione su hardware minimo, riduzione memoria e caricamenti.
 - Bilanciamento progressione ed economia.
 - Test di regressione completi, accessibilità, localizzazione.
-- Build di rilascio per le piattaforme scelte.
+- Certificazione console e pubblicazione sugli store mobile.
+- Build di rilascio per PC, console e mobile.
 
 ---
 

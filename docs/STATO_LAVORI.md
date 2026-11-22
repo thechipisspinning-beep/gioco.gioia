@@ -14,7 +14,8 @@
 | Elenco decisioni aperte | ✅ | [`DECISIONI_APERTE.md`](DECISIONI_APERTE.md) |
 | Piano di sviluppo | ✅ | [`PIANO_SVILUPPO.md`](PIANO_SVILUPPO.md) |
 | Revisione e approvazione del committente | ⏳ | |
-| Decisioni 🔴 (D-01, D-02, D-29, D-30) | ⛔ | Necessarie per iniziare la Fase 2 |
+| Decisioni D-01, D-04, D-16, D-17 | ✅ | Registrate nel GDD v0.2 |
+| Decisioni 🔴 rimanenti (D-02, D-29, D-30, D-34, D-35, D-39) | ⛔ | Necessarie per iniziare la Fase 2 |
 
 ## Fasi successive
 | Fase | Stato |
