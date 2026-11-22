@@ -406,3 +406,4 @@ Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, 
 | 0.2 | 2026-11-22 | Decise: piattaforme PC + console + mobile (D-01), 3 compagni (D-04), selvatici adottabili ma più difficili (D-16), malattia e morte in 3 giorni per trascuratezza (D-17). Aggiunti § 6.7 e controlli touch |
 | 1.0 | 2026-11-22 | Tutte le decisioni prese dal team su delega del committente; motore cambiato da Unity a Godot 4.7 (D-30) |
 | 1.1 | 2026-11-22 | D-15 precisata: sblocco delle zone guidato dalla storia, isola esplorabile liberamente |
+| 1.2 | 2026-11-22 | Realizzate tutte le fasi: 21 specie, produzione degli animali da fattoria, abilità dei compagni, meteo, modalità foto, storia in 18 capitoli; qualità grafica selezionabile |

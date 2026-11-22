@@ -7,7 +7,11 @@ La protagonista, **Gioia**, vive su un'isola enorme piena di animali reali da in
 La versione web viene pubblicata automaticamente su GitHub Pages a ogni aggiornamento:
 **https://thechipisspinning-beep.github.io/gioco.gioia/** (funziona anche da telefono).
 
-Controlli: WASD per muoversi, Shift per correre, Spazio per saltare, clic per controllare la telecamera con il mouse, rotella per lo zoom. Con il controller: stick sinistro, R2 per correre, X/□ per saltare. Su telefono: joystick a sinistra, trascinare a destra per la telecamera.
+**Tastiera e mouse:** WASD muoversi · Shift correre · Spazio saltare · E interagire · clic per controllare la telecamera · rotella zoom · J diario · I zaino · P foto · Esc pausa.
+**Controller:** stick sinistro muoversi · R2 correre · X/□ saltare · A interagire · stick destro telecamera · L1/R1 zoom · Select diario · Start pausa.
+**Telefono:** joystick a sinistra (al bordo per correre) · trascinare a destra per la telecamera · pulsanti per saltare e interagire · Foto, Zaino, Diario e Pausa in alto.
+
+Cosa c'è: un'isola di circa 2 km con villaggio, campagna e fattoria, foresta, lago, montagna, prati e spiagge; 21 specie di animali da incontrare, curare e adottare (fino a 3 compagni al seguito); casa da arredare e ampliare; orto, cucina, negozio, veterinaria; 8 abitanti; una storia in 18 capitoli più missioni secondarie e giornaliere; ciclo giorno/notte e meteo; diario, foto e 3 slot di salvataggio.
 
 ## Documentazione
 | Documento | Contenuto |

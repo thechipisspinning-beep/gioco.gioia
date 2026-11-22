@@ -18,7 +18,7 @@ var _player: Node3D
 
 
 func _ready() -> void:
-	if OS.has_feature("mobile") or OS.has_feature("web"):
+	if Settings.get_quality() == Settings.Quality.LOW:
 		max_active = 14
 		active_radius = 55.0
 		release_radius = 75.0

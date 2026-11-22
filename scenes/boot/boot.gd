@@ -6,6 +6,7 @@ const FIRST_SCENE: String = "res://scenes/main_menu/main_menu.tscn"
 
 func _ready() -> void:
 	_apply_locale()
+	Settings.apply_quality()
 	var scene: String = FIRST_SCENE
 	# Strumenti di sviluppo: `-- --scene=res://...` apre direttamente una scena.
 	for arg: String in OS.get_cmdline_user_args():

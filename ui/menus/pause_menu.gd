@@ -37,6 +37,12 @@ func open() -> void:
 		close())
 	save.disabled = SaveManager.current_slot == 0
 	_box.add_child(save)
+	var quality: Button = MenuHelpers.button(tr("PAUSE_QUALITY") % tr(["QUALITY_LOW", "QUALITY_MEDIUM", "QUALITY_HIGH"][Settings.get_quality()]))
+	quality.pressed.connect(func() -> void:
+		Settings.set_quality((Settings.get_quality() + 1) % 3)
+		quality.text = tr("PAUSE_QUALITY") % tr(["QUALITY_LOW", "QUALITY_MEDIUM", "QUALITY_HIGH"][Settings.get_quality()])
+		EventBus.notification_requested.emit(tr("QUALITY_NOTE")))
+	_box.add_child(quality)
 	var menu: Button = MenuHelpers.button(tr("PAUSE_MAIN_MENU"))
 	menu.pressed.connect(func() -> void:
 		SaveManager.autosave()

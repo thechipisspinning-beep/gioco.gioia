@@ -377,18 +377,8 @@ func _mesh(parent: Node3D, mesh: Mesh, color: Color, pos: Vector3) -> MeshInstan
 
 
 func _sphere(radius: float, half_height: float) -> SphereMesh:
-	var m: SphereMesh = SphereMesh.new()
-	m.radius = radius
-	m.height = half_height * 2.0
-	m.radial_segments = 16
-	m.rings = 8
-	return m
+	return MeshCache.sphere(radius, half_height * 2.0, 16, 8)
 
 
 func _capsule(radius: float, height: float) -> CapsuleMesh:
-	var m: CapsuleMesh = CapsuleMesh.new()
-	m.radius = radius
-	m.height = maxf(height, radius * 2.0)
-	m.radial_segments = 12
-	m.rings = 4
-	return m
+	return MeshCache.capsule(radius, height, 12, 4)

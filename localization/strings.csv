@@ -439,3 +439,8 @@ Q_M16,Gli abitanti del lago,The lake dwellers
 Q_M17,In cima alla montagna,Up the mountain
 Q_M18,Il rifugio è rinato!,The shelter is reborn!
 OBJ_MEET_ANY,Incontra specie diverse,Meet different species
+PAUSE_QUALITY,Grafica: %s,Graphics: %s
+QUALITY_LOW,bassa,low
+QUALITY_MEDIUM,media,medium
+QUALITY_HIGH,alta,high
+QUALITY_NOTE,Alcune impostazioni si applicano al prossimo cambio di zona,Some settings apply when you next change area

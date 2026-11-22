@@ -14,6 +14,8 @@ enum State { IDLE, WANDER, SNIFF, SIT, LIE, SLEEP, CURIOUS, FLEE, ATTENTIVE, PET
 const GRAVITY: float = 15.0
 const INTERACT_DISTANCE: float = 1.3
 const BALL_THROW_DISTANCE: float = 7.0
+## Oltre questa distanza da Gioia l'animale non anima il modello.
+const ANIMATION_DISTANCE: float = 45.0
 
 var species: SpeciesDefinition
 var data: AnimalState
@@ -81,6 +83,8 @@ func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
 	move_and_slide()
 	visual.speed = Vector2(velocity.x, velocity.z).length()
+	# Animazioni solo per chi è abbastanza vicino da vederle bene (LOD di simulazione).
+	visual.set_process(_player_distance < ANIMATION_DISTANCE or is_busy() or _state == State.FOLLOW)
 
 
 # ---------------------------------------------------------------------------

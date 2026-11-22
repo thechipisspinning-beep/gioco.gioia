@@ -23,7 +23,7 @@ var _initial_done: bool = false
 
 func _ready() -> void:
 	# Profilo qualità: su mobile e web un raggio più piccolo.
-	if OS.has_feature("mobile") or OS.has_feature("web"):
+	if Settings.get_quality() == Settings.Quality.LOW:
 		load_radius = mini(load_radius, 2)
 
 

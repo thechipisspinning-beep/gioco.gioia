@@ -168,24 +168,12 @@ func _mesh(parent: Node3D, mesh: Mesh, color: Color, pos: Vector3) -> MeshInstan
 
 
 func _sph(r: float) -> SphereMesh:
-	var m: SphereMesh = SphereMesh.new()
-	m.radius = r
-	m.height = r * 2.0
-	m.radial_segments = 14
-	m.rings = 7
-	return m
+	return MeshCache.sphere(r, r * 2.0, 14, 7)
 
 
 func _cyl(top: float, bottom: float, h: float) -> CylinderMesh:
-	var m: CylinderMesh = CylinderMesh.new()
-	m.top_radius = top
-	m.bottom_radius = bottom
-	m.height = h
-	m.radial_segments = 8
-	return m
+	return MeshCache.cylinder(top, bottom, h, 8)
 
 
 func _box(size: Vector3) -> BoxMesh:
-	var m: BoxMesh = BoxMesh.new()
-	m.size = size
-	return m
+	return MeshCache.box(size)

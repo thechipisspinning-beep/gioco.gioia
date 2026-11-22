@@ -37,9 +37,11 @@ func _ready() -> void:
 	environment.sky = sky
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.tonemap_mode = Environment.TONE_MAPPER_LINEAR
-	environment.glow_enabled = true
+	# Bagliore solo sulle luci molto forti: con soglia bassa anche i lampioni
+	# chiari al sole "brillavano" creando macchie bianche lontane.
+	environment.glow_enabled = Settings.get_quality() >= Settings.Quality.MEDIUM
 	environment.glow_intensity = 0.25
-	environment.glow_hdr_threshold = 1.1
+	environment.glow_hdr_threshold = 1.6
 	environment.fog_enabled = true
 	# Foschia leggera solo in lontananza (dà profondità senza slavare i colori);
 	# il cielo non viene velato.
@@ -56,7 +58,9 @@ func _ready() -> void:
 	sun.name = "Sun"
 	sun.shadow_enabled = true
 	sun.shadow_blur = 1.5
-	sun.directional_shadow_max_distance = 60.0
+	# Ombre più vicine e semplici con qualità bassa (telefoni, web).
+	sun.directional_shadow_max_distance = [30.0, 45.0, 60.0][Settings.get_quality()]
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL if Settings.get_quality() == Settings.Quality.LOW else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	add_child(sun)
 	moon = DirectionalLight3D.new()
 	moon.name = "Moon"

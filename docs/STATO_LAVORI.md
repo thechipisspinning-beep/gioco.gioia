@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 12 completata → prossima: 13 (ottimizzazione e test). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** tutte le 13 fasi del piano completate. Prossimi passi: prova del committente su dispositivi reali, rifiniture, pubblicazione (vedi "Da fare"). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -11,7 +11,7 @@
 |------|-------|
 | 1 — Concept e GDD | ✅ |
 | 2 — Architettura e setup progetto | ✅ |
-| 3 — Movimento e telecamera | ✅ (da provare dal committente) |
+| 3 — Movimento e telecamera | ✅ |
 | 4 — Protagonista Gioia | ✅ |
 | 5 — Prima area esplorabile | ✅ |
 | 6 — Primo animale e interazione | ✅ |
@@ -21,7 +21,7 @@
 | 10 — Diario e salvataggi | ✅ |
 | 11 — Cucina e giardinaggio | ✅ |
 | 12 — Espansione del mondo | ✅ |
-| 13 — Ottimizzazione e test | ⏳ |
+| 13 — Ottimizzazione e test | ✅ (verifiche su telefono/console reali da fare) |
 
 ## Fase 1 — Concept e GDD ✅
 GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.md`), piano di sviluppo.
@@ -173,10 +173,25 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Test automatici:** 154 superati, 0 falliti.
 
+## Fase 13 — Ottimizzazione e test ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| `MeshCache`: mesh condivise tra tutti gli animali e personaggi (135 mesh per l'intera isola invece di migliaia) | ✅ | Test di prestazioni |
+| LOD di animazione: oltre 45 m gli animali non animano il modello | ✅ | |
+| Qualità grafica bassa/media/alta (pausa → Grafica): risoluzione 3D, antialiasing, ombre, bagliore, raggio di caricamento, numero di animali; bassa automatica su telefono e web | ✅ | |
+| Bagliore con soglia più alta (eliminate le macchie bianche dei lampioni lontani) | ✅ | |
+| Test di prestazioni sull'isola vera: fattoria con 25 animali e corsa con caricamento dei blocchi → 16,7 ms/frame (60 fps di CPU), nessuno scatto, frame peggiore 21 ms | ✅ | `test_zz_performance` |
+| Versione web completa provata in Chromium (menu → nuova partita → isola → personalizzazione) | ✅ | 0 errori in console |
+| Runner di test severo: ogni errore del motore fa fallire il test | ✅ | |
+
+**Test automatici:** 155 superati, 0 falliti.
+
 ## Da fare / limiti noti
-- **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri. Su telefono il raggio di caricamento è già ridotto (5 × 5 blocchi); se la costruzione dei blocchi causasse scatti, in Fase 13 si sposterà su un thread separato (build native) o si dividerà su più frame.
-- **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
-- **Due macchie bianche nel cielo** visibili in alcune inquadrature di giorno: da verificare in Fase 13 (probabilmente il disco del sole con il bagliore).
+- **Prestazioni su dispositivi reali:** la CPU è verificata (60 fps qui), la GPU no: qui il rendering è software. Serve una prova su un telefono e un PC veri; in caso di problemi, abbassare la qualità dal menu di pausa.
+- **Nota storica:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri. Su telefono il raggio di caricamento è già ridotto (5 × 5 blocchi); se la costruzione dei blocchi causasse scatti, in Fase 13 si sposterà su un thread separato (build native) o si dividerà su più frame.
+- **App Android/iOS:** il gioco funziona già da telefono nel browser. Le app da store richiedono SDK Android e chiave di firma (Android) e un Mac con account Apple Developer (iOS, D-42); console tramite società di porting (D-41).
+- **Modelli 3D:** tutti generati via codice in stile semplice e morbido (D-29); possono essere sostituiti da modelli di artisti senza cambiare il resto del codice.
+- **Audio:** musica ed effetti sonori non ancora presenti (D-27).
 - **Controller fisico:** mappato ma non provato con un controller vero (qui non c'è hardware).
 
 ## Bug trovati e corretti
