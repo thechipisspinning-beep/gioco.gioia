@@ -8,6 +8,8 @@ extends Node
 ##   --shot=secondi:/percorso.png,...     salva screenshot agli istanti indicati
 ##   --quit-at=secondi                    chiude il gioco
 ##   --time=HH                            imposta l'ora di gioco all'avvio
+##   --friendship=id_animale:valore       imposta l'amicizia (e una visita) di un animale
+##   --adopt=id_animale:Nome:follow       adotta un animale (follow facoltativo: diventa compagno)
 ##
 ## Esempio (screenshot di Gioia che corre):
 ##   godot --path . -- --hold=move_forward:0.5:3,run:0.5:3 --shot=3:/tmp/run.png --quit-at=3.2
@@ -37,7 +39,7 @@ func _ready() -> void:
 			for part: String in arg.trim_prefix("--hold=").split(","):
 				var p: PackedStringArray = part.split(":")
 				if p.size() == 3:
-					_holds.append({"action": StringName(p[0]), "from": p[1].to_float(), "to": p[2].to_float(), "down": false})
+					_holds.append({"action": StringName(p[0]), "from": p[1].to_float(), "to": p[2].to_float(), "phase": 0})
 		elif arg.begins_with("--look="):
 			var p: PackedStringArray = arg.trim_prefix("--look=").split(":")
 			if p.size() == 4:
@@ -49,6 +51,8 @@ func _ready() -> void:
 					_shots.append({"at": part.substr(0, idx).to_float(), "path": part.substr(idx + 1), "done": false})
 		elif arg.begins_with("--quit-at="):
 			_quit_at = arg.trim_prefix("--quit-at=").to_float()
+		elif arg.begins_with("--friendship=") or arg.begins_with("--adopt="):
+			_apply_animal_arg.call_deferred(arg)
 		elif arg.begins_with("--time="):
 			var hour: int = arg.trim_prefix("--time=").to_int()
 			GameClock.reset(GameTime.new(float(hour * GameTime.MINUTES_PER_HOUR)))
@@ -56,17 +60,16 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_elapsed += delta
+	# Ogni pressione dura almeno un frame anche se il gioco va lento (rendering software):
+	# 0 = in attesa, 1 = premuto, 2 = finito.
 	for h: Dictionary in _holds:
-		var should_be_down: bool = _elapsed >= float(h["from"]) and _elapsed < float(h["to"])
-		if should_be_down != bool(h["down"]):
-			h["down"] = should_be_down
-			# Evento reale (non solo action_press): così lo ricevono anche
-			# _input/_unhandled_input e i pulsanti dell'interfaccia.
-			var ev: InputEventAction = InputEventAction.new()
-			ev.action = h["action"]
-			ev.pressed = should_be_down
-			ev.strength = 1.0 if should_be_down else 0.0
-			Input.parse_input_event(ev)
+		var phase: int = int(h["phase"])
+		if phase == 0 and _elapsed >= float(h["from"]):
+			_send_action(h["action"], true)
+			h["phase"] = 1
+		elif phase == 1 and _elapsed >= float(h["to"]):
+			_send_action(h["action"], false)
+			h["phase"] = 2
 	for l: Dictionary in _looks:
 		if _elapsed >= float(l["from"]) and _elapsed < float(l["to"]):
 			look_requested.emit(float(l["yaw"]) * delta, float(l["pitch"]) * delta)
@@ -76,6 +79,37 @@ func _process(delta: float) -> void:
 			_save_screenshot(String(s["path"]))
 	if _quit_at > 0.0 and _elapsed >= _quit_at:
 		get_tree().quit()
+
+
+## Evento reale (non solo action_press): così lo ricevono anche
+## _input/_unhandled_input e i pulsanti dell'interfaccia.
+func _send_action(action: StringName, pressed: bool) -> void:
+	var ev: InputEventAction = InputEventAction.new()
+	ev.action = action
+	ev.pressed = pressed
+	ev.strength = 1.0 if pressed else 0.0
+	Input.parse_input_event(ev)
+
+
+## Applicato dopo che la scena ha creato i suoi animali.
+func _apply_animal_arg(arg: String) -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var p: PackedStringArray = arg.split("=", true, 1)[1].split(":")
+	var state: AnimalState = GameState.animals.get_animal(StringName(p[0]))
+	if state == null:
+		push_warning("[DevTools] animale sconosciuto: %s" % p[0])
+		return
+	if arg.begins_with("--friendship="):
+		state.friendship = p[1].to_float()
+		state.record_visit(GameState.current_day())
+	else:
+		state.friendship = maxf(state.friendship, 100.0)
+		for d: int in 5:
+			state.record_visit(d + 1)
+		AnimalCare.adopt(state, p[1] if p.size() > 1 else "Amico")
+		if p.size() > 2 and p[2] == "follow":
+			AnimalCare.set_companion(state, true)
 
 
 func _save_screenshot(path: String) -> void:

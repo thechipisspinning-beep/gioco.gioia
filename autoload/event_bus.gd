@@ -21,3 +21,15 @@ signal friendship_changed(animal_id: StringName, friendship: float)
 ## Messaggio breve da mostrare a schermo (già tradotto).
 @warning_ignore("unused_signal")
 signal notification_requested(text: String)
+## Il giocatore ha scelto "Adotta": la UI chiede il nome. `agent` è l'AnimalAgent.
+@warning_ignore("unused_signal")
+signal adoption_requested(agent: Node)
+## Un animale è stato adottato.
+@warning_ignore("unused_signal")
+signal animal_adopted(animal_id: StringName, species_id: StringName)
+## Sono cambiati i compagni che seguono Gioia (o dove vivono gli animali adottati).
+@warning_ignore("unused_signal")
+signal companions_changed
+## È cambiata la salute di un animale (ammalato, guarito, morto).
+@warning_ignore("unused_signal")
+signal animal_health_changed(animal_id: StringName, health: int)

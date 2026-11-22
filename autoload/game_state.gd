@@ -9,6 +9,8 @@ var inventory: Inventory = Inventory.new()
 var discoveries: DiscoveryLog = DiscoveryLog.new()
 ## Modalità serena (D-38): gli animali si ammalano ma non muoiono.
 var serene_mode: bool = false
+## Piccoli valori di progressione (es. ultimo giorno in cui si è presa la medicina).
+var flags: Dictionary = {}
 
 
 func _ready() -> void:
@@ -20,6 +22,7 @@ func start_new_game(serene: bool = false) -> void:
 	inventory = Inventory.new()
 	discoveries = DiscoveryLog.new()
 	serene_mode = serene
+	flags = {}
 	# Dotazione iniziale di Gioia.
 	inventory.add(&"kibble", 10)
 	inventory.add(&"apple", 5)

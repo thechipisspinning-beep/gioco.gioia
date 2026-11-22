@@ -32,6 +32,7 @@ var _ball: Node3D
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _met_reported: bool = false
 var _follow_slot: int = 0
+var _dying: bool = false
 
 
 ## Inizializza l'animale. Va chiamato prima di aggiungerlo alla scena.
@@ -72,6 +73,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		_player_distance = 999.0
 	_check_met()
+	_sync_with_data()
+	if _dying:
+		return
 	_check_global_transitions()
 	_run_state(delta)
 	_apply_gravity(delta)
@@ -93,12 +97,30 @@ func get_hearts() -> int:
 
 ## Testo di stato per l'interfaccia (es. "Dorme", "È timida").
 func get_status_text() -> String:
+	if data.health == AnimalState.Health.SICK:
+		var day: int = AnimalHealth.sick_day(data, GameClock.time.get_total_minutes())
+		return (tr("ANIMAL_STATUS_SICK_SERENE") if GameState.serene_mode else tr("ANIMAL_STATUS_SICK")) % mini(day, 3)
+	if data.health == AnimalState.Health.CONVALESCENT:
+		return tr("ANIMAL_STATUS_CONVALESCENT")
+	if data.adopted:
+		if data.hunger < AnimalHealth.LOW_NEED_WARNING:
+			return tr("ANIMAL_STATUS_HUNGRY")
+		if data.cleanliness < AnimalHealth.LOW_NEED_WARNING:
+			return tr("ANIMAL_STATUS_DIRTY")
+		if data.happiness < AnimalHealth.LOW_NEED_WARNING:
+			return tr("ANIMAL_STATUS_SAD")
 	if _state == State.SLEEP:
 		return tr("ANIMAL_STATUS_SLEEPING")
 	if _state == State.FLEE:
 		return tr("ANIMAL_STATUS_SCARED")
 	if not TrustModel.tolerates_distance(data, species, _player_distance):
 		return tr("ANIMAL_STATUS_SHY")
+	if not data.adopted:
+		if TrustModel.can_adopt(data, species):
+			return tr("ANIMAL_STATUS_CAN_ADOPT")
+		var progress: Dictionary = TrustModel.adoption_progress(data, species)
+		if float(progress["friendship_missing"]) <= 0.0 and int(progress["days_missing"]) > 0:
+			return tr("ANIMAL_STATUS_NEEDS_DAYS") % int(progress["days_missing"])
 	return ""
 
 
@@ -109,20 +131,39 @@ func is_busy() -> bool:
 ## Azioni disponibili ora. Ogni voce: {id, label, enabled}.
 func get_interaction_actions() -> Array[Dictionary]:
 	var actions: Array[Dictionary] = []
-	if is_busy() or _state in [State.SLEEP, State.FLEE] or not data.is_alive():
+	if not data.is_alive() or is_busy():
+		return actions
+	var inv_now: Inventory = GameState.inventory
+	# Un animale malato si può curare anche mentre dorme (la notte non deve impedire la cura).
+	if _state == State.SLEEP and data.health == AnimalState.Health.SICK:
+		actions.append({"id": "medicine", "label": tr("ACTION_MEDICINE") % inv_now.count(&"medicine"), "enabled": inv_now.has(&"medicine")})
+		return actions
+	if _state in [State.SLEEP, State.FLEE]:
 		return actions
 	if not TrustModel.tolerates_distance(data, species, _player_distance):
 		return actions
 	var inv: Inventory = GameState.inventory
+	var sick: bool = data.health == AnimalState.Health.SICK
+	if TrustModel.can_adopt(data, species):
+		actions.append({"id": "adopt", "label": tr("ACTION_ADOPT"), "enabled": true})
+	if sick:
+		actions.append({"id": "medicine", "label": tr("ACTION_MEDICINE") % inv.count(&"medicine"), "enabled": inv.has(&"medicine")})
 	actions.append({"id": "pet", "label": tr("ACTION_PET"), "enabled": true})
 	for item_id: StringName in inv.item_ids():
 		var item: ItemDefinition = Database.item(item_id)
 		if item != null and item.category == ItemDefinition.Category.FOOD:
 			actions.append({"id": "feed:" + String(item_id), "label": tr("ACTION_FEED") % [tr(item.name_key), inv.count(item_id)], "enabled": true})
-	if species.likes_fetch and inv.has(&"ball"):
+	if species.likes_fetch and inv.has(&"ball") and not sick:
 		actions.append({"id": "play", "label": tr("ACTION_PLAY_BALL"), "enabled": true})
 	if inv.has(&"brush"):
 		actions.append({"id": "brush", "label": tr("ACTION_BRUSH"), "enabled": true})
+	if data.adopted and not sick:
+		if data.location == AnimalState.Location.COMPANION:
+			actions.append({"id": "stay", "label": tr("ACTION_GO_HOME"), "enabled": true})
+		else:
+			var full: bool = GameState.animals.companions().size() >= Adoption.MAX_COMPANIONS
+			var label: String = tr("ACTION_FOLLOW_FULL") % Adoption.MAX_COMPANIONS if full else tr("ACTION_FOLLOW")
+			actions.append({"id": "follow", "label": label, "enabled": not full})
 	return actions
 
 
@@ -131,6 +172,18 @@ func perform_interaction(action_id: String) -> void:
 		return
 	_face_player_now()
 	var day: int = GameState.current_day()
+	if action_id == "adopt":
+		EventBus.adoption_requested.emit(self)
+		return
+	if action_id == "follow" or action_id == "stay":
+		AnimalCare.set_companion(data, action_id == "follow")
+		_sync_with_data()
+		return
+	if action_id == "medicine":
+		if AnimalCare.give_medicine(data):
+			Emote.spawn(self, global_position + Vector3.UP * 0.95, Emote.Kind.BIG_HEARTS)
+			_enter(State.PETTED)
+		return
 	if action_id == "pet":
 		_apply_trust(TrustModel.Action.PET, day)
 		_enter(State.PETTED)
@@ -526,10 +579,39 @@ func _ensure_player() -> void:
 			return
 
 
-## Usato dal sistema dei compagni (Fase 7).
-func set_following(follow: bool, slot: int = 0) -> void:
+## Allinea il comportamento allo stato persistente (adozione, compagni, salute).
+func _sync_with_data() -> void:
+	if _dying:
+		return
+	if not data.is_alive():
+		_dying = true
+		# Uscita di scena delicata (D-03): l'animale si addormenta e svanisce.
+		visual.pose = QuadrupedVisual.Pose.SLEEP
+		var t: Tween = create_tween()
+		t.tween_interval(1.5)
+		t.tween_property(visual, "scale", Vector3.ONE * 0.01, 1.5).set_ease(Tween.EASE_IN)
+		t.tween_callback(queue_free)
+		remove_from_group(&"interactable")
+		return
+	if is_busy():
+		return
+	var sick: bool = data.health == AnimalState.Health.SICK
+	if sick:
+		if _state != State.LIE and _state != State.SLEEP:
+			_enter(State.LIE)
+		_state_time = 0.0  # resta sdraiato finché non guarisce
+		visual.wag = 0.0
+		return
+	var should_follow: bool = data.location == AnimalState.Location.COMPANION
+	if should_follow and _state != State.FOLLOW:
+		_enter(State.FOLLOW)
+	elif not should_follow and _state == State.FOLLOW:
+		_enter(State.IDLE)
+
+
+## Posizione nella formazione dei compagni (0, 1, 2).
+func set_follow_slot(slot: int) -> void:
 	_follow_slot = slot
-	_enter(State.FOLLOW if follow else State.IDLE)
 
 
 func get_state_name() -> String:

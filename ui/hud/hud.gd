@@ -13,6 +13,8 @@ var _interactor: Interactor
 var _card: InteractionCard
 var _menu: ActionMenu
 var _menu_target: Node3D
+var _name_dialog: NameDialog
+var _adopting: AnimalAgent
 var _mouse_was_captured: bool = false
 var _device: String = ""
 
@@ -26,6 +28,11 @@ func _ready() -> void:
 	_root.add_child(_menu)
 	_menu.action_chosen.connect(_on_action_chosen)
 	_menu.closed.connect(_on_menu_closed)
+	_name_dialog = NameDialog.new()
+	_root.add_child(_name_dialog)
+	_name_dialog.confirmed.connect(_on_name_confirmed)
+	_name_dialog.cancelled.connect(func() -> void: _set_ui_locked(false))
+	EventBus.adoption_requested.connect(_on_adoption_requested)
 	_touch.interact_pressed.connect(_on_touch_interact)
 	GameClock.hour_changed.connect(func(_d: int, _h: int) -> void: _refresh_clock())
 	_refresh_clock()
@@ -71,12 +78,7 @@ func _open_menu(target: Node3D) -> void:
 	if actions.is_empty():
 		return
 	_menu_target = target
-	_player.input_locked = true
-	_interactor.enabled = false
-	_touch.set_active(false)
-	_card.visible = false
-	_mouse_was_captured = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_set_ui_locked(true)
 	_menu.open(str(target.call("get_interaction_title")), actions)
 
 
@@ -86,12 +88,43 @@ func _on_action_chosen(action_id: String) -> void:
 
 
 func _on_menu_closed() -> void:
-	_player.input_locked = false
-	_interactor.enabled = true
-	_touch.set_active(true)
-	if _mouse_was_captured:
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_menu_target = null
+	# Se l'azione scelta ha aperto un'altra finestra (es. il nome), resta bloccato.
+	if not _name_dialog.visible:
+		_set_ui_locked(false)
+
+
+func _on_adoption_requested(agent: Node) -> void:
+	_adopting = agent as AnimalAgent
+	if _adopting == null:
+		return
+	_set_ui_locked(true)
+	_name_dialog.open(tr(_adopting.species.name_key))
+
+
+func _on_name_confirmed(chosen_name: String) -> void:
+	if _adopting != null and is_instance_valid(_adopting):
+		if AnimalCare.adopt(_adopting.data, chosen_name):
+			Emote.spawn(_adopting, _adopting.global_position + Vector3.UP * 0.95, Emote.Kind.BIG_HEARTS)
+	_adopting = null
+	_set_ui_locked(false)
+
+
+## Blocca/sblocca Gioia, la telecamera e i controlli touch mentre una finestra è aperta.
+func _set_ui_locked(locked: bool) -> void:
+	_player.input_locked = locked
+	_interactor.enabled = not locked
+	_touch.set_active(not locked)
+	if locked:
+		_card.visible = false
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			_mouse_was_captured = true
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	else:
+		if _mouse_was_captured:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		_mouse_was_captured = false
+		_card.show_target(_interactor.focus)
 
 
 func _refresh_clock() -> void:

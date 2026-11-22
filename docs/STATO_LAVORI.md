@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 3 completata → prossima: 4 (Gioia definitiva e personalizzazione)
+**Fase attuale:** 7 completata → prossima: 10 (salvataggi e diario). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -14,8 +14,8 @@
 | 3 — Movimento e telecamera | ✅ (da provare dal committente) |
 | 4 — Protagonista Gioia | ⏳ |
 | 5 — Prima area esplorabile | ⏳ |
-| 6 — Primo animale e interazione | ⏳ |
-| 7 — Adozione | ⏳ |
+| 6 — Primo animale e interazione | ✅ |
+| 7 — Adozione | ✅ (mangiatoie automatiche D-37 rimandate alla Fase 8, con la casa) |
 | 8 — Casa e personalizzazione | ⏳ |
 | 9 — Missioni e ricompense | ⏳ |
 | 10 — Diario e salvataggi | ⏳ |
@@ -51,6 +51,28 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Test automatici:** 25 superati, 0 falliti.
 
+## Fase 6 — Primo animale e interazione ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| Dati delle specie e degli oggetti come Resource (`data/species`, `data/items`), autoload `Database` e `GameState` | ✅ | Test: catalogo caricato, cibi coerenti |
+| `AnimalState`, `AnimalRegistry`, `Inventory`, `DiscoveryLog` (logica pura, salvabili) | ✅ | Test di andata/ritorno dei dati |
+| `TrustModel`: amicizia con rendimenti decrescenti, cibo preferito/rifiutato, selvatici più lenti, spavento | ✅ | 12 test unitari |
+| `AnimalAgent`: girovagare, annusare, sedersi, sdraiarsi, dormire di notte, curiosità, timidezza e fuga, coccole, mangiare, riportare la pallina | ✅ | 9 test di integrazione + screenshot |
+| Modello procedurale dei quadrupedi (cane, volpe) con animazioni: passo, coda, orecchie, sguardo, occhi che sbattono, saltelli | ✅ | Screenshot |
+| `Interactor` + scheda con cuori + menu delle azioni + notifiche + pulsante touch | ✅ | Screenshot, navigazione da tastiera/controller |
+
+## Fase 7 — Adozione, bisogni e malattia ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| Adozione con nome (finestra con "Suggerisci un nome"), adozioni illimitate | ✅ | 7 test + screenshot del flusso completo |
+| Compagni al seguito (max 3, D-04) in formazione, "Torna a casa" | ✅ | Test con fisica: il compagno segue Gioia per 10 m |
+| Volpe selvatica: più timida, scappa se Gioia corre, 90 di amicizia e 3 giorni di visite (D-16) | ✅ | Test |
+| `AnimalHealth`: bisogni che calano, malattia dopo 12 ore di trascuratezza, morte dopo 3 giorni (D-17, D-35), modalità serena (D-38), solo adottati (D-40) | ✅ | 11 test unitari, anche con salti di tempo grandi |
+| Cura: medicina dalla cassetta del veterinario (1 al giorno), convalescenza | ✅ | Test di integrazione |
+| Servizio `AnimalCare`: aggiorna ogni ora anche gli animali non presenti nella scena, notifiche | ✅ | Test |
+
+**Test automatici:** 80 superati, 0 falliti.
+
 ## Da fare / limiti noti
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri; il budget verrà verificato in Fase 5.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
@@ -63,3 +85,9 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | Con lo stick a metà Gioia era più lenta del dovuto | L'intensità dell'input veniva applicata due volte | La direzione viene normalizzata, l'intensità applicata solo alla velocità |
 | Colori slavati sul web | Il renderer Compatibility somma luce ambientale e sole diversamente | Classe `Lighting` con fattori misurati per renderer |
 | Su telefono compariva il suggerimento "WASD" | I tocchi generano anche clic del mouse emulati | Gli eventi emulati vengono ignorati (anche per la cattura del mouse) |
+| Gli animali usavano un riferimento a Gioia non più valido | Riferimento salvato una volta sola | L'animale verifica e ritrova Gioia quando serve |
+| Scheda animale e notifiche fuori dallo schermo | Ancoraggi calcolati prima che il pannello avesse dimensioni | Posizionamento calcolato a ogni frame |
+| Riflessi degli occhi enormi | Dimensione non proporzionata alla testa | Dimensioni relative alla testa |
+| Curare un animale lo faceva riammalare subito | Il tempo non ancora simulato veniva calcolato dopo la cura | La cura aggiorna prima lo stato all'ora attuale |
+| Un animale malato che dormiva non si poteva curare | Nessuna azione disponibile durante il sonno | La medicina si può dare anche mentre dorme |
+| Un compagno poteva comparire nella scena sbagliata durante un cambio di scena | Anche il gestore della scena in uscita reagiva | Agisce solo il gestore della scena corrente |

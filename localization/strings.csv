@@ -30,3 +30,38 @@ NOTIFY_FOOD_REFUSED,A %s non piace: %s,%s doesn't like: %s
 NOTIFY_FOOD_FAVORITE,È il cibo preferito di %s!,That's %s's favourite food!
 NOTIFY_ANIMAL_TIRED,%s ne ha abbastanza per oggi. Torna domani!,%s has had enough for today. Come back tomorrow!
 NOTIFY_FRIENDSHIP_UP,L'amicizia con %s cresce: %d cuori su 5,Your friendship with %s grows: %d of 5 hearts
+ITEM_MEDICINE,Medicina,Medicine
+ACTION_ADOPT,Adotta!,Adopt!
+ACTION_MEDICINE,Dai la medicina (%d),Give medicine (%d)
+ACTION_FOLLOW,Seguimi,Follow me
+ACTION_FOLLOW_FULL,Seguimi (già %d compagni),Follow me (already %d companions)
+ACTION_GO_HOME,Torna a casa,Go home
+NAME_TITLE,Adotti un animale: %s! Come vuoi chiamarlo?,You're adopting: %s! What will you call it?
+NAME_SUGGEST,Suggerisci un nome,Suggest a name
+NAME_CONFIRM,Adotta,Adopt
+ANIMAL_STATUS_SICK,Sta male (giorno %d di 3). Serve una medicina!,Feeling sick (day %d of 3). It needs medicine!
+ANIMAL_STATUS_SICK_SERENE,Sta male (giorno %d). Serve una medicina!,Feeling sick (day %d). It needs medicine!
+ANIMAL_STATUS_CONVALESCENT,"Sta guarendo, ha bisogno di riposo","Recovering, needs some rest"
+ANIMAL_STATUS_HUNGRY,Ha fame,Hungry
+ANIMAL_STATUS_DIRTY,Ha bisogno di una spazzolata,Needs brushing
+ANIMAL_STATUS_SAD,Si annoia: gioca con lui!,Bored: play together!
+ANIMAL_STATUS_CAN_ADOPT,Ti vuole bene: puoi adottarlo!,Loves you: you can adopt it!
+ANIMAL_STATUS_NEEDS_DAYS,Si fida di te. Torna a trovarlo ancora %d giorni,Trusts you. Visit again on %d more days
+NOTIFY_ADOPTED,"Benvenuto in famiglia, %s!","Welcome to the family, %s!"
+NOTIFY_FOLLOWS,%s ora ti segue,%s is now following you
+NOTIFY_GOES_HOME,%s torna a casa,%s is going home
+NOTIFY_TOO_MANY_COMPANIONS,Possono seguirti al massimo %d animali,At most %d animals can follow you
+NOTIFY_SICK_CANNOT_FOLLOW,%s sta male e deve riposare,%s is sick and needs rest
+NOTIFY_NEED_HUNGER,%s ha fame!,%s is hungry!
+NOTIFY_NEED_HAPPINESS,%s si sente solo: passa a giocare!,%s feels lonely: come and play!
+NOTIFY_NEED_CLEAN,%s ha bisogno di una spazzolata,%s needs brushing
+NOTIFY_FELL_SICK,%s si è ammalato! Curalo entro 3 giorni,%s is sick! Cure it within 3 days
+NOTIFY_SICK_DAY,%s sta ancora male (giorno %d di 3),%s is still sick (day %d of 3)
+NOTIFY_DIED,%s si è addormentato per sempre. Resterà nel tuo diario.,%s fell asleep forever. It will stay in your journal.
+NOTIFY_RECOVERED,%s è guarito!,%s has recovered!
+NOTIFY_CURED,Hai dato la medicina a %s,You gave the medicine to %s
+NOTIFY_GOT_MEDICINE,Hai preso una medicina,You took a medicine
+VET_KIOSK_TITLE,Cassetta del veterinario,Vet's box
+VET_KIOSK_HINT,Una medicina al giorno per gli animali malati,One medicine a day for sick animals
+VET_KIOSK_DONE_TODAY,Hai già preso la medicina di oggi,You already took today's medicine
+VET_KIOSK_TAKE,Prendi una medicina,Take a medicine

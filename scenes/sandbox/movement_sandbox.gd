@@ -210,3 +210,11 @@ func _spawn_player() -> void:
 	# Animali: un cane socievole nel prato e una volpe timida vicino al laghetto.
 	AnimalSpawner.spawn(self, &"sandbox_dog", &"dog", Vector3(-2.0, 0.1, 3.0))
 	AnimalSpawner.spawn(self, &"sandbox_fox", &"fox", Vector3(-20.0, 0.1, -6.0))
+
+	# Casa provvisoria: gli animali adottati vivono nel giardino della casetta.
+	var companions: CompanionManager = CompanionManager.new()
+	companions.home_yard = Vector3(7.0, 0.1, -9.0)
+	add_child(companions)
+	var kiosk: VetKiosk = VetKiosk.new()
+	kiosk.position = Vector3(3.6, 0.0, -11.5)
+	add_child(kiosk)

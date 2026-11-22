@@ -78,7 +78,7 @@ static func startle(state: AnimalState, species: SpeciesDefinition) -> void:
 
 ## L'animale accetta di essere avvicinato a `distance` metri?
 static func tolerates_distance(state: AnimalState, species: SpeciesDefinition, distance: float) -> bool:
-	if species.comfort_distance <= 0.0:
+	if species.comfort_distance <= 0.0 or state.adopted:
 		return true
 	# Con l'amicizia la distanza di sicurezza si riduce fino a zero (a metà della soglia di adozione).
 	var trust_ratio: float = clampf(state.friendship / maxf(1.0, species.friendship_to_adopt * 0.5), 0.0, 1.0)
