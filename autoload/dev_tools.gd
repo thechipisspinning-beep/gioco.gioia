@@ -10,6 +10,7 @@ extends Node
 ##   --time=HH                            imposta l'ora di gioco all'avvio
 ##   --friendship=id_animale:valore       imposta l'amicizia (e una visita) di un animale
 ##   --adopt=id_animale:Nome:follow       adotta un animale (follow facoltativo: diventa compagno)
+##   --signal=nome_segnale:secondi        emette un segnale dell'EventBus senza argomenti (es. build_mode_requested)
 ##
 ## Esempio (screenshot di Gioia che corre):
 ##   godot --path . -- --hold=move_forward:0.5:3,run:0.5:3 --shot=3:/tmp/run.png --quit-at=3.2
@@ -20,6 +21,7 @@ var _holds: Array[Dictionary] = []
 var _looks: Array[Dictionary] = []
 var _shots: Array[Dictionary] = []
 var _quit_at: float = -1.0
+var _signals: Array[Dictionary] = []
 var _elapsed: float = 0.0
 var active: bool = false
 
@@ -46,6 +48,9 @@ func _ready() -> void:
 				var idx: int = part.find(":")
 				if idx > 0:
 					_shots.append({"at": part.substr(0, idx).to_float(), "path": part.substr(idx + 1), "done": false})
+		elif arg.begins_with("--signal="):
+			var p: PackedStringArray = arg.trim_prefix("--signal=").split(":")
+			_signals.append({"name": StringName(p[0]), "at": p[1].to_float() if p.size() > 1 else 1.0, "done": false})
 		elif arg.begins_with("--quit-at="):
 			_quit_at = arg.trim_prefix("--quit-at=").to_float()
 		elif arg.begins_with("--friendship=") or arg.begins_with("--adopt="):
@@ -67,6 +72,10 @@ func _process(delta: float) -> void:
 		elif phase == 1 and _elapsed >= float(h["to"]):
 			_send_action(h["action"], false)
 			h["phase"] = 2
+	for sig: Dictionary in _signals:
+		if not bool(sig["done"]) and _elapsed >= float(sig["at"]):
+			sig["done"] = true
+			EventBus.emit_signal(sig["name"])
 	for l: Dictionary in _looks:
 		if _elapsed >= float(l["from"]) and _elapsed < float(l["to"]):
 			look_requested.emit(float(l["yaw"]) * delta, float(l["pitch"]) * delta)

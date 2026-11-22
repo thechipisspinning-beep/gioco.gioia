@@ -21,6 +21,8 @@ var _journal: Journal
 var _top_buttons: HBoxContainer
 var _creator: CharacterCreator
 var _camera_rig: CameraRig
+var _build_panel: BuildPanel
+var _build_mode: BuildMode
 var _mouse_was_captured: bool = false
 var _device: String = ""
 
@@ -76,11 +78,13 @@ func _process(_delta: float) -> void:
 	var area: Vector2 = _root.size
 	_top_buttons.size = _top_buttons.get_combined_minimum_size()
 	_top_buttons.position = Vector2(area.x - _top_buttons.size.x - 20.0, 20.0)
-	_top_buttons.visible = not (_pause.visible or _journal.visible or _creator.visible)
+	_top_buttons.visible = not (_pause.visible or _journal.visible or _creator.visible or (_build_mode != null and _build_mode.active))
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible or _creator.visible:
+		return
+	if _build_mode != null and _build_mode.active:
 		return
 	if event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
@@ -92,6 +96,20 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("journal"):
 		get_viewport().set_input_as_handled()
 		_open_journal()
+
+
+## Collega la modalità arredamento (solo dentro casa).
+func attach_build_mode(bm: BuildMode) -> void:
+	_build_mode = bm
+	_build_panel = BuildPanel.new()
+	_build_panel.build_mode = bm
+	_root.add_child(_build_panel)
+	bm.opened.connect(func() -> void:
+		_set_ui_locked(true)
+		_build_panel.open())
+	bm.closed.connect(func() -> void:
+		_build_panel.close()
+		_set_ui_locked(false))
 
 
 ## Apre la personalizzazione di Gioia (inizio partita o specchio).

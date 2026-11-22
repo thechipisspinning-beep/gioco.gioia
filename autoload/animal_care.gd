@@ -13,6 +13,8 @@ func _ready() -> void:
 ## Aggiorna tutti gli animali adottati fino all'ora attuale.
 func tick() -> void:
 	var now: float = GameClock.time.get_total_minutes()
+	# Prima la mangiatoia automatica (D-37), poi l'aggiornamento di bisogni e salute.
+	Feeder.feed_hungry_animals()
 	for state: AnimalState in GameState.animals.adopted():
 		var species: SpeciesDefinition = Database.species(state.species_id)
 		if species == null:

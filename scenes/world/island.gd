@@ -25,6 +25,10 @@ func _ready() -> void:
 	var start: Vector2 = IslandLayout.PLAYER_START
 	player.position = Vector3(start.x, streamer.height_at(start.x, start.y) + 0.3, start.y)
 	player.rotation.y = PI
+	if SceneRouter.take_spawn() == &"home_door":
+		var door: Vector3 = home_door_position()
+		player.position = door + Vector3(0, 0.3, 1.6)
+		player.rotation.y = 0.0
 	var saved: Dictionary = SaveManager.take_pending_player(scene_file_path)
 	if not saved.is_empty():
 		player.position = Vector3(float(saved["x"]), float(saved["y"]) + 0.3, float(saved["z"]))
@@ -121,6 +125,14 @@ func _build_village() -> void:
 	village.add_child(kiosk)
 
 
+## Porta della casa di Gioia (a terra, sul lato sud).
+func home_door_position() -> Vector3:
+	var hp: Vector2 = IslandLayout.HOME_POSITION
+	var p: Vector3 = Vector3(hp.x, 0.0, hp.y - 6.0 + 2.5 + 0.1)
+	p.y = ground(p.x, p.z)
+	return p
+
+
 func _build_home() -> void:
 	var home: Node3D = Node3D.new()
 	home.name = "GioiaHome"
@@ -128,7 +140,22 @@ func _build_home() -> void:
 	var hp: Vector2 = IslandLayout.HOME_POSITION
 	var base: Vector3 = Vector3(hp.x, ground(hp.x, hp.y), hp.y)
 	# Il vecchio rifugio della nonna (D-12): più grande, tetto verde.
-	BuildingKit.cottage(home, base + Vector3(0, 0, -6), 0.0, Color("fff3e0"), Color("7fb36a"), Vector3(7.0, 3.2, 5.0))
+	var layout: HomeLayout = GameState.home
+	var wall: Color = FurnitureCatalog.WALL_COLORS[layout.exterior_wall]
+	var roof: Color = FurnitureCatalog.ROOF_COLORS[layout.exterior_roof]
+	# La casa si allarga quando si aggiungono stanze (GDD § 8).
+	var width: float = 7.0 + (layout.room_count() - 1) * 3.0
+	BuildingKit.cottage(home, base + Vector3((layout.room_count() - 1) * 1.5, 0, -6), 0.0, wall, roof, Vector3(width, 3.2, 5.0))
+	var door: ExitDoor = ExitDoor.new()
+	door.position = home_door_position() + Vector3(-(layout.room_count() - 1) * 0.0, 0, 0.5)
+	door.target_scene = "res://scenes/interiors/home_interior.tscn"
+	door.target_spawn = &"entrance"
+	door.title_key = "DOOR_ENTER_HOME"
+	home.add_child(door)
+	var feeder: Feeder = Feeder.new()
+	feeder.position = base + Vector3(-6.0, 0.0, 4.0)
+	feeder.position.y = ground(feeder.position.x, feeder.position.z)
+	home.add_child(feeder)
 	# Recinto del giardino
 	var g: Callable = ground
 	var corners: Array[Vector3] = [base + Vector3(-12, 0, -1), base + Vector3(12, 0, -1), base + Vector3(12, 0, 14), base + Vector3(-12, 0, 14)]

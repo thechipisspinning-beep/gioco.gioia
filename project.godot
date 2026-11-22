@@ -25,6 +25,7 @@ GameState="*res://autoload/game_state.gd"
 GameClock="*res://autoload/game_clock.gd"
 AnimalCare="*res://autoload/animal_care.gd"
 SaveManager="*res://autoload/save_manager.gd"
+SceneRouter="*res://autoload/scene_router.gd"
 DevTools="*res://autoload/dev_tools.gd"
 
 [debug]

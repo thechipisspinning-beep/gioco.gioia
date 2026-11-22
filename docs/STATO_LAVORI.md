@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 5 completata → prossima: 8 (casa e personalizzazione). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** 8 completata → prossima: 9 (missioni e ricompense). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -15,8 +15,8 @@
 | 4 — Protagonista Gioia | ✅ |
 | 5 — Prima area esplorabile | ✅ (terreno di tutta l'isola; contenuti dettagliati nel villaggio e a casa, le altre zone si arricchiscono in Fase 12) |
 | 6 — Primo animale e interazione | ✅ |
-| 7 — Adozione | ✅ (mangiatoie automatiche D-37 rimandate alla Fase 8, con la casa) |
-| 8 — Casa e personalizzazione | ⏳ |
+| 7 — Adozione | ✅ |
+| 8 — Casa e personalizzazione | ✅ (l'ampliamento richiede un permesso, che arriva come ricompensa con la Fase 9) |
 | 9 — Missioni e ricompense | ⏳ |
 | 10 — Diario e salvataggi | ✅ (scheda Missioni del diario arriva con la Fase 9) |
 | 11 — Cucina e giardinaggio | ⏳ |
@@ -114,6 +114,19 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | Menu principale → isola; versione web provata in Chromium fino alla personalizzazione | ✅ | Screenshot |
 
 **Test automatici:** 109 superati, 0 falliti.
+
+## Fase 8 — Casa e personalizzazione ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| `HomeLayout` + `FurnitureCatalog`: griglia da 0,5 m, 4 stanze sbloccabili (soggiorno, camera, cucina, stanza degli animali), 14 mobili, porte e passaggi sempre liberi, tappeti sotto i mobili | ✅ | 7 test unitari |
+| Interno della casa (scena separata, D-14) in stile casa delle bambole, costruito dai dati; mobili con collisione | ✅ | Test + screenshot |
+| Porta di casa e porta d'uscita con dissolvenza (`SceneRouter`), arrivo davanti alla porta | ✅ | |
+| Modalità arredamento: cursore con mouse/tocco/tastiera/controller, anteprima verde/rossa, ruota, colore, togli, raccogli e sposta | ✅ | Test + screenshot |
+| Colori di pareti e pavimento per stanza, colori esterni di muri e tetto (D-21); la casa esterna si allarga con le stanze | ✅ | |
+| Mangiatoia automatica in giardino (D-37): si riempie con le crocchette, nutre ogni ora gli animali di casa affamati | ✅ | Test |
+| Arredamento iniziale e mobili in inventario a inizio partita | ✅ | |
+
+**Test automatici:** 122 superati, 0 falliti.
 
 ## Da fare / limiti noti
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri. Su telefono il raggio di caricamento è già ridotto (5 × 5 blocchi); se la costruzione dei blocchi causasse scatti, in Fase 13 si sposterà su un thread separato (build native) o si dividerà su più frame.

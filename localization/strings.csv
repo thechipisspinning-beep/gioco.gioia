@@ -161,3 +161,45 @@ ZONE_MOUNTAIN,Montagna,Mountain
 ZONE_MEADOWS,Prati fioriti,Flower meadows
 ZONE_BEACH,Spiaggia,Beach
 NOTIFY_NEW_ZONE,Nuovo luogo scoperto: %s,New place discovered: %s
+DOOR_ENTER,Entra,Enter
+DOOR_ENTER_HOME,Entra in casa,Go inside
+DOOR_EXIT,Esci in giardino,Go outside
+CATALOG_TITLE,Catalogo dell'arredamento,Furniture catalogue
+CATALOG_OPEN,Arreda la casa,Decorate the house
+FEEDER_TITLE,Mangiatoia automatica,Automatic feeder
+FEEDER_STATUS,Porzioni rimaste: %d,Portions left: %d
+FEEDER_REFILL,Riempi (usa %d crocchette),Refill (uses %d kibble)
+FEEDER_REFILLED,Mangiatoia riempita: %d porzioni,Feeder refilled: %d portions
+BUILD_ROTATE,Ruota,Rotate
+BUILD_COLOR,Colore,Colour
+BUILD_REMOVE,Togli,Remove
+BUILD_WALLS,Pareti,Walls
+BUILD_FLOOR,Pavimento,Floor
+BUILD_EXTERIOR,Muri esterni,Outer walls
+BUILD_ROOF,Tetto,Roof
+BUILD_EXTERIOR_DONE,Lo vedrai uscendo in giardino,You'll see it when you go outside
+BUILD_EXPAND,Amplia la casa,Expand the house
+BUILD_EXPAND_HINT,Serve un permesso di ampliamento (ricompensa delle missioni),Needs an expansion permit (quest reward)
+BUILD_EXPANDED,Nuova stanza costruita!,New room built!
+BUILD_DONE,Fine,Done
+BUILD_NO_FURNITURE,Nessun mobile da posizionare: tocca un mobile per spostarlo,No furniture to place: tap a piece to move it
+BUILD_HINT_PICK,"%s · Scegli un mobile qui sotto, oppure tocca un mobile per spostarlo","%s · Pick a piece below, or tap a piece to move it"
+BUILD_HINT_PLACE,%s · %s: tocca dove metterlo (verde = si può),%s · %s: tap where to put it (green = OK)
+ROOM_LIVING,Soggiorno,Living room
+ROOM_BEDROOM,Camera,Bedroom
+ROOM_KITCHEN,Cucina,Kitchen
+ROOM_PETS,Stanza degli animali,Pet room
+FURN_BED,Letto,Bed
+FURN_TABLE,Tavolo,Table
+FURN_CHAIR,Sedia,Chair
+FURN_SOFA,Divano,Sofa
+FURN_RUG,Tappeto,Rug
+FURN_LAMP,Lampada,Lamp
+FURN_PLANT,Pianta,Plant
+FURN_BOOKSHELF,Libreria,Bookshelf
+FURN_PET_BED,Cuccia,Pet bed
+FURN_PET_BOWL,Ciotola,Pet bowl
+FURN_SCRATCHING_POST,Tiragraffi,Scratching post
+FURN_TOY_BOX,Cesta dei giochi,Toy box
+FURN_STOVE,Fornello,Stove
+FURN_COUNTER,Bancone,Counter

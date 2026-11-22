@@ -40,6 +40,9 @@ var _pitch: float = 0.0
 ## Modalità ritratto (personalizzazione): Gioia inquadrata di fronte, a sinistra dello schermo.
 var _portrait: bool = false
 var _saved_view: Vector4 = Vector4.ZERO  # yaw, pitch, distanza, altezza
+## Modalità arredamento: vista dall'alto che segue il cursore invece di Gioia.
+var _build_view: bool = false
+var _build_focus: Vector3 = Vector3.ZERO
 var _target_distance: float = 5.0
 var _time_since_manual_look: float = 100.0
 
@@ -82,8 +85,31 @@ func set_portrait(enabled: bool) -> void:
 	_time_since_manual_look = 0.0
 
 
+## Vista dall'alto per arredare (segue `set_build_focus`).
+func set_build_view(enabled: bool, focus: Vector3) -> void:
+	if enabled == _build_view:
+		return
+	_build_view = enabled
+	_build_focus = focus
+	if enabled:
+		_saved_view = Vector4(_yaw, _pitch, _target_distance, focus_height)
+		_yaw = 0.0
+		_pitch = deg_to_rad(-58.0)
+		_target_distance = minf(9.0, max_distance + 3.0)
+		focus_height = 0.0
+	else:
+		_yaw = _saved_view.x
+		_pitch = _saved_view.y
+		_target_distance = _saved_view.z
+		focus_height = _saved_view.w
+
+
+func set_build_focus(focus: Vector3) -> void:
+	_build_focus = focus
+
+
 func _unhandled_input(event: InputEvent) -> void:
-	if _portrait:
+	if _portrait or _build_view:
 		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var motion: InputEventMouseMotion = event as InputEventMouseMotion
@@ -101,7 +127,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	var stick: Vector2 = Input.get_vector("look_left", "look_right", "look_up", "look_down")
-	if _portrait:
+	if _portrait or _build_view:
 		stick = Vector2.ZERO
 	if stick.length_squared() > 0.0:
 		add_look(-stick.x * stick_speed_degrees * delta, -stick.y * stick_speed_degrees * delta * 0.7)
@@ -111,6 +137,7 @@ func _process(delta: float) -> void:
 	_auto_align(delta)
 	_apply_rotation()
 	_spring_arm.spring_length = lerpf(_spring_arm.spring_length, _target_distance, 1.0 - exp(-zoom_smoothing * delta))
+	_spring_arm.collision_mask = 0 if _build_view else 1
 
 
 ## Ruota la telecamera di `yaw_degrees` (orizzontale) e `pitch_degrees` (verticale).
@@ -147,6 +174,8 @@ func _follow_target(delta: float) -> void:
 	if target == null:
 		return
 	var focus: Vector3 = target.global_position + Vector3.UP * focus_height
+	if _build_view:
+		focus = _build_focus
 	if _portrait:
 		# Sposta l'inquadratura così Gioia sta a sinistra e il pannello a destra.
 		focus += global_transform.basis.x * 0.55
@@ -154,7 +183,7 @@ func _follow_target(delta: float) -> void:
 
 
 func _auto_align(delta: float) -> void:
-	if _portrait or not auto_align_enabled or target == null or _time_since_manual_look < auto_align_delay:
+	if _portrait or _build_view or not auto_align_enabled or target == null or _time_since_manual_look < auto_align_delay:
 		return
 	var body: CharacterBody3D = target as CharacterBody3D
 	if body == null:

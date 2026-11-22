@@ -39,3 +39,12 @@ signal player_gesture(gesture: StringName)
 ## Apri la schermata di personalizzazione di Gioia (es. dallo specchio).
 @warning_ignore("unused_signal")
 signal customization_requested
+## Apri la modalità arredamento (dal catalogo in casa).
+@warning_ignore("unused_signal")
+signal build_mode_requested
+## È stato posizionato un mobile in casa (per le missioni).
+@warning_ignore("unused_signal")
+signal furniture_placed(furniture_id: StringName)
+## La casa è stata ampliata (numero di stanze).
+@warning_ignore("unused_signal")
+signal home_expanded(room_count: int)
