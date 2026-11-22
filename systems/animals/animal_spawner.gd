@@ -6,13 +6,20 @@ extends RefCounted
 
 
 ## Crea (o ritrova) l'animale `animal_id` della specie data e lo aggiunge a `parent`.
-static func spawn(parent: Node3D, animal_id: StringName, species_id: StringName, position: Vector3) -> AnimalAgent:
+## `register` = false: l'animale entra nel registro (e nei salvataggi) solo
+## quando Gioia ci interagisce (simulazione a livelli, Architettura § 6.4).
+static func spawn(parent: Node3D, animal_id: StringName, species_id: StringName, position: Vector3, register: bool = true) -> AnimalAgent:
 	var species: SpeciesDefinition = Database.species(species_id)
 	if species == null:
 		push_error("Specie sconosciuta: %s" % species_id)
 		return null
 	var variant: int = absi(hash(String(animal_id))) % maxi(1, species.fur_colors.size())
-	var state: AnimalState = GameState.animals.ensure(animal_id, species_id, variant)
+	var state: AnimalState
+	if register or GameState.animals.has(animal_id):
+		state = GameState.animals.ensure(animal_id, species_id, variant)
+	else:
+		state = AnimalState.new(animal_id, species_id)
+		state.variant = variant
 	if not state.is_alive():
 		return null
 	var agent: AnimalAgent = AnimalAgent.new()

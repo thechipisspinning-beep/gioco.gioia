@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"owl"
+name_key = "SPECIES_OWL"
+fact_key = "FACT_OWL"
+wild = true
+size = 0
+zones = PackedStringArray("forest")
+population = 2
+walk_speed = 1.0
+run_speed = 4.0
+roam_radius = 6.0
+shyness = 0.85
+notice_distance = 9.0
+comfort_distance = 5.0
+active_from_hour = 19
+active_to_hour = 6
+favorite_foods = PackedStringArray("fish")
+accepted_foods = PackedStringArray("pet_treat")
+likes_fetch = false
+friendship_to_adopt = 95
+adoption_visit_days = 3
+trust_gain_multiplier = 0.5
+hunger_decay_per_hour = 0.022
+companion_item = &""
+produce_item = &""
+model = &"bird"
+fur_colors = Array[Color]([Color(0.627, 0.478, 0.353, 1), Color(0.847, 0.796, 0.722, 1)])
+accent_color = Color(0.949, 0.902, 0.824, 1)
+model_params = {
+"size": 0.26,
+"beak": "hook",
+"beak_color": Color(0.902, 0.722, 0.290, 1),
+"legs_color": Color(0.902, 0.722, 0.290, 1),
+"tail": "short",
+"eye_size": 0.38,
+"ear_tufts": true,
+"head_ratio": 0.5
+}

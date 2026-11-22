@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"cow"
+name_key = "SPECIES_COW"
+fact_key = "FACT_COW"
+wild = false
+size = 2
+zones = PackedStringArray("countryside")
+population = 3
+walk_speed = 0.9
+run_speed = 3.0
+roam_radius = 7.0
+shyness = 0.2
+notice_distance = 8.0
+comfort_distance = 0.0
+active_from_hour = 5
+active_to_hour = 20
+favorite_foods = PackedStringArray("hay")
+accepted_foods = PackedStringArray("grain", "apple", "carrot")
+likes_fetch = false
+friendship_to_adopt = 75
+adoption_visit_days = 2
+trust_gain_multiplier = 0.8
+hunger_decay_per_hour = 0.022
+companion_item = &""
+produce_item = &"milk"
+model = &"quadruped"
+fur_colors = Array[Color]([Color(1.000, 0.980, 0.949, 1), Color(0.541, 0.353, 0.227, 1)])
+accent_color = Color(1.000, 0.827, 0.800, 1)
+model_params = {
+"body_length": 1.05,
+"body_radius": 0.36,
+"leg_length": 0.5,
+"head_radius": 0.24,
+"snout_length": 0.06,
+"snout": "flat",
+"nose_color": Color(0.965, 0.714, 0.690, 1),
+"ears": "small",
+"horns": "small",
+"tail": "tuft",
+"tail_length": 0.6,
+"patches": Color(0.227, 0.188, 0.188, 1),
+"neck_length": 1.1
+}

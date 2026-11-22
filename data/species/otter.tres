@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"otter"
+name_key = "SPECIES_OTTER"
+fact_key = "FACT_OTTER"
+wild = true
+size = 1
+zones = PackedStringArray("lake")
+population = 3
+walk_speed = 1.0
+run_speed = 4.0
+roam_radius = 9.0
+shyness = 0.75
+notice_distance = 9.0
+comfort_distance = 4.0
+active_from_hour = 6
+active_to_hour = 20
+favorite_foods = PackedStringArray("fish")
+accepted_foods = PackedStringArray("mushroom")
+likes_fetch = false
+friendship_to_adopt = 90
+adoption_visit_days = 3
+trust_gain_multiplier = 0.55
+hunger_decay_per_hour = 0.022
+companion_item = &"fish"
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.416, 0.290, 0.227, 1), Color(0.478, 0.353, 0.267, 1)])
+accent_color = Color(0.847, 0.769, 0.659, 1)
+model_params = {
+"body_length": 0.55,
+"body_radius": 0.13,
+"leg_length": 0.09,
+"head_radius": 0.12,
+"snout_length": 0.05,
+"ears": "round",
+"tail": "thin",
+"tail_length": 0.45
+}

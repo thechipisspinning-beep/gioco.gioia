@@ -18,7 +18,7 @@ const BALL_THROW_DISTANCE: float = 7.0
 var species: SpeciesDefinition
 var data: AnimalState
 var home_position: Vector3
-var visual: QuadrupedVisual
+var visual: AnimalVisual
 
 var _state: State = State.IDLE
 var _state_time: float = 0.0
@@ -55,7 +55,7 @@ func _ready() -> void:
 	shape.shape = sphere
 	shape.position.y = 0.3
 	add_child(shape)
-	visual = QuadrupedVisual.new()
+	visual = AnimalVisual.create_for(species)
 	visual.name = "Visual"
 	add_child(visual)
 	visual.setup(species, data.variant)
@@ -171,6 +171,8 @@ func perform_interaction(action_id: String) -> void:
 	if is_busy():
 		return
 	_face_player_now()
+	# Da ora in poi esiste un rapporto: l'animale entra nel registro (e nei salvataggi).
+	GameState.animals.add(data)
 	var day: int = GameState.current_day()
 	if action_id == "adopt":
 		EventBus.adoption_requested.emit(self)
@@ -244,6 +246,7 @@ func _check_met() -> void:
 	EventBus.animal_met.emit(species.id, data.id)
 	if first:
 		EventBus.notification_requested.emit(tr("NOTIFY_NEW_SPECIES") % tr(species.name_key))
+		EventBus.gameplay_event.emit("discover_species", species.id, 1)
 
 
 func _check_global_transitions() -> void:
@@ -280,7 +283,7 @@ func _enter(new_state: State) -> void:
 	var was_busy: bool = is_busy()
 	_state = new_state
 	_state_time = 0.0
-	visual.pose = QuadrupedVisual.Pose.STAND
+	visual.pose = AnimalVisual.Pose.STAND
 	visual.head_down = 0.0
 	visual.happy_eyes = false
 	visual.scratching = false
@@ -305,14 +308,14 @@ func _enter(new_state: State) -> void:
 			visual.head_down = 1.0
 		State.SIT:
 			_state_duration = _rng.randf_range(4.0, 8.0)
-			visual.pose = QuadrupedVisual.Pose.SIT
+			visual.pose = AnimalVisual.Pose.SIT
 			visual.scratching = _rng.randf() < 0.35
 		State.LIE:
 			_state_duration = _rng.randf_range(6.0, 12.0)
-			visual.pose = QuadrupedVisual.Pose.LIE
+			visual.pose = AnimalVisual.Pose.LIE
 		State.SLEEP:
 			_state_duration = 9999.0
-			visual.pose = QuadrupedVisual.Pose.SLEEP
+			visual.pose = AnimalVisual.Pose.SLEEP
 		State.CURIOUS:
 			_state_duration = 8.0
 			visual.wag = 0.9
@@ -604,7 +607,7 @@ func _sync_with_data() -> void:
 	if not data.is_alive():
 		_dying = true
 		# Uscita di scena delicata (D-03): l'animale si addormenta e svanisce.
-		visual.pose = QuadrupedVisual.Pose.SLEEP
+		visual.pose = AnimalVisual.Pose.SLEEP
 		var t: Tween = create_tween()
 		t.tween_interval(1.5)
 		t.tween_property(visual, "scale", Vector3.ONE * 0.01, 1.5).set_ease(Tween.EASE_IN)

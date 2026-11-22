@@ -8,6 +8,7 @@ const LOW_NEED_KEYS: Dictionary = {"hunger": "NOTIFY_NEED_HUNGER", "happiness": 
 
 func _ready() -> void:
 	GameClock.hour_changed.connect(func(_d: int, _h: int) -> void: tick())
+	GameClock.day_started.connect(func(_d: int) -> void: produce())
 
 
 ## Aggiorna tutti gli animali adottati fino all'ora attuale.
@@ -16,7 +17,13 @@ func tick() -> void:
 	# Prima la mangiatoia automatica (D-37), poi l'aggiornamento di bisogni e salute.
 	Feeder.feed_hungry_animals()
 	_caretaker()
+	_companion_finds()
 	GameState.garden.update(now)
+	# La pioggia annaffia l'orto (D-07).
+	if WeatherModel.is_raining(GameClock.time.get_day(), GameClock.time.get_hour()):
+		for i: int in GameState.garden.plots.size():
+			if not GameState.garden.is_empty(i) and not GameState.garden.is_ready(i):
+				GameState.garden.water(i, now)
 	for state: AnimalState in GameState.animals.adopted():
 		var species: SpeciesDefinition = Database.species(state.species_id)
 		if species == null:
@@ -36,6 +43,35 @@ func _caretaker() -> void:
 		if state.is_alive() and state.location == AnimalState.Location.HOME:
 			state.happiness = maxf(state.happiness, 0.5)
 			state.cleanliness = maxf(state.cleanliness, 0.5)
+
+
+## Ogni mattina gli animali da fattoria adottati, sani e a casa regalano
+## uova, latte o lana (D-24). Restituisce quanti oggetti sono stati prodotti.
+func produce() -> int:
+	var n: int = 0
+	for state: AnimalState in GameState.animals.adopted():
+		var species: SpeciesDefinition = Database.species(state.species_id)
+		if species == null or species.produce_item == &"" or not state.is_alive():
+			continue
+		if state.health != AnimalState.Health.HEALTHY or state.location != AnimalState.Location.HOME or state.hunger < 0.2:
+			continue
+		GameState.inventory.add(species.produce_item)
+		var def: ItemDefinition = Database.item(species.produce_item)
+		EventBus.notification_requested.emit(tr("NOTIFY_PRODUCE") % [state.given_name, tr(def.name_key) if def != null else ""])
+		n += 1
+	return n
+
+
+## Abilità dei compagni (D-18): ogni ora, chi segue Gioia ha una possibilità
+## su tre di trovare il suo oggetto preferito (fiori, bacche, noci, pesce…).
+func _companion_finds(chance: float = 0.33) -> void:
+	for state: AnimalState in GameState.animals.companions():
+		var species: SpeciesDefinition = Database.species(state.species_id)
+		if species == null or species.companion_item == &"" or randf() > chance:
+			continue
+		GameState.inventory.add(species.companion_item)
+		var def: ItemDefinition = Database.item(species.companion_item)
+		EventBus.notification_requested.emit(tr("NOTIFY_COMPANION_FOUND") % [state.given_name, tr(def.name_key) if def != null else ""])
 
 
 func adopt(state: AnimalState, raw_name: String) -> bool:

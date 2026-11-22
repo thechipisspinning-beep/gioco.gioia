@@ -35,8 +35,10 @@ static func objective_text(o: Dictionary) -> String:
 			return tr_t.call("OBJ_REFILL_FEEDER")
 		"visit_zone":
 			return tr_t.call("OBJ_VISIT_ZONE") % tr_t.call("ZONE_" + t.to_upper()) if t != "" else tr_t.call("OBJ_VISIT_ANY")
+		"discover_species":
+			return tr_t.call("OBJ_MEET_ANY")
 		"meet_species":
-			return tr_t.call("OBJ_MEET") % tr_t.call("SPECIES_" + t.to_upper())
+			return tr_t.call("OBJ_MEET") % tr_t.call("SPECIES_" + t.to_upper()) if t != "" else tr_t.call("OBJ_MEET_ANY")
 		"collect":
 			return tr_t.call("OBJ_COLLECT") % tr_t.call("ITEM_" + t.to_upper()) if t != "" else tr_t.call("OBJ_COLLECT_ANY")
 	return tr_t.call("OBJ_" + str(o["type"]).to_upper())

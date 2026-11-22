@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"cat"
+name_key = "SPECIES_CAT"
+fact_key = "FACT_CAT"
+wild = false
+size = 0
+zones = PackedStringArray("village", "meadows")
+population = 2
+walk_speed = 1.3
+run_speed = 5.0
+roam_radius = 8.0
+shyness = 0.35
+notice_distance = 7.0
+comfort_distance = 0.0
+active_from_hour = 6
+active_to_hour = 22
+favorite_foods = PackedStringArray("fish", "pet_treat")
+accepted_foods = PackedStringArray("kibble")
+likes_fetch = false
+friendship_to_adopt = 65
+adoption_visit_days = 2
+trust_gain_multiplier = 0.9
+hunger_decay_per_hour = 0.022
+companion_item = &"fish"
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.949, 0.651, 0.353, 1), Color(0.420, 0.420, 0.420, 1), Color(1.000, 0.973, 0.933, 1), Color(0.227, 0.188, 0.188, 1)])
+accent_color = Color(1.000, 0.973, 0.933, 1)
+model_params = {
+"body_length": 0.42,
+"body_radius": 0.13,
+"leg_length": 0.2,
+"head_radius": 0.14,
+"snout_length": 0.04,
+"ears": "pointed",
+"ear_inner": Color(1.000, 0.690, 0.722, 1),
+"tail": "thin",
+"tail_length": 0.4
+}

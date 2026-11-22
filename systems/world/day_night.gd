@@ -18,6 +18,8 @@ const KEYS: Array[Dictionary] = [
 ]
 const MOON_ENERGY: float = 0.22
 
+## 0 = cielo limpido, 1 = molto nuvoloso (impostato dal meteo).
+var weather_dim: float = 0.0
 var environment: Environment
 var sun: DirectionalLight3D
 var moon: DirectionalLight3D
@@ -80,15 +82,16 @@ func apply_hour(hour: float) -> void:
 	var sun_up: float = smoothstep(-0.05, 0.12, sun_dir.y)
 	var moon_up: float = smoothstep(-0.05, 0.12, moon_dir.y)
 	sun.light_color = k["sun"]
-	sun.light_energy = Lighting.sun_energy(float(k["se"]) * sun_up)
+	sun.light_energy = Lighting.sun_energy(float(k["se"]) * sun_up * (1.0 - weather_dim * 0.6))
 	sun.visible = sun.light_energy > 0.01
 	moon.light_energy = Lighting.sun_energy(MOON_ENERGY * moon_up * (1.0 - sun_up))
 	moon.visible = moon.light_energy > 0.01
 	environment.ambient_light_color = k["amb"]
 	environment.ambient_light_energy = Lighting.ambient_energy(float(k["ae"]))
 	environment.fog_light_color = k["hor"]
-	_sky_material.set_shader_parameter("top_color", k["top"])
-	_sky_material.set_shader_parameter("horizon_color", k["hor"])
+	var grey: Color = Color("9aa3b5")
+	_sky_material.set_shader_parameter("top_color", (k["top"] as Color).lerp(grey, weather_dim * 0.7))
+	_sky_material.set_shader_parameter("horizon_color", (k["hor"] as Color).lerp(grey.lightened(0.2), weather_dim * 0.6))
 	_sky_material.set_shader_parameter("ground_color", (k["hor"] as Color).lerp(Palette.GRASS, 0.4))
 	_sky_material.set_shader_parameter("sun_direction", sun_dir)
 	_sky_material.set_shader_parameter("moon_direction", moon_dir)

@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"seagull"
+name_key = "SPECIES_SEAGULL"
+fact_key = "FACT_SEAGULL"
+wild = true
+size = 0
+zones = PackedStringArray("beach")
+population = 4
+walk_speed = 1.2
+run_speed = 4.5
+roam_radius = 10.0
+shyness = 0.8
+notice_distance = 9.0
+comfort_distance = 4.0
+active_from_hour = 5
+active_to_hour = 21
+favorite_foods = PackedStringArray("fish")
+accepted_foods = PackedStringArray("grain")
+likes_fetch = false
+friendship_to_adopt = 90
+adoption_visit_days = 3
+trust_gain_multiplier = 0.55
+hunger_decay_per_hour = 0.022
+companion_item = &"seashell"
+produce_item = &""
+model = &"bird"
+fur_colors = Array[Color]([Color(0.984, 0.984, 0.984, 1)])
+accent_color = Color(0.914, 0.933, 0.953, 1)
+model_params = {
+"size": 0.24,
+"beak": "cone",
+"beak_color": Color(0.949, 0.761, 0.227, 1),
+"legs_color": Color(0.949, 0.639, 0.227, 1),
+"tail": "short",
+"eye_size": 0.18,
+"head_color": Color(1.000, 1.000, 1.000, 1)
+}

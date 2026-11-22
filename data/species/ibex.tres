@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"ibex"
+name_key = "SPECIES_IBEX"
+fact_key = "FACT_IBEX"
+wild = true
+size = 2
+zones = PackedStringArray("mountain")
+population = 3
+walk_speed = 1.2
+run_speed = 6.0
+roam_radius = 14.0
+shyness = 0.9
+notice_distance = 12.0
+comfort_distance = 6.0
+active_from_hour = 6
+active_to_hour = 20
+favorite_foods = PackedStringArray("herb")
+accepted_foods = PackedStringArray("hay", "apple")
+likes_fetch = false
+friendship_to_adopt = 100
+adoption_visit_days = 3
+trust_gain_multiplier = 0.5
+hunger_decay_per_hour = 0.022
+companion_item = &""
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.604, 0.502, 0.408, 1), Color(0.478, 0.392, 0.314, 1)])
+accent_color = Color(0.910, 0.863, 0.784, 1)
+model_params = {
+"body_length": 0.75,
+"body_radius": 0.24,
+"leg_length": 0.55,
+"head_radius": 0.16,
+"snout_length": 0.12,
+"ears": "small",
+"horns": "curved",
+"horn_color": Color(0.541, 0.478, 0.392, 1),
+"tail": "short",
+"neck_length": 1.3
+}

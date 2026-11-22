@@ -29,6 +29,14 @@ func ensure(animal_id: StringName, species_id: StringName, variant: int = 0) -> 
 	return s
 
 
+## Registra uno stato creato altrove (animale selvatico con cui nasce un rapporto).
+func add(state: AnimalState) -> void:
+	if state.id == &"" or _animals.has(state.id):
+		return
+	_animals[state.id] = state
+	animal_added.emit(state)
+
+
 ## Genera un nuovo ID univoco e stabile per un animale.
 func new_id(species_id: StringName) -> StringName:
 	var id: StringName = StringName("%s_%04d" % [species_id, _next_serial])

@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"goat"
+name_key = "SPECIES_GOAT"
+fact_key = "FACT_GOAT"
+wild = false
+size = 1
+zones = PackedStringArray("countryside", "mountain")
+population = 3
+walk_speed = 1.2
+run_speed = 4.5
+roam_radius = 7.0
+shyness = 0.3
+notice_distance = 7.0
+comfort_distance = 0.0
+active_from_hour = 6
+active_to_hour = 20
+favorite_foods = PackedStringArray("hay")
+accepted_foods = PackedStringArray("apple", "carrot", "herb")
+likes_fetch = false
+friendship_to_adopt = 70
+adoption_visit_days = 2
+trust_gain_multiplier = 0.85
+hunger_decay_per_hour = 0.022
+companion_item = &""
+produce_item = &"milk"
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.949, 0.929, 0.902, 1), Color(0.604, 0.478, 0.369, 1), Color(0.416, 0.353, 0.306, 1)])
+accent_color = Color(1.000, 0.973, 0.933, 1)
+model_params = {
+"body_length": 0.5,
+"body_radius": 0.17,
+"leg_length": 0.34,
+"head_radius": 0.14,
+"snout_length": 0.12,
+"ears": "small",
+"horns": "curved",
+"tail": "short",
+"neck_length": 1.2
+}

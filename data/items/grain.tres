@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/items/item_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"grain"
+name_key = "ITEM_GRAIN"
+category = 0
+consumable = true
+icon_color = Color(0.851, 0.698, 0.416, 1)

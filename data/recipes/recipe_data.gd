@@ -16,12 +16,15 @@ const ALL: Array[Dictionary] = [
 		"ingredients": {&"apple": 1, &"strawberry": 2}, "result": &"fruit_salad", "count": 1, "unlock": ""},
 	{"id": &"mushroom_soup", "name_key": "RECIPE_MUSHROOM_SOUP", "for": "gioia",
 		"ingredients": {&"mushroom": 2, &"herb": 1, &"carrot": 1}, "result": &"mushroom_soup", "count": 1, "unlock": "recipe_mushroom_soup"},
+	{"id": &"pancakes", "name_key": "RECIPE_PANCAKES", "for": "gioia",
+		"ingredients": {&"egg": 2, &"milk": 1, &"grain": 1}, "result": &"pancakes", "count": 2, "unlock": ""},
 ]
 
 ## Effetti dei cibi per Gioia: durata in minuti di gioco.
 const MEAL_BUFFS: Dictionary = {
 	&"fruit_salad": {"buff": &"good_mood", "minutes": 180},
 	&"mushroom_soup": {"buff": &"energy", "minutes": 180},
+	&"pancakes": {"buff": &"good_mood", "minutes": 240},
 }
 
 

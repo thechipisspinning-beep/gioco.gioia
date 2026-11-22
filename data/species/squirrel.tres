@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"squirrel"
+name_key = "SPECIES_SQUIRREL"
+fact_key = "FACT_SQUIRREL"
+wild = true
+size = 0
+zones = PackedStringArray("forest")
+population = 4
+walk_speed = 1.4
+run_speed = 6.0
+roam_radius = 8.0
+shyness = 0.8
+notice_distance = 8.0
+comfort_distance = 4.0
+active_from_hour = 6
+active_to_hour = 20
+favorite_foods = PackedStringArray("nuts")
+accepted_foods = PackedStringArray("berries", "strawberry")
+likes_fetch = false
+friendship_to_adopt = 85
+adoption_visit_days = 3
+trust_gain_multiplier = 0.6
+hunger_decay_per_hour = 0.022
+companion_item = &"nuts"
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.788, 0.412, 0.227, 1), Color(0.541, 0.353, 0.227, 1)])
+accent_color = Color(1.000, 0.953, 0.878, 1)
+model_params = {
+"body_length": 0.2,
+"body_radius": 0.09,
+"leg_length": 0.07,
+"head_radius": 0.09,
+"snout_length": 0.02,
+"ears": "pointed",
+"ear_inner": Color(0.788, 0.412, 0.227, 1),
+"tail": "bushy",
+"tail_length": 0.38
+}

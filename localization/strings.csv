@@ -373,3 +373,69 @@ Q_M11,Il primo piatto,The first dish
 Q_M12,L'orto della nonna,Grandma's garden
 REWARD_RECIPE_HERBAL_MEDICINE,nuova ricetta: medicina alle erbe,new recipe: herbal medicine
 REWARD_RECIPE_MUSHROOM_SOUP,nuova ricetta: zuppa di funghi,new recipe: mushroom soup
+SPECIES_CAT,Gatto,Cat
+FACT_CAT,Il gatto fa le fusa anche per calmarsi quando è un po' agitato.,"Cats purr to calm themselves down, too."
+SPECIES_RABBIT,Coniglio,Rabbit
+FACT_RABBIT,"Quando è felice il coniglio fa dei salti buffi chiamati ""binky"".","Happy rabbits do funny jumps called ""binkies""."
+SPECIES_SHEEP,Pecora,Sheep
+FACT_SHEEP,"Le pecore riconoscono i volti dei loro amici, anche umani.","Sheep can recognise the faces of their friends, even humans."
+SPECIES_GOAT,Capra,Goat
+FACT_GOAT,Le capre sono curiosissime e bravissime ad arrampicarsi.,Goats are very curious and great climbers.
+SPECIES_PIG,Maiale,Pig
+FACT_PIG,I maiali sono tra gli animali più intelligenti e amano il fango per rinfrescarsi.,Pigs are among the smartest animals and love mud to cool off.
+SPECIES_COW,Mucca,Cow
+FACT_COW,Le mucche hanno una migliore amica e stanno più tranquille vicino a lei.,Cows have a best friend and feel calmer near her.
+SPECIES_HORSE,Cavallo,Horse
+FACT_HORSE,"Il cavallo può dormire in piedi grazie a un ""blocco"" speciale delle zampe.",Horses can sleep standing up thanks to a special leg lock.
+SPECIES_DONKEY,Asino,Donkey
+FACT_DONKEY,L'asino ha un udito finissimo e grandi orecchie per rinfrescarsi.,Donkeys have great hearing and big ears to cool down.
+SPECIES_CHICKEN,Gallina,Chicken
+FACT_CHICKEN,Le galline chiocciano in modo diverso per dire cose diverse.,Chickens cluck in different ways to say different things.
+SPECIES_DUCK,Anatra,Duck
+FACT_DUCK,Le piume delle anatre non si bagnano grazie a un olio naturale.,Duck feathers stay dry thanks to a natural oil.
+SPECIES_DEER,Cervo,Deer
+FACT_DEER,Il cervo perde le corna ogni anno e gliene crescono di nuove.,Deer lose their antlers every year and grow new ones.
+SPECIES_SQUIRREL,Scoiattolo,Squirrel
+FACT_SQUIRREL,Lo scoiattolo nasconde le noci e ne dimentica alcune: così nascono nuovi alberi!,Squirrels hide nuts and forget some: that's how new trees grow!
+SPECIES_HEDGEHOG,Riccio,Hedgehog
+FACT_HEDGEHOG,Il riccio esce di notte e si appallottola quando ha paura.,Hedgehogs come out at night and curl up when scared.
+SPECIES_OWL,Gufo,Owl
+FACT_OWL,Il gufo può girare la testa quasi del tutto all'indietro.,Owls can turn their heads almost all the way around.
+SPECIES_TURTLE,Tartaruga,Turtle
+FACT_TURTLE,La tartaruga porta sempre la sua casa sulla schiena.,A turtle always carries its home on its back.
+SPECIES_SEAGULL,Gabbiano,Seagull
+FACT_SEAGULL,I gabbiani possono bere anche l'acqua salata del mare.,Seagulls can even drink salty sea water.
+SPECIES_OTTER,Lontra,Otter
+FACT_OTTER,"Le lontre si tengono per mano quando dormono, per non allontanarsi.",Otters hold hands while sleeping so they don't drift apart.
+SPECIES_MARMOT,Marmotta,Marmot
+FACT_MARMOT,Le marmotte fischiano per avvisare le amiche di un pericolo.,Marmots whistle to warn their friends of danger.
+SPECIES_IBEX,Stambecco,Ibex
+FACT_IBEX,Lo stambecco si arrampica su pareti di roccia quasi verticali.,Ibex can climb almost vertical rock walls.
+ITEM_HAY,Fieno,Hay
+ITEM_GRAIN,Mangime,Grain
+ITEM_FISH,Pesce,Fish
+ITEM_NUTS,Noci,Nuts
+ITEM_EGG,Uovo,Egg
+ITEM_MILK,Latte,Milk
+ITEM_WOOL,Lana,Wool
+ITEM_PANCAKES,Frittelle,Pancakes
+RECIPE_PANCAKES,Frittelle,Pancakes
+NOTIFY_PRODUCE,%s ti ha regalato: %s,%s gave you: %s
+NOTIFY_COMPANION_FOUND,%s ha trovato: %s!,%s found: %s!
+WEATHER_CLEAR,Sereno,Clear
+WEATHER_CLOUDY,Nuvoloso,Cloudy
+WEATHER_RAIN,Pioggia,Rain
+PHOTO_SHOOT,Scatta,Snap
+PHOTO_EXIT,Esci,Exit
+PHOTO_HINT,"Modalità foto · inquadra con la telecamera, poi Scatta (E / A)","Photo mode · frame with the camera, then Snap (E / A)"
+PHOTO_SAVED,Foto salvata nel diario!,Photo saved to your journal!
+HUD_PHOTO,Foto,Photo
+JOURNAL_TAB_PHOTOS,Foto,Photos
+JOURNAL_NO_PHOTOS,"Nessuna foto. Premi ""Foto"" (o P) per scattarne una!","No photos yet. Press ""Photo"" (or P) to take one!"
+Q_M13,La fattoria di Lia,Lia's farm
+Q_M14,Un amico della fattoria,A farm friend
+Q_M15,Sulla spiaggia,At the beach
+Q_M16,Gli abitanti del lago,The lake dwellers
+Q_M17,In cima alla montagna,Up the mountain
+Q_M18,Il rifugio è rinato!,The shelter is reborn!
+OBJ_MEET_ANY,Incontra specie diverse,Meet different species

@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"chicken"
+name_key = "SPECIES_CHICKEN"
+fact_key = "FACT_CHICKEN"
+wild = false
+size = 0
+zones = PackedStringArray("countryside", "village")
+population = 4
+walk_speed = 1.1
+run_speed = 3.5
+roam_radius = 7.0
+shyness = 0.4
+notice_distance = 6.0
+comfort_distance = 1.5
+active_from_hour = 5
+active_to_hour = 20
+favorite_foods = PackedStringArray("grain")
+accepted_foods = PackedStringArray("strawberry", "herb")
+likes_fetch = false
+friendship_to_adopt = 60
+adoption_visit_days = 2
+trust_gain_multiplier = 0.9
+hunger_decay_per_hour = 0.022
+companion_item = &""
+produce_item = &"egg"
+model = &"bird"
+fur_colors = Array[Color]([Color(1.000, 0.973, 0.933, 1), Color(0.788, 0.471, 0.243, 1), Color(0.227, 0.188, 0.188, 1)])
+accent_color = Color(1.000, 0.973, 0.933, 1)
+model_params = {
+"size": 0.25,
+"beak": "cone",
+"crest": true,
+"tail": "fan",
+"eye_size": 0.2
+}

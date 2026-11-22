@@ -70,7 +70,7 @@ func set_portrait(enabled: bool) -> void:
 		return
 	_portrait = enabled
 	# Nel ritratto gli animali non coprono Gioia.
-	_camera.set_cull_mask_value(QuadrupedVisual.RENDER_LAYER, not enabled)
+	_camera.set_cull_mask_value(AnimalVisual.RENDER_LAYER, not enabled)
 	if enabled:
 		_saved_view = Vector4(_yaw, _pitch, _target_distance, focus_height)
 		_yaw = target.global_rotation.y if target != null else _yaw

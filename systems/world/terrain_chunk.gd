@@ -216,7 +216,8 @@ func _collectible_for(zone: StringName, h: float, p: Vector2, rng: RandomNumberG
 		return &"seashell"
 	match zone:
 		&"forest":
-			return &"mushroom" if rng.randf() < 0.6 else &"berries"
+			var r: float = rng.randf()
+			return &"mushroom" if r < 0.45 else (&"berries" if r < 0.75 else &"nuts")
 		&"lake", &"mountain":
 			return &"herb" if rng.randf() < 0.7 else &""
 		&"meadows", &"countryside", &"village":

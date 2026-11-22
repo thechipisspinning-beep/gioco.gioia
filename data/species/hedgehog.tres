@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"hedgehog"
+name_key = "SPECIES_HEDGEHOG"
+fact_key = "FACT_HEDGEHOG"
+wild = true
+size = 0
+zones = PackedStringArray("meadows", "forest")
+population = 3
+walk_speed = 0.7
+run_speed = 2.5
+roam_radius = 6.0
+shyness = 0.75
+notice_distance = 6.0
+comfort_distance = 3.0
+active_from_hour = 18
+active_to_hour = 6
+favorite_foods = PackedStringArray("pet_treat")
+accepted_foods = PackedStringArray("apple", "mushroom", "strawberry")
+likes_fetch = false
+friendship_to_adopt = 85
+adoption_visit_days = 3
+trust_gain_multiplier = 0.6
+hunger_decay_per_hour = 0.022
+companion_item = &"mushroom"
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.541, 0.416, 0.322, 1)])
+accent_color = Color(0.910, 0.831, 0.737, 1)
+model_params = {
+"body_length": 0.22,
+"body_radius": 0.13,
+"leg_length": 0.05,
+"head_radius": 0.09,
+"snout_length": 0.06,
+"ears": "round",
+"tail": "none",
+"spikes": true,
+"spike_color": Color(0.353, 0.267, 0.212, 1),
+"face_color": Color(0.910, 0.831, 0.737, 1)
+}

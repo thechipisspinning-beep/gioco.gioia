@@ -16,6 +16,12 @@ enum Size { SMALL, MEDIUM, LARGE }
 @export var wild: bool = false
 @export var size: Size = Size.MEDIUM
 
+@export_group("Dove vive")
+## Zone dell'isola in cui compare (id di IslandLayout.ZONES).
+@export var zones: PackedStringArray = PackedStringArray()
+## Quanti esemplari per zona.
+@export var population: int = 2
+
 @export_group("Movimento")
 @export var walk_speed: float = 1.4
 @export var run_speed: float = 4.5
@@ -52,6 +58,12 @@ enum Size { SMALL, MEDIUM, LARGE }
 @export var cleanliness_decay_per_hour: float = 0.01
 ## Ore di gioco consecutive con un bisogno a zero prima di ammalarsi.
 @export var hours_neglected_before_sickness: float = 12.0
+
+@export_group("Compagno e produzione")
+## Oggetto che trova a volte quando segue Gioia (D-18). Vuoto = nessuna abilità.
+@export var companion_item: StringName = &""
+## Oggetto prodotto ogni giorno se adottato e a casa (uova, latte, lana, D-24).
+@export var produce_item: StringName = &""
 
 @export_group("Aspetto")
 @export var model: StringName = &"quadruped"

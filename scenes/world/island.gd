@@ -15,6 +15,9 @@ var day_night: DayNight
 func _ready() -> void:
 	day_night = DayNight.new()
 	add_child(day_night)
+	var weather: WeatherSystem = WeatherSystem.new()
+	weather.day_night = day_night
+	add_child(weather)
 	streamer = WorldStreamer.new()
 	streamer.name = "Terrain"
 	add_child(streamer)
@@ -50,6 +53,7 @@ func _ready() -> void:
 
 	_build_village()
 	_build_home()
+	_build_farm()
 	_spawn_animals()
 	_spawn_villagers()
 
@@ -134,6 +138,44 @@ func home_door_position() -> Vector3:
 	return p
 
 
+## Fattoria in campagna (zona degli animali da fattoria).
+func _build_farm() -> void:
+	var farm: Node3D = Node3D.new()
+	farm.name = "Farm"
+	add_child(farm)
+	var c: Vector2 = IslandLayout.FLAT_AREAS[2]["center"]
+	var base: Vector3 = Vector3(c.x, ground(c.x, c.y), c.y)
+	BuildingKit.cottage(farm, base + Vector3(-14, 0, -18), 20.0, Color("e9a17a"), Color("a94f3c"), Vector3(9.0, 4.2, 7.0))
+	var g: Callable = ground
+	var corners: Array[Vector3] = [base + Vector3(-22, 0, -6), base + Vector3(24, 0, -6), base + Vector3(24, 0, 26), base + Vector3(-22, 0, 26)]
+	for i: int in 4:
+		var a: Vector3 = corners[i]
+		var b: Vector3 = corners[(i + 1) % 4]
+		if i == 2:
+			# Cancello aperto sul lato verso il villaggio.
+			BuildingKit.fence_line(farm, a, a.lerp(b, 0.42), g)
+			BuildingKit.fence_line(farm, a.lerp(b, 0.58), b, g)
+		else:
+			BuildingKit.fence_line(farm, a, b, g)
+	var lb: LevelBuilder = LevelBuilder.new(farm)
+	for o: Vector3 in [Vector3(8, 0, 2), Vector3(10, 0, 3.5), Vector3(-6, 0, 18), Vector3(15, 0, 20)]:
+		var p: Vector3 = base + o
+		p.y = ground(p.x, p.z)
+		var bale: CylinderMesh = CylinderMesh.new()
+		bale.top_radius = 0.7
+		bale.bottom_radius = 0.7
+		bale.height = 1.1
+		var cs: StaticBody3D = lb.solid_box(Vector3(1.3, 1.2, 1.1), p + Vector3(0, 0.6, 0), Color(0, 0, 0, 0))
+		for child: Node in cs.get_children():
+			if child is MeshInstance3D:
+				child.queue_free()
+		lb.decor(bale, p + Vector3(0, 0.7, 0), Color("e6c66a"), Vector3(0, 0, 90))
+	var trough: BoxMesh = BoxMesh.new()
+	trough.size = Vector3(3.0, 0.5, 0.8)
+	var tp: Vector3 = base + Vector3(2, 0, 10)
+	lb.solid_box(Vector3(3.0, 0.5, 0.8), Vector3(tp.x, ground(tp.x, tp.z) + 0.25, tp.z), Palette.WOOD)
+
+
 func _build_home() -> void:
 	var home: Node3D = Node3D.new()
 	home.name = "GioiaHome"
@@ -189,9 +231,10 @@ func _build_home() -> void:
 
 
 func _spawn_animals() -> void:
-	var village: Vector2 = IslandLayout.FLAT_AREAS[0]["center"]
-	_spawn(&"village_dog", &"dog", Vector2(village.x - 8.0, village.y + 12.0))
-	_spawn(&"forest_fox", &"fox", Vector2(-230.0, 10.0))
+	# Tutte le specie nelle loro zone, attivate vicino a Gioia (Fase 12).
+	var population: AnimalPopulation = AnimalPopulation.new()
+	population.name = "AnimalPopulation"
+	add_child(population)
 
 
 func _spawn_villagers() -> void:

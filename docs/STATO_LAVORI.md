@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 11 completata → prossima: 12 (espansione del mondo). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** 12 completata → prossima: 13 (ottimizzazione e test). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -13,14 +13,14 @@
 | 2 — Architettura e setup progetto | ✅ |
 | 3 — Movimento e telecamera | ✅ (da provare dal committente) |
 | 4 — Protagonista Gioia | ✅ |
-| 5 — Prima area esplorabile | ✅ (terreno di tutta l'isola; contenuti dettagliati nel villaggio e a casa, le altre zone si arricchiscono in Fase 12) |
+| 5 — Prima area esplorabile | ✅ |
 | 6 — Primo animale e interazione | ✅ |
 | 7 — Adozione | ✅ |
 | 8 — Casa e personalizzazione | ✅ |
 | 9 — Missioni e ricompense | ✅ |
 | 10 — Diario e salvataggi | ✅ |
 | 11 — Cucina e giardinaggio | ✅ |
-| 12 — Espansione del mondo | ⏳ |
+| 12 — Espansione del mondo | ✅ |
 | 13 — Ottimizzazione e test | ⏳ |
 
 ## Fase 1 — Concept e GDD ✅
@@ -157,6 +157,22 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Test automatici:** 148 superati, 0 falliti.
 
+## Fase 12 — Espansione del mondo ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| 21 specie (D-09): cane, gatto, coniglio, pecora, capra, maiale, mucca, cavallo, asino, gallina, anatra, volpe, cervo, scoiattolo, riccio, gufo, tartaruga, gabbiano, lontra, marmotta, stambecco — ognuna con zone, orari, cibi, difficoltà di adozione e curiosità | ✅ | Test: dati coerenti, ogni modello si costruisce |
+| Modelli: quadrupedi estesi (orecchie lunghe/tonde/piccole, corna, palchi, criniera, lana, aculei, macchie, muso piatto, code varie), uccelli (beccare, ali), tartarughe (testa nel guscio) | ✅ | Screenshot della fattoria |
+| `AnimalPopulation`: 88 punti di comparsa stabili; animali attivi solo vicino a Gioia (max 30, 14 su mobile/web), rilasciati lontano; gli animali entrano nei salvataggi solo quando nasce un rapporto | ✅ | Test |
+| Fattoria in campagna con stalla, recinto, balle di fieno, abbeveratoio; animali da fattoria nel recinto | ✅ | Screenshot |
+| Produzione (D-24): uova, latte, lana ogni mattina dagli animali adottati a casa; nuova ricetta "frittelle" | ✅ | Test |
+| Abilità dei compagni (D-18): ogni ora possono trovare il loro oggetto (fiori, bacche, noci, pesce, conchiglie…) | ✅ | Test |
+| Meteo (D-07): sereno/nuvoloso/pioggia a blocchi di 6 ore, deterministico; neve sopra i 70 m; il cielo si scurisce; la pioggia annaffia l'orto | ✅ | Test |
+| Modalità foto (D-25) con scheda Foto nel diario (max 30 foto) | ✅ | Da provare dal committente (lo scatto richiede rendering) |
+| Storia: capitoli 13–18 (fattoria, spiaggia, lago, montagna, "Il rifugio è rinato!") | ✅ | Test |
+| Nuovi oggetti: fieno, mangime, pesce, noci, uova, latte, lana; negozio e vendite aggiornati | ✅ | |
+
+**Test automatici:** 154 superati, 0 falliti.
+
 ## Da fare / limiti noti
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri. Su telefono il raggio di caricamento è già ridotto (5 × 5 blocchi); se la costruzione dei blocchi causasse scatti, in Fase 13 si sposterà su un thread separato (build native) o si dividerà su più frame.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
@@ -181,6 +197,8 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | I sentieri dell'isola non venivano letti | Liste di punti non convertite nel tipo giusto | Dichiarate come `PackedVector2Array` |
 | Terreno, erba e fiori slavati su desktop, troppo scuri sul web | I colori per vertice non venivano convertiti da sRGB (e il renderer web lo fa già) | Conversione nello shader solo dove serve |
 | Foschia che velava cielo e colori | Nebbia troppo densa applicata anche al cielo | Nebbia leggera, cielo escluso |
+| Gli animali da fattoria erano sparsi per tutta la campagna | Punti di comparsa scelti in tutta la zona | Comparsa e movimento limitati al recinto della fattoria |
+| "Incontra 15 specie" avrebbe contato i singoli animali (anche più volte) | Usato l'evento di ogni incontro | Nuovo evento solo alla prima scoperta di una specie |
 | Errori di formattazione dei testi delle missioni | Testi mancanti nelle traduzioni | Aggiunti; il runner severo li ha segnalati |
 | Pannello della personalizzazione schiacciato | Lo ScrollContainer non trasmette l'altezza del contenuto | Altezza calcolata dal contenuto |
 | Diario e pausa in alto a sinistra senza sfondo | I pannelli creati da codice restavano di dimensione zero | Ancoraggi e margini impostati insieme (`set_anchors_and_offsets_preset`) |

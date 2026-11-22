@@ -6,7 +6,7 @@ extends Control
 
 signal closed
 
-enum Tab { ANIMALS, FAMILY, QUESTS, PROGRESS }
+enum Tab { ANIMALS, FAMILY, QUESTS, PHOTOS, PROGRESS }
 
 var _tab: Tab = Tab.ANIMALS
 var _content: VBoxContainer
@@ -38,9 +38,9 @@ func open() -> void:
 	var tabs: HBoxContainer = HBoxContainer.new()
 	tabs.add_theme_constant_override("separation", 8)
 	_box.add_child(tabs)
-	for t: int in [Tab.ANIMALS, Tab.FAMILY, Tab.QUESTS, Tab.PROGRESS]:
-		var key: String = ["JOURNAL_TAB_ANIMALS", "JOURNAL_TAB_FAMILY", "JOURNAL_TAB_QUESTS", "JOURNAL_TAB_PROGRESS"][t]
-		var b: Button = MenuHelpers.button(tr(key), 120)
+	for t: int in [Tab.ANIMALS, Tab.FAMILY, Tab.QUESTS, Tab.PHOTOS, Tab.PROGRESS]:
+		var key: String = ["JOURNAL_TAB_ANIMALS", "JOURNAL_TAB_FAMILY", "JOURNAL_TAB_QUESTS", "JOURNAL_TAB_PHOTOS", "JOURNAL_TAB_PROGRESS"][t]
+		var b: Button = MenuHelpers.button(tr(key), 100)
 		b.toggle_mode = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var tab_id: Tab = t as Tab
@@ -88,6 +88,8 @@ func _show_tab(t: Tab) -> void:
 			_fill_family()
 		Tab.QUESTS:
 			_fill_quests()
+		Tab.PHOTOS:
+			_fill_photos()
 		Tab.PROGRESS:
 			_fill_progress()
 
@@ -180,6 +182,30 @@ func _fill_quests() -> void:
 			var q: Dictionary = QuestData.get_quest(id)
 			if q.get("kind", "") != "daily":
 				_content.add_child(MenuHelpers.body("• " + tr(str(q["title_key"])), 17, UITheme.TEXT_SOFT))
+
+
+func _fill_photos() -> void:
+	var photos: PackedStringArray = PhotoMode.list_photos()
+	if photos.is_empty():
+		_content.add_child(MenuHelpers.body(tr("JOURNAL_NO_PHOTOS"), 17, UITheme.TEXT_SOFT))
+		return
+	var grid: GridContainer = GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	_content.add_child(grid)
+	# Dalla più recente.
+	for i: int in range(photos.size() - 1, -1, -1):
+		var img: Image = Image.load_from_file(photos[i])
+		if img == null or img.is_empty():
+			continue
+		img.resize(224, int(img.get_height() * 224.0 / maxf(1.0, img.get_width())))
+		var tex: TextureRect = TextureRect.new()
+		tex.texture = ImageTexture.create_from_image(img)
+		tex.custom_minimum_size = Vector2(224, 126)
+		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		grid.add_child(tex)
 
 
 func _fill_progress() -> void:

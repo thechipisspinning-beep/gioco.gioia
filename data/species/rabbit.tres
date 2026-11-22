@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"rabbit"
+name_key = "SPECIES_RABBIT"
+fact_key = "FACT_RABBIT"
+wild = false
+size = 0
+zones = PackedStringArray("meadows", "village")
+population = 3
+walk_speed = 1.2
+run_speed = 5.5
+roam_radius = 7.0
+shyness = 0.5
+notice_distance = 7.0
+comfort_distance = 2.0
+active_from_hour = 5
+active_to_hour = 21
+favorite_foods = PackedStringArray("carrot", "carrot_snack")
+accepted_foods = PackedStringArray("strawberry", "herb")
+likes_fetch = false
+friendship_to_adopt = 60
+adoption_visit_days = 2
+trust_gain_multiplier = 0.9
+hunger_decay_per_hour = 0.022
+companion_item = &"carrot"
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.949, 0.929, 0.902, 1), Color(0.690, 0.541, 0.416, 1), Color(0.541, 0.502, 0.471, 1)])
+accent_color = Color(1.000, 0.973, 0.933, 1)
+model_params = {
+"body_length": 0.28,
+"body_radius": 0.14,
+"leg_length": 0.08,
+"head_radius": 0.13,
+"snout_length": 0.02,
+"ears": "long",
+"tail": "short",
+"tail_color": Color(1.000, 1.000, 1.000, 1)
+}

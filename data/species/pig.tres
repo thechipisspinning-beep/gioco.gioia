@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"pig"
+name_key = "SPECIES_PIG"
+fact_key = "FACT_PIG"
+wild = false
+size = 1
+zones = PackedStringArray("countryside")
+population = 3
+walk_speed = 1.0
+run_speed = 3.5
+roam_radius = 7.0
+shyness = 0.25
+notice_distance = 7.0
+comfort_distance = 0.0
+active_from_hour = 6
+active_to_hour = 20
+favorite_foods = PackedStringArray("apple")
+accepted_foods = PackedStringArray("carrot", "mushroom", "strawberry")
+likes_fetch = false
+friendship_to_adopt = 70
+adoption_visit_days = 2
+trust_gain_multiplier = 0.85
+hunger_decay_per_hour = 0.022
+companion_item = &""
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.969, 0.722, 0.690, 1), Color(0.914, 0.639, 0.608, 1)])
+accent_color = Color(1.000, 0.827, 0.800, 1)
+model_params = {
+"body_length": 0.6,
+"body_radius": 0.24,
+"leg_length": 0.16,
+"head_radius": 0.17,
+"snout_length": 0.02,
+"snout": "flat",
+"nose_color": Color(0.941, 0.561, 0.525, 1),
+"ears": "small",
+"tail": "curly"
+}

@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"donkey"
+name_key = "SPECIES_DONKEY"
+fact_key = "FACT_DONKEY"
+wild = false
+size = 2
+zones = PackedStringArray("countryside")
+population = 2
+walk_speed = 1.0
+run_speed = 4.0
+roam_radius = 7.0
+shyness = 0.3
+notice_distance = 8.0
+comfort_distance = 0.0
+active_from_hour = 6
+active_to_hour = 20
+favorite_foods = PackedStringArray("carrot", "hay")
+accepted_foods = PackedStringArray("apple", "grain")
+likes_fetch = false
+friendship_to_adopt = 75
+adoption_visit_days = 2
+trust_gain_multiplier = 0.8
+hunger_decay_per_hour = 0.022
+companion_item = &""
+produce_item = &""
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.604, 0.565, 0.565, 1), Color(0.478, 0.416, 0.369, 1)])
+accent_color = Color(0.949, 0.929, 0.902, 1)
+model_params = {
+"body_length": 0.85,
+"body_radius": 0.28,
+"leg_length": 0.55,
+"head_radius": 0.19,
+"snout_length": 0.18,
+"ears": "long",
+"tail": "tuft",
+"tail_length": 0.5,
+"mane": true,
+"mane_color": Color(0.227, 0.188, 0.188, 1),
+"neck_length": 1.4
+}
