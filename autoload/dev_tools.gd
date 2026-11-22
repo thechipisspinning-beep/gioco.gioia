@@ -60,10 +60,13 @@ func _process(delta: float) -> void:
 		var should_be_down: bool = _elapsed >= float(h["from"]) and _elapsed < float(h["to"])
 		if should_be_down != bool(h["down"]):
 			h["down"] = should_be_down
-			if should_be_down:
-				Input.action_press(h["action"])
-			else:
-				Input.action_release(h["action"])
+			# Evento reale (non solo action_press): così lo ricevono anche
+			# _input/_unhandled_input e i pulsanti dell'interfaccia.
+			var ev: InputEventAction = InputEventAction.new()
+			ev.action = h["action"]
+			ev.pressed = should_be_down
+			ev.strength = 1.0 if should_be_down else 0.0
+			Input.parse_input_event(ev)
 	for l: Dictionary in _looks:
 		if _elapsed >= float(l["from"]) and _elapsed < float(l["to"]):
 			look_requested.emit(float(l["yaw"]) * delta, float(l["pitch"]) * delta)

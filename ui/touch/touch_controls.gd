@@ -11,6 +11,9 @@ extends Control
 ## quindi il gameplay non sa da dove arriva l'input.
 ## Si mostrano solo su dispositivi touch (o con l'argomento `--touch`).
 
+## Premuto il pulsante "interagisci" (compare solo quando c'è qualcosa vicino).
+signal interact_pressed
+
 @export var camera_rig: CameraRig
 @export var joystick_radius: float = 90.0
 @export_range(0.5, 1.0) var run_threshold: float = 0.92
@@ -22,10 +25,17 @@ var _move_origin: Vector2 = Vector2.ZERO
 var _move_vector: Vector2 = Vector2.ZERO
 var _look_touch: int = -1
 var _jump_touch: int = -1
+var _active: bool = true
+## Mostra il pulsante "interagisci" (impostato dall'HUD).
+var interact_available: bool = false:
+	set(value):
+		interact_available = value
+		queue_redraw()
 
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	# Senza touch il nodo resta nascosto e non intercetta nulla.
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = should_show()
 	set_process_input(visible)
@@ -36,7 +46,21 @@ static func should_show() -> bool:
 	return DisplayServer.is_touchscreen_available() or OS.get_cmdline_user_args().has("--touch")
 
 
+## Disattiva i controlli (es. mentre un menu è aperto, così i tocchi arrivano ai pulsanti).
+func set_active(active: bool) -> void:
+	_active = active
+	if not active:
+		_move_touch = -1
+		_look_touch = -1
+		_jump_touch = -1
+		_set_move(Vector2.ZERO)
+		Input.action_release("jump")
+	queue_redraw()
+
+
 func _input(event: InputEvent) -> void:
+	if not visible or not _active:
+		return
 	if event is InputEventScreenTouch:
 		_on_touch(event as InputEventScreenTouch)
 	elif event is InputEventScreenDrag:
@@ -45,6 +69,10 @@ func _input(event: InputEvent) -> void:
 
 func _on_touch(touch: InputEventScreenTouch) -> void:
 	if touch.pressed:
+		if interact_available and touch.position.distance_to(_interact_button_center()) <= jump_button_radius * 1.1:
+			interact_pressed.emit()
+			get_viewport().set_input_as_handled()
+			return
 		if _jump_touch == -1 and touch.position.distance_to(_jump_button_center()) <= jump_button_radius * 1.15:
 			_jump_touch = touch.index
 			Input.action_press("jump")
@@ -104,6 +132,10 @@ func _press_axis(negative: StringName, positive: StringName, value: float) -> vo
 		Input.action_release(positive)
 
 
+func _interact_button_center() -> Vector2:
+	return _jump_button_center() + Vector2(-20.0, -150.0)
+
+
 func _jump_button_center() -> Vector2:
 	return Vector2(size.x - 120.0, size.y - 130.0)
 
@@ -130,6 +162,14 @@ func _draw() -> void:
 	var p: PackedVector2Array = PackedVector2Array([
 		jump_center + Vector2(0, -24), jump_center + Vector2(22, 10), jump_center + Vector2(-22, 10)])
 	draw_colored_polygon(p, Color(0.36, 0.27, 0.42, 0.8))
+	if interact_available and _active:
+		# Pulsante "interagisci": cerchio corallo con una mano stilizzata (palmo + dita).
+		var ic: Vector2 = _interact_button_center()
+		draw_circle(ic, jump_button_radius, Color(1.0, 0.54, 0.48, 0.85))
+		draw_arc(ic, jump_button_radius, 0.0, TAU, 48, outline, 4.0, true)
+		draw_circle(ic + Vector2(0, 8), 16.0, Color.WHITE)
+		for i: int in 4:
+			draw_circle(ic + Vector2(-13.0 + i * 8.7, -12.0 - absf(1.5 - i) * -2.0), 5.0, Color.WHITE)
 
 
 func _notification(what: int) -> void:

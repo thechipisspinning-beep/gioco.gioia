@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"fox"
+name_key = "SPECIES_FOX"
+fact_key = "FACT_FOX"
+wild = true
+size = 1
+walk_speed = 1.3
+run_speed = 6.0
+roam_radius = 8.0
+shyness = 0.85
+notice_distance = 10.0
+comfort_distance = 5.0
+active_from_hour = 16
+active_to_hour = 9
+favorite_foods = PackedStringArray("berries")
+accepted_foods = PackedStringArray("apple")
+likes_fetch = false
+friendship_to_adopt = 90
+adoption_visit_days = 3
+trust_gain_multiplier = 0.6
+hunger_decay_per_hour = 0.02
+happiness_decay_per_hour = 0.015
+cleanliness_decay_per_hour = 0.008
+hours_neglected_before_sickness = 14.0
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.93, 0.5, 0.22, 1), Color(0.86, 0.42, 0.2, 1)])
+accent_color = Color(0.99, 0.96, 0.92, 1)
+model_params = {
+"body_length": 0.6,
+"body_height": 0.45,
+"body_radius": 0.16,
+"leg_length": 0.28,
+"head_radius": 0.15,
+"snout_length": 0.17,
+"ears": "pointed",
+"tail": "bushy",
+"tail_length": 0.42,
+"leg_color": Color(0.25, 0.18, 0.16, 1)
+}

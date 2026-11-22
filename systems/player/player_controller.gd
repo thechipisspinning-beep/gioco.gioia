@@ -50,7 +50,12 @@ var _is_running: bool = false
 var _move_input: Vector2 = Vector2.ZERO
 
 
+## Quando è vero (menu aperti, dialoghi) Gioia ignora l'input di movimento.
+var input_locked: bool = false
+
+
 func _ready() -> void:
+	add_to_group(&"player")
 	floor_max_angle = deg_to_rad(46.0)
 	floor_snap_length = 0.35
 	floor_constant_speed = true
@@ -58,8 +63,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	_move_input = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	_is_running = Input.is_action_pressed("run") and _move_input.length() > 0.1
+	_move_input = Vector2.ZERO if input_locked else Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	_is_running = not input_locked and Input.is_action_pressed("run") and _move_input.length() > 0.1
 
 	_update_timers(delta)
 	_apply_gravity(delta)
@@ -94,7 +99,7 @@ func _update_timers(delta: float) -> void:
 		_coyote_timer = coyote_time
 	else:
 		_coyote_timer = maxf(_coyote_timer - delta, 0.0)
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_just_pressed("jump") and not input_locked:
 		_jump_buffer_timer = jump_buffer_time
 	else:
 		_jump_buffer_timer = maxf(_jump_buffer_timer - delta, 0.0)

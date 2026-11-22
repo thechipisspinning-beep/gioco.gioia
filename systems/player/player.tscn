@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://systems/player/player_controller.gd" id="1"]
 [ext_resource type="Script" path="res://systems/player/player_visual.gd" id="2"]
+[ext_resource type="Script" path="res://systems/interaction/interactor.gd" id="3"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.28
@@ -19,3 +20,6 @@ shape = SubResource("capsule")
 [node name="Visual" type="Node3D" parent="." node_paths=PackedStringArray("controller")]
 script = ExtResource("2")
 controller = NodePath("..")
+
+[node name="Interactor" type="Node" parent="."]
+script = ExtResource("3")

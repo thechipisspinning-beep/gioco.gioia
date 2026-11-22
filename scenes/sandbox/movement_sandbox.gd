@@ -1,6 +1,7 @@
 extends Node3D
 ## Sandbox della Fase 3: area di prova per movimento e telecamera.
 ##
+## Ospita anche i primi animali (Fase 6): un cane e una volpe.
 ## Contiene: prato con fiori, sentiero, rampe di pendenza crescente (l'ultima
 ## troppo ripida da salire), scala, piattaforme per il salto (una troppo alta),
 ## tunnel e casetta per verificare che la telecamera non attraversi i muri,
@@ -204,5 +205,8 @@ func _spawn_player() -> void:
 
 	var hud: Node = HUD_SCENE.instantiate()
 	add_child(hud)
-	var touch: TouchControls = hud.get_node("%TouchControls") as TouchControls
-	touch.camera_rig = camera_rig
+	hud.call("setup", player, camera_rig)
+
+	# Animali: un cane socievole nel prato e una volpe timida vicino al laghetto.
+	AnimalSpawner.spawn(self, &"sandbox_dog", &"dog", Vector3(-2.0, 0.1, 3.0))
+	AnimalSpawner.spawn(self, &"sandbox_fox", &"fox", Vector3(-20.0, 0.1, -6.0))

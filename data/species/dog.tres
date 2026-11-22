@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="SpeciesDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/animals/species_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"dog"
+name_key = "SPECIES_DOG"
+fact_key = "FACT_DOG"
+wild = false
+size = 1
+walk_speed = 1.5
+run_speed = 5.2
+roam_radius = 9.0
+shyness = 0.05
+notice_distance = 8.0
+comfort_distance = 0.0
+active_from_hour = 6
+active_to_hour = 22
+favorite_foods = PackedStringArray("kibble")
+accepted_foods = PackedStringArray("apple")
+likes_fetch = true
+friendship_to_adopt = 60
+adoption_visit_days = 1
+trust_gain_multiplier = 1.0
+hunger_decay_per_hour = 0.025
+happiness_decay_per_hour = 0.02
+cleanliness_decay_per_hour = 0.012
+hours_neglected_before_sickness = 12.0
+model = &"quadruped"
+fur_colors = Array[Color]([Color(0.83, 0.62, 0.38, 1), Color(0.38, 0.27, 0.2, 1), Color(0.95, 0.9, 0.82, 1), Color(0.18, 0.16, 0.16, 1)])
+accent_color = Color(0.99, 0.95, 0.88, 1)
+model_params = {
+"body_length": 0.62,
+"body_height": 0.5,
+"body_radius": 0.19,
+"leg_length": 0.3,
+"head_radius": 0.17,
+"snout_length": 0.13,
+"ears": "floppy",
+"tail": "thin",
+"tail_length": 0.3
+}

@@ -5,3 +5,28 @@ TOUCH_JUMP,Salta,Jump
 HINT_CONTROLS_DESKTOP,"WASD: muoviti · Shift: corri · Spazio: salta · Clic: controlla la telecamera · Rotella: zoom · Esc: libera il mouse","WASD: move · Shift: run · Space: jump · Click: control camera · Wheel: zoom · Esc: release mouse"
 HINT_CONTROLS_PAD,"Stick sinistro: muoviti · R2: corri · X/□: salta · Stick destro: telecamera · L1/R1: zoom","Left stick: move · R2: run · X/□: jump · Right stick: camera · L1/R1: zoom"
 HINT_CONTROLS_TOUCH,"Joystick: muoviti (fino al bordo per correre) · Trascina a destra: telecamera","Joystick: move (push to the edge to run) · Drag on the right: camera"
+SPECIES_DOG,Cane,Dog
+SPECIES_FOX,Volpe,Fox
+FACT_DOG,Il cane riconosce decine di parole e capisce il tono della tua voce.,Dogs can learn dozens of words and understand the tone of your voice.
+FACT_FOX,La volpe usa la coda folta come coperta quando dorme.,Foxes use their bushy tail as a blanket when they sleep.
+ITEM_KIBBLE,Crocchette,Kibble
+ITEM_APPLE,Mela,Apple
+ITEM_BERRIES,Frutti di bosco,Berries
+ITEM_BALL,Pallina,Ball
+ITEM_BRUSH,Spazzola,Brush
+ACTION_PET,Accarezza,Pet
+ACTION_FEED,Dai %s (%d),Give %s (%d)
+ACTION_PLAY_BALL,Lancia la pallina,Throw the ball
+ACTION_BRUSH,Spazzola,Brush
+ACTION_CANCEL,Annulla,Cancel
+PROMPT_INTERACT_KEY,[E] Interagisci,[E] Interact
+PROMPT_INTERACT_PAD,[A] Interagisci,[A] Interact
+PROMPT_INTERACT_TOUCH,Tocca il pulsante con la mano,Tap the hand button
+ANIMAL_STATUS_SLEEPING,Sta dormendo… Zzz,Sleeping… Zzz
+ANIMAL_STATUS_SCARED,Che spavento! Lascialo calmare,Got scared! Let it calm down
+ANIMAL_STATUS_SHY,"Animale timido: avvicinati piano, senza correre","Shy animal: approach slowly, don't run"
+NOTIFY_NEW_SPECIES,Nuovo animale nel diario: %s!,New animal in your journal: %s!
+NOTIFY_FOOD_REFUSED,A %s non piace: %s,%s doesn't like: %s
+NOTIFY_FOOD_FAVORITE,È il cibo preferito di %s!,That's %s's favourite food!
+NOTIFY_ANIMAL_TIRED,%s ne ha abbastanza per oggi. Torna domani!,%s has had enough for today. Come back tomorrow!
+NOTIFY_FRIENDSHIP_UP,L'amicizia con %s cresce: %d cuori su 5,Your friendship with %s grows: %d of 5 hearts

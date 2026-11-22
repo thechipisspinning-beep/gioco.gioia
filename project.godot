@@ -19,6 +19,8 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 [autoload]
 
 EventBus="*res://autoload/event_bus.gd"
+Database="*res://autoload/database.gd"
+GameState="*res://autoload/game_state.gd"
 GameClock="*res://autoload/game_clock.gd"
 DevTools="*res://autoload/dev_tools.gd"
 
