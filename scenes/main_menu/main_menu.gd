@@ -2,7 +2,7 @@ extends Control
 ## Menu principale: Continua, Nuova partita (3 slot + Modalità serena),
 ## Carica partita, Lingua, Esci.
 
-const WORLD_SCENE: String = "res://scenes/sandbox/movement_sandbox.tscn"
+const WORLD_SCENE: String = "res://scenes/world/island.tscn"
 
 var _main_box: VBoxContainer
 var _dialog: VBoxContainer

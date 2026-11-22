@@ -26,6 +26,10 @@ func _run() -> void:
 		_collect_test_files(dir, files)
 	files.sort()
 
+	var catcher: ErrorCatcher = ErrorCatcher.new()
+	OS.add_logger(catcher)
+	catcher.take()
+
 	var passed: int = 0
 	var failed: int = 0
 	var failed_names: PackedStringArray = PackedStringArray()
@@ -34,7 +38,8 @@ func _run() -> void:
 		if filter != "" and not path.contains(filter):
 			continue
 		var script: GDScript = load(path) as GDScript
-		if script == null:
+		catcher.take()
+		if script == null or not script.can_instantiate():
 			print("ERRORE: impossibile caricare ", path)
 			failed += 1
 			failed_names.append(path)
@@ -48,6 +53,9 @@ func _run() -> void:
 			test.before_each()
 			await test.call(method_name)
 			test.after_each()
+			# Un errore del motore durante il test (es. errore di script) lo fa fallire.
+			for err: String in catcher.take():
+				test.fail("errore durante il test: " + err)
 			var label: String = "%s::%s" % [path.get_file().get_basename(), method_name]
 			if test.get_failures().is_empty():
 				passed += 1

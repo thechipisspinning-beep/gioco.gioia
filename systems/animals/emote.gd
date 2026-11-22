@@ -44,7 +44,7 @@ func _play(kind: Kind) -> void:
 			bar.material_override = ToonMaterials.get_material(Palette.FLOWER_YELLOW)
 			bar.position.y = 0.15
 			add_child(bar)
-			add_child(_ball(0.035, Palette.FLOWER_YELLOW))
+			_ball(0.035, Palette.FLOWER_YELLOW)  # _ball aggiunge già il nodo come figlio
 			var t: Tween = create_tween()
 			t.tween_property(self, "position:y", position.y + 0.2, 0.15)
 			t.tween_interval(0.6)

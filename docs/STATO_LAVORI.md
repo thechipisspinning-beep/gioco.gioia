@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 4 completata → prossima: 5 (prima area esplorabile e ciclo giorno/notte). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** 5 completata → prossima: 8 (casa e personalizzazione). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -13,7 +13,7 @@
 | 2 — Architettura e setup progetto | ✅ |
 | 3 — Movimento e telecamera | ✅ (da provare dal committente) |
 | 4 — Protagonista Gioia | ✅ |
-| 5 — Prima area esplorabile | ⏳ |
+| 5 — Prima area esplorabile | ✅ (terreno di tutta l'isola; contenuti dettagliati nel villaggio e a casa, le altre zone si arricchiscono in Fase 12) |
 | 6 — Primo animale e interazione | ✅ |
 | 7 — Adozione | ✅ (mangiatoie automatiche D-37 rimandate alla Fase 8, con la casa) |
 | 8 — Casa e personalizzazione | ⏳ |
@@ -99,8 +99,24 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Test automatici:** 97 superati, 0 falliti.
 
+## Fase 5 — Prima area esplorabile ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| `IslandLayout` (dati): isola di ~1,9 km di diametro, 7 zone, aree spianate, lago, 7 sentieri, casa di Gioia | ✅ | Test |
+| `TerrainModel`: altezza e colore deterministici (costa irregolare, colline, montagna a nord con neve, lago, spiagge, sentieri) | ✅ | 8 test |
+| `WorldStreamer` + `TerrainChunk`: blocchi da 64 m caricati/scaricati attorno a Gioia, collisione heightmap, alberi/cespugli/rocce/canne in MultiMesh, erba e fiori solo vicino | ✅ | Test: carica, scarica, memoria stabile; blocco costruito in 5–12 ms |
+| `PropMeshes`: alberi tondi e pini, cespugli, rocce, erba, fiori, canne fusi in una mesh per tipo (un materiale) | ✅ | Screenshot |
+| `DayNight`: sole e luna che si muovono, cielo con stelle (shader), colori per fascia oraria, compensazione per il web | ✅ | Test: sole a mezzogiorno, luna a mezzanotte |
+| Mare con shader stilizzato; acqua profonda non attraversabile (Gioia scivola lungo la riva; gli animali la evitano) | ✅ | Test con fisica sulla costa |
+| Villaggio: piazza, fontana, 6 casette colorate, lampioni, panchine, cassetta del veterinario | ✅ | Screenshot |
+| Casa di Gioia (il rifugio della nonna) con giardino recintato e specchio; gli animali adottati vivono nel giardino | ✅ | Screenshot |
+| `ZoneTracker`: nome della zona quando ci si entra, luoghi scoperti nel diario | ✅ | |
+| Menu principale → isola; versione web provata in Chromium fino alla personalizzazione | ✅ | Screenshot |
+
+**Test automatici:** 109 superati, 0 falliti.
+
 ## Da fare / limiti noti
-- **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri; il budget verrà verificato in Fase 5.
+- **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri. Su telefono il raggio di caricamento è già ridotto (5 × 5 blocchi); se la costruzione dei blocchi causasse scatti, in Fase 13 si sposterà su un thread separato (build native) o si dividerà su più frame.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
 - **Controller fisico:** mappato ma non provato con un controller vero (qui non c'è hardware).
 
@@ -117,5 +133,10 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | Curare un animale lo faceva riammalare subito | Il tempo non ancora simulato veniva calcolato dopo la cura | La cura aggiorna prima lo stato all'ora attuale |
 | Un animale malato che dormiva non si poteva curare | Nessuna azione disponibile durante il sonno | La medicina si può dare anche mentre dorme |
 | Un compagno poteva comparire nella scena sbagliata durante un cambio di scena | Anche il gestore della scena in uscita reagiva | Agisce solo il gestore della scena corrente |
+| Il test runner considerava superati i test interrotti da un errore di script | Gli errori del motore non venivano intercettati | `ErrorCatcher` (Logger) fa fallire ogni test con errori |
+| Il punto esclamativo della volpe spaventata non funzionava | Nodo aggiunto due volte | Corretto (trovato grazie al runner più severo) |
+| I sentieri dell'isola non venivano letti | Liste di punti non convertite nel tipo giusto | Dichiarate come `PackedVector2Array` |
+| Terreno, erba e fiori slavati su desktop, troppo scuri sul web | I colori per vertice non venivano convertiti da sRGB (e il renderer web lo fa già) | Conversione nello shader solo dove serve |
+| Foschia che velava cielo e colori | Nebbia troppo densa applicata anche al cielo | Nebbia leggera, cielo escluso |
 | Pannello della personalizzazione schiacciato | Lo ScrollContainer non trasmette l'altezza del contenuto | Altezza calcolata dal contenuto |
 | Diario e pausa in alto a sinistra senza sfondo | I pannelli creati da codice restavano di dimensione zero | Ancoraggi e margini impostati insieme (`set_anchors_and_offsets_preset`) |

@@ -17,8 +17,20 @@ uniform float rim_power : hint_range(0.5, 8.0) = 3.0;
 // (usato da MultiMesh per fiori ed erba: un solo materiale, tanti colori).
 uniform bool use_vertex_color = false;
 
+// I colori per vertice/istanza sono scritti in sRGB (come la palette) ma lo
+// shader li riceve così come sono: vanno convertiti in lineare, altrimenti
+// risultano più chiari e slavati.
+// Il renderer Compatibility (web) li converte già da solo.
+vec3 srgb_to_linear(vec3 c) {
+#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+	return c;
+#else
+	return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), c));
+#endif
+}
+
 void fragment() {
-	ALBEDO = albedo.rgb * (use_vertex_color ? COLOR.rgb : vec3(1.0));
+	ALBEDO = albedo.rgb * (use_vertex_color ? srgb_to_linear(COLOR.rgb) : vec3(1.0));
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.0;
 }

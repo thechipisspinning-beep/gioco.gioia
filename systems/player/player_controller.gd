@@ -128,8 +128,27 @@ func _apply_horizontal_movement(delta: float) -> void:
 	if not is_on_floor():
 		rate *= air_control
 	horizontal = horizontal.move_toward(target, rate * delta)
+	horizontal = _avoid_deep_water(horizontal)
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
+
+
+## L'acqua profonda respinge dolcemente (D-13): Gioia scivola lungo la riva
+## invece di entrare. Si controlla un punto poco più avanti nella direzione di marcia.
+func _avoid_deep_water(horizontal: Vector3) -> Vector3:
+	if horizontal.length_squared() < 0.0001:
+		return horizontal
+	var ahead: Vector3 = global_position + horizontal.normalized() * 0.6
+	if WorldQuery.is_walkable(ahead):
+		return horizontal
+	# Prova a scivolare lungo uno dei due assi.
+	var only_x: Vector3 = Vector3(horizontal.x, 0.0, 0.0)
+	var only_z: Vector3 = Vector3(0.0, 0.0, horizontal.z)
+	if only_x.length() > 0.05 and WorldQuery.is_walkable(global_position + only_x.normalized() * 0.6):
+		return only_x
+	if only_z.length() > 0.05 and WorldQuery.is_walkable(global_position + only_z.normalized() * 0.6):
+		return only_z
+	return Vector3.ZERO
 
 
 func _try_jump() -> void:

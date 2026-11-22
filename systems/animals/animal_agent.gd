@@ -288,9 +288,15 @@ func _enter(new_state: State) -> void:
 		State.IDLE:
 			_state_duration = _rng.randf_range(1.5, 4.0)
 		State.WANDER:
-			var angle: float = _rng.randf() * TAU
-			var dist: float = _rng.randf_range(2.0, species.roam_radius)
-			_target = home_position + Vector3(cos(angle) * dist, 0.0, sin(angle) * dist)
+			# Sceglie una meta camminabile attorno a casa (fino a 6 tentativi).
+			_target = home_position
+			for attempt: int in 6:
+				var angle: float = _rng.randf() * TAU
+				var dist: float = _rng.randf_range(2.0, species.roam_radius)
+				var candidate: Vector3 = home_position + Vector3(cos(angle) * dist, 0.0, sin(angle) * dist)
+				if WorldQuery.is_walkable(candidate):
+					_target = candidate
+					break
 			_state_duration = 12.0
 		State.SNIFF:
 			_state_duration = _rng.randf_range(2.0, 4.0)
@@ -517,6 +523,10 @@ func _move_to(target: Vector3, speed: float, delta: float, stop_distance: float)
 		return true
 	var dir: Vector3 = to.normalized()
 	dir = _avoid_obstacles(dir)
+	if not WorldQuery.is_walkable(global_position + dir * 0.8):
+		# Acqua profonda davanti: si ferma (e sceglierà un'altra meta).
+		_brake(delta)
+		return true
 	var desired: Vector3 = dir * speed
 	var horizontal: Vector3 = Vector3(velocity.x, 0.0, velocity.z).move_toward(desired, 12.0 * delta)
 	velocity.x = horizontal.x

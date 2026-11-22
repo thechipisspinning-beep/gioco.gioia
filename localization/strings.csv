@@ -153,3 +153,11 @@ STYLE_FLOWER_CROWN,Corona di fiori,Flower crown
 STYLE_BACKPACK,Zainetto,Backpack
 MIRROR_TITLE,Specchio,Mirror
 MIRROR_CUSTOMIZE,Cambia aspetto,Change look
+ZONE_VILLAGE,Villaggio,Village
+ZONE_COUNTRYSIDE,Campagna,Countryside
+ZONE_FOREST,Foresta,Forest
+ZONE_LAKE,Lago,Lake
+ZONE_MOUNTAIN,Montagna,Mountain
+ZONE_MEADOWS,Prati fioriti,Flower meadows
+ZONE_BEACH,Spiaggia,Beach
+NOTIFY_NEW_ZONE,Nuovo luogo scoperto: %s,New place discovered: %s

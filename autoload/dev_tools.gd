@@ -2,7 +2,7 @@ extends Node
 ## Strumenti di sviluppo controllati da riga di comando (argomenti dopo `--`).
 ## Non fanno nulla se non vengono passati argomenti: nelle partite normali sono inerti.
 ##
-##   --scene=res://percorso.tscn          apre direttamente una scena
+##   --scene=res://percorso.tscn          apre direttamente una scena (gestito da Boot)
 ##   --hold=azione:inizio:fine,...        tiene premuta un'azione tra due istanti (secondi)
 ##   --look=yaw:pitch:inizio:fine         ruota la telecamera (gradi/secondo) in un intervallo
 ##   --shot=secondi:/percorso.png,...     salva screenshot agli istanti indicati
@@ -32,10 +32,7 @@ func _ready() -> void:
 		return
 	active = true
 	for arg: String in args:
-		if arg.begins_with("--scene="):
-			var scene_path: String = arg.trim_prefix("--scene=")
-			get_tree().change_scene_to_file.call_deferred(scene_path)
-		elif arg.begins_with("--hold="):
+		if arg.begins_with("--hold="):
 			for part: String in arg.trim_prefix("--hold=").split(","):
 				var p: PackedStringArray = part.split(":")
 				if p.size() == 3:

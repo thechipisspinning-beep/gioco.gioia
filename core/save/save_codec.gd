@@ -26,7 +26,12 @@ static func encode(game: Dictionary, summary: Dictionary, saved_at: int) -> Stri
 ## I salvataggi di versioni precedenti vengono migrati; quelli di versioni
 ## future (gioco più vecchio del salvataggio) vengono rifiutati.
 static func decode(text: String) -> Dictionary:
-	var parsed: Variant = JSON.parse_string(text)
+	# JSON.parse (non parse_string) non scrive errori nel log per i file rovinati:
+	# sono un caso previsto, gestito restituendo {}.
+	var json: JSON = JSON.new()
+	if json.parse(text) != OK:
+		return {}
+	var parsed: Variant = json.data
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}
 	var doc: Dictionary = parsed as Dictionary
