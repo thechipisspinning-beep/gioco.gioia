@@ -36,7 +36,7 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | `DevTools`: input simulato, screenshot, scena di avvio da riga di comando | ✅ | Usato per le verifiche visive |
 | Runner di test headless (`tests/run_tests.gd`) | ✅ | Verificato che rilevi anche i fallimenti asincroni |
 | Esportazioni Web, Windows, Linux (`export_presets.cfg`) | ✅ Web provata · ⏳ Windows/Linux non ancora provate | Build web avviata in Chromium (desktop e telefono emulato) |
-| CI GitHub Actions: test + build web + pubblicazione su Pages | 🔧 | Vedi "Da fare" sotto |
+| CI GitHub Actions: test + build web + pubblicazione su Pages | ✅ | Prima esecuzione completa riuscita; gioco online su https://thechipisspinning-beep.github.io/gioco.gioia/ |
 
 ## Fase 3 — Movimento e telecamera ✅
 | Attività | Stato | Verifica |
@@ -52,7 +52,6 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 **Test automatici:** 25 superati, 0 falliti.
 
 ## Da fare / limiti noti
-- **GitHub Pages:** per pubblicare la versione web va attivato una volta su GitHub: *Settings → Pages → Source: GitHub Actions*. Senza, la CI esegue comunque test e build.
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri; il budget verrà verificato in Fase 5.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
 - **Controller fisico:** mappato ma non provato con un controller vero (qui non c'è hardware).
