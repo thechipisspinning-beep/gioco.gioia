@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 7 completata → prossima: 10 (salvataggi e diario). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** 10 completata → prossima: 4 (Gioia definitiva e personalizzazione). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -18,7 +18,7 @@
 | 7 — Adozione | ✅ (mangiatoie automatiche D-37 rimandate alla Fase 8, con la casa) |
 | 8 — Casa e personalizzazione | ⏳ |
 | 9 — Missioni e ricompense | ⏳ |
-| 10 — Diario e salvataggi | ⏳ |
+| 10 — Diario e salvataggi | ✅ (scheda Missioni del diario arriva con la Fase 9) |
 | 11 — Cucina e giardinaggio | ⏳ |
 | 12 — Espansione del mondo | ⏳ |
 | 13 — Ottimizzazione e test | ⏳ |
@@ -73,6 +73,20 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Test automatici:** 80 superati, 0 falliti.
 
+## Fase 10 — Salvataggi e diario ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| `SaveCodec`: formato JSON versionato con migrazioni, rifiuta file rovinati o di versioni future | ✅ | Test |
+| `SaveManager`: 3 slot, scrittura sicura (temporaneo → verifica → sostituzione), copia di riserva usata se il file principale è rovinato | ✅ | 8 test, incluso il file danneggiato |
+| Salvataggio automatico ogni 3 minuti, dopo un'adozione, alla chiusura e quando l'app va in background | ✅ | Verificato a vista: il file viene creato |
+| Ripristino completo: animali, inventario, scoperte, cibi preferiti scoperti, ora, modalità serena, posizione di Gioia | ✅ | Test di andata/ritorno |
+| Menu principale (Continua, Nuova partita con scelta dello slot e Modalità serena, Carica, Lingua, Esci) | ✅ | Screenshot, navigazione da tastiera/controller |
+| Menu di pausa (Riprendi, Diario, Salva, Menu principale) | ✅ | Screenshot |
+| Diario: Animali (incontrati, orari, cibo preferito scoperto, curiosità), Famiglia (cuori, bisogni, salute, ricordi), Progressi | ✅ | Screenshot |
+| Lingua scelta ricordata (`Settings`) | ✅ | |
+
+**Test automatici:** 88 superati, 0 falliti.
+
 ## Da fare / limiti noti
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri; il budget verrà verificato in Fase 5.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
@@ -91,3 +105,4 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | Curare un animale lo faceva riammalare subito | Il tempo non ancora simulato veniva calcolato dopo la cura | La cura aggiorna prima lo stato all'ora attuale |
 | Un animale malato che dormiva non si poteva curare | Nessuna azione disponibile durante il sonno | La medicina si può dare anche mentre dorme |
 | Un compagno poteva comparire nella scena sbagliata durante un cambio di scena | Anche il gestore della scena in uscita reagiva | Agisce solo il gestore della scena corrente |
+| Diario e pausa in alto a sinistra senza sfondo | I pannelli creati da codice restavano di dimensione zero | Ancoraggi e margini impostati insieme (`set_anchors_and_offsets_preset`) |

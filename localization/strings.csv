@@ -65,3 +65,55 @@ VET_KIOSK_TITLE,Cassetta del veterinario,Vet's box
 VET_KIOSK_HINT,Una medicina al giorno per gli animali malati,One medicine a day for sick animals
 VET_KIOSK_DONE_TODAY,Hai già preso la medicina di oggi,You already took today's medicine
 VET_KIOSK_TAKE,Prendi una medicina,Take a medicine
+MENU_SUBTITLE,La storia di Gioia,Gioia's story
+MENU_CONTINUE,Continua,Continue
+MENU_NEW_GAME,Nuova partita,New game
+MENU_LOAD_GAME,Carica partita,Load game
+MENU_LANGUAGE,Lingua: Italiano,Language: English
+MENU_QUIT,Esci,Quit
+MENU_CHOOSE_SLOT,Scegli dove salvare la nuova partita,Choose where to save the new game
+MENU_SERENE_MODE,Modalità serena,Serene mode
+MENU_SERENE_MODE_HINT,Gli animali possono ammalarsi ma non muoiono mai. Consigliata ai più piccoli.,Animals can get sick but never die. Recommended for younger players.
+MENU_OVERWRITE_TITLE,Sovrascrivere?,Overwrite?
+MENU_OVERWRITE_TEXT,Lo slot %d contiene già una partita. Iniziandone una nuova andrà persa.,Slot %d already has a game. Starting a new one will erase it.
+MENU_OVERWRITE_YES,"Sì, inizia una nuova partita","Yes, start a new game"
+SLOT,Slot,Slot
+SLOT_EMPTY,vuoto,empty
+SLOT_SUMMARY,Giorno %d · %d adottati · %d specie · %s,Day %d · %d adopted · %d species · %s
+PAUSE_TITLE,Pausa,Paused
+PAUSE_RESUME,Riprendi,Resume
+PAUSE_JOURNAL,Diario,Journal
+PAUSE_SAVE,Salva la partita,Save game
+PAUSE_MAIN_MENU,Menu principale,Main menu
+NOTIFY_SAVED,Partita salvata,Game saved
+NOTIFY_SAVE_FAILED,Impossibile salvare,Could not save
+HUD_JOURNAL,Diario,Journal
+HUD_PAUSE,Pausa,Pause
+JOURNAL_TITLE,Il diario di Gioia,Gioia's journal
+JOURNAL_CLOSE,Chiudi,Close
+JOURNAL_TAB_ANIMALS,Animali,Animals
+JOURNAL_TAB_FAMILY,Famiglia,Family
+JOURNAL_TAB_PROGRESS,Progressi,Progress
+JOURNAL_SPECIES_COUNT,Specie incontrate: %d su %d,Species met: %d of %d
+JOURNAL_NOT_MET,Non ancora incontrato. Esplora l'isola!,Not met yet. Explore the island!
+JOURNAL_WILD,selvatico,wild
+JOURNAL_DOMESTIC,domestico,domestic
+JOURNAL_MET_ON,Incontrato il giorno %d alle %02d,Met on day %d at %02d
+JOURNAL_ACTIVE_HOURS,Attivo dalle %d alle %d,Active from %d to %d
+JOURNAL_FAVORITE_FOOD,Cibo preferito: %s,Favourite food: %s
+JOURNAL_FAVORITE_UNKNOWN,da scoprire,still to discover
+JOURNAL_NO_FAMILY,Non hai ancora adottato nessun animale. Fai amicizia con uno!,You haven't adopted any animals yet. Make a friend!
+JOURNAL_FOLLOWS_YOU,ti segue,follows you
+JOURNAL_AT_HOME,a casa,at home
+JOURNAL_SICK,malato (giorno %d di 3),sick (day %d of 3)
+JOURNAL_ADOPTED_ON,Adottato il giorno %d,Adopted on day %d
+JOURNAL_MEMORIES,Ricordi,Memories
+JOURNAL_MEMORY_TEXT,Adottato il giorno %d. Resterà sempre nel tuo cuore.,Adopted on day %d. It will always stay in your heart.
+JOURNAL_STAT_DAY,Giorno: %d,Day: %d
+JOURNAL_STAT_SPECIES,Specie incontrate: %d su %d,Species met: %d of %d
+JOURNAL_STAT_ADOPTED,Animali in famiglia: %d,Animals in the family: %d
+JOURNAL_STAT_COMPANIONS,Compagni al seguito: %d su %d,Companions: %d of %d
+JOURNAL_SERENE_ON,Modalità serena attiva,Serene mode on
+NEED_HUNGER,Pancia piena,Full tummy
+NEED_HAPPINESS,Felicità,Happiness
+NEED_CLEANLINESS,Pulizia,Cleanliness

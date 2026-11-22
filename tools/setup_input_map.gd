@@ -28,6 +28,7 @@ func _initialize() -> void:
 	_action("jump", [_key(KEY_SPACE), _button(JOY_BUTTON_X)])
 	_action("interact", [_key(KEY_E), _button(JOY_BUTTON_A)])
 	_action("pause", [_key(KEY_ESCAPE), _button(JOY_BUTTON_START)])
+	_action("journal", [_key(KEY_J), _key(KEY_TAB), _button(JOY_BUTTON_BACK)])
 
 	var err: Error = ProjectSettings.save()
 	if err != OK:

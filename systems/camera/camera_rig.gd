@@ -67,8 +67,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		# Solo un vero clic cattura il mouse (non quelli emulati dai tocchi).
 		if button.pressed and button.button_index == MOUSE_BUTTON_LEFT and button.device != InputEvent.DEVICE_ID_EMULATION:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	if event.is_action_pressed("pause") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event.is_action_pressed("camera_zoom_in"):
 		add_zoom(-zoom_step)
 	elif event.is_action_pressed("camera_zoom_out"):

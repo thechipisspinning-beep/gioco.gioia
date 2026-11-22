@@ -15,10 +15,10 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	# In alto a destra.
+	# In alto a destra, sotto i pulsanti Diario e Pausa.
 	var area: Vector2 = get_parent_area_size()
 	size = Vector2(420.0, get_combined_minimum_size().y)
-	position = Vector2(area.x - size.x - 20.0, 20.0)
+	position = Vector2(area.x - size.x - 20.0, 94.0)
 
 
 func show_toast(text: String) -> void:

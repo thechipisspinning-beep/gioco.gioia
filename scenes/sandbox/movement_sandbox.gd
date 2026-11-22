@@ -196,6 +196,11 @@ func _spawn_player() -> void:
 	player = PLAYER_SCENE.instantiate() as PlayerController
 	player.position = SPAWN_POSITION
 	player.rotation.y = PI  # guarda verso il centro della sandbox (-Z)
+	# Dopo un caricamento Gioia riparte dove era stata salvata.
+	var saved: Dictionary = SaveManager.take_pending_player(scene_file_path)
+	if not saved.is_empty():
+		player.position = Vector3(float(saved["x"]), float(saved["y"]) + 0.05, float(saved["z"]))
+		player.rotation.y = float(saved.get("yaw", 0.0))
 	add_child(player)
 
 	camera_rig = CAMERA_SCENE.instantiate() as CameraRig

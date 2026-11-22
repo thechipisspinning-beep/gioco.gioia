@@ -1,4 +1,5 @@
 extends CanvasLayer
+# Nota: l'HUD continua a funzionare durante la pausa (menu e diario).
 ## HUD (GDD § 12.1): giorno e ora, suggerimento dei controlli, scheda
 ## dell'oggetto/animale puntato, menu delle azioni, notifiche.
 ## Collegato a Gioia tramite `setup()`.
@@ -15,11 +16,15 @@ var _menu: ActionMenu
 var _menu_target: Node3D
 var _name_dialog: NameDialog
 var _adopting: AnimalAgent
+var _pause: PauseMenu
+var _journal: Journal
+var _top_buttons: HBoxContainer
 var _mouse_was_captured: bool = false
 var _device: String = ""
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_root.theme = UITheme.get_theme()
 	_card = InteractionCard.new()
 	_root.add_child(_card)
@@ -33,6 +38,14 @@ func _ready() -> void:
 	_name_dialog.confirmed.connect(_on_name_confirmed)
 	_name_dialog.cancelled.connect(func() -> void: _set_ui_locked(false))
 	EventBus.adoption_requested.connect(_on_adoption_requested)
+	_journal = Journal.new()
+	_root.add_child(_journal)
+	_journal.closed.connect(_on_overlay_closed)
+	_pause = PauseMenu.new()
+	_root.add_child(_pause)
+	_pause.closed.connect(_on_overlay_closed)
+	_pause.journal_requested.connect(_open_journal)
+	_build_top_buttons()
 	_touch.interact_pressed.connect(_on_touch_interact)
 	GameClock.hour_changed.connect(func(_d: int, _h: int) -> void: _refresh_clock())
 	_refresh_clock()
@@ -50,6 +63,59 @@ func setup(player: PlayerController, camera_rig: CameraRig) -> void:
 
 func _process(_delta: float) -> void:
 	_refresh_clock()
+	# Pulsanti in alto a destra (le notifiche compaiono sotto).
+	var area: Vector2 = _root.size
+	_top_buttons.size = _top_buttons.get_combined_minimum_size()
+	_top_buttons.position = Vector2(area.x - _top_buttons.size.x - 20.0, 20.0)
+	_top_buttons.visible = not (_pause.visible or _journal.visible)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible:
+		return
+	if event.is_action_pressed("pause"):
+		get_viewport().set_input_as_handled()
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			# Primo Esc: libera il mouse; secondo Esc: pausa.
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		else:
+			_open_pause()
+	elif event.is_action_pressed("journal"):
+		get_viewport().set_input_as_handled()
+		_open_journal()
+
+
+func _open_pause() -> void:
+	_set_ui_locked(true)
+	_pause.open()
+
+
+func _open_journal() -> void:
+	_set_ui_locked(true)
+	get_tree().paused = true
+	_journal.open()
+
+
+func _on_overlay_closed() -> void:
+	if _journal.visible or _pause.visible:
+		return
+	get_tree().paused = false
+	_set_ui_locked(false)
+
+
+## Pulsanti in alto a destra (Diario, Pausa): indispensabili su telefono, comodi col mouse.
+func _build_top_buttons() -> void:
+	_top_buttons = HBoxContainer.new()
+	_top_buttons.add_theme_constant_override("separation", 10)
+	_root.add_child(_top_buttons)
+	var j: Button = MenuHelpers.button(tr("HUD_JOURNAL"), 110)
+	j.focus_mode = Control.FOCUS_NONE
+	j.pressed.connect(_open_journal)
+	_top_buttons.add_child(j)
+	var p: Button = MenuHelpers.button(tr("HUD_PAUSE"), 110)
+	p.focus_mode = Control.FOCUS_NONE
+	p.pressed.connect(_open_pause)
+	_top_buttons.add_child(p)
 
 
 func _input(event: InputEvent) -> void:

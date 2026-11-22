@@ -1,9 +1,7 @@
 extends Node
-## Scena di avvio: inizializza ciò che serve e passa alla prima scena di gioco.
-## Per ora porta direttamente alla sandbox di movimento (Fase 3); in seguito
-## porterà al menu principale.
+## Scena di avvio: imposta la lingua e apre il menu principale.
 
-const FIRST_SCENE: String = "res://scenes/sandbox/movement_sandbox.tscn"
+const FIRST_SCENE: String = "res://scenes/main_menu/main_menu.tscn"
 
 
 func _ready() -> void:
@@ -12,8 +10,10 @@ func _ready() -> void:
 
 
 func _apply_locale() -> void:
-	var system_lang: String = OS.get_locale_language()
+	var lang: String = Settings.get_language()
+	if lang == "":
+		lang = "it" if OS.get_locale_language() == "it" else "en"
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--lang="):
-			system_lang = arg.trim_prefix("--lang=")
-	TranslationServer.set_locale("it" if system_lang == "it" else "en")
+			lang = arg.trim_prefix("--lang=")
+	TranslationServer.set_locale(lang)

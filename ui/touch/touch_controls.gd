@@ -34,7 +34,7 @@ var interact_available: bool = false:
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	# Senza touch il nodo resta nascosto e non intercetta nulla.
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = should_show()
@@ -69,6 +69,9 @@ func _input(event: InputEvent) -> void:
 
 func _on_touch(touch: InputEventScreenTouch) -> void:
 	if touch.pressed:
+		# La fascia in alto è riservata ai pulsanti dell'interfaccia (Diario, Pausa).
+		if touch.position.y < 96.0:
+			return
 		if interact_available and touch.position.distance_to(_interact_button_center()) <= jump_button_radius * 1.1:
 			interact_pressed.emit()
 			get_viewport().set_input_as_handled()

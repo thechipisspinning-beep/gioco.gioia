@@ -203,6 +203,7 @@ func perform_interaction(action_id: String) -> void:
 		_apply_trust(TrustModel.Action.FEED, day, pref)
 		if pref >= 2:
 			EventBus.notification_requested.emit(tr("NOTIFY_FOOD_FAVORITE") % get_interaction_title())
+			GameState.discoveries.mark_favorite_food(species.id, item_id)
 		_enter(State.EAT)
 	elif action_id == "play":
 		_start_fetch()
