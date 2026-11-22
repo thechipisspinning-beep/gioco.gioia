@@ -310,3 +310,66 @@ JOURNAL_DONE_QUESTS,Completate,Completed
 JOURNAL_NO_QUESTS,Nessuna missione in corso,No quests in progress
 JOURNAL_DAILY,(di oggi),(today)
 JOURNAL_STAT_QUESTS,Missioni completate: %d,Quests completed: %d
+ITEM_CARROT,Carota,Carrot
+ITEM_STRAWBERRY,Fragola,Strawberry
+ITEM_PET_TREAT,Biscotti per animali,Pet treats
+ITEM_BERRY_MIX,Mix di bacche,Berry mix
+ITEM_CARROT_SNACK,Snack di carote,Carrot snack
+ITEM_FRUIT_SALAD,Macedonia,Fruit salad
+ITEM_MUSHROOM_SOUP,Zuppa di funghi,Mushroom soup
+ITEM_CARROT_SEEDS,Semi di carota,Carrot seeds
+ITEM_STRAWBERRY_SEEDS,Semi di fragola,Strawberry seeds
+ITEM_HERB_SEEDS,Semi di erbe aromatiche,Herb seeds
+ITEM_FLOWER_SEEDS,Semi di fiori,Flower seeds
+RECIPE_PET_TREATS,Biscotti per animali,Pet treats
+RECIPE_BERRY_MIX,Mix di bacche,Berry mix
+RECIPE_CARROT_SNACK,Snack di carote,Carrot snack
+RECIPE_HERBAL_MEDICINE,Medicina alle erbe,Herbal medicine
+RECIPE_FRUIT_SALAD,Macedonia,Fruit salad
+RECIPE_MUSHROOM_SOUP,Zuppa di funghi,Mushroom soup
+COOK_TITLE,Cucina,Cooking
+COOK_OPEN,Cucina,Cook
+COOK_STOVE,Fornello,Stove
+COOK_CAMPFIRE,Fuoco da campo,Campfire
+COOK_BUTTON,Cucina,Cook
+COOK_FOR_ANIMALS,per gli animali,for animals
+COOK_FOR_GIOIA,per Gioia,for Gioia
+COOK_FOR_MEDICINE,medicina,medicine
+COOK_GAME_HINT,"Premi ""Mescola!"" quando il cucchiaio è nella zona verde: 2 centri su 3 = una porzione in più!","Press ""Stir!"" when the spoon is in the green zone: 2 hits out of 3 = an extra portion!"
+COOK_STIR,Mescola!,Stir!
+COOK_SKIP,Salta,Skip
+COOK_DONE,Hai cucinato: %s ×%d,You cooked: %s ×%d
+COOK_BONUS,Porzione extra!,Extra portion!
+BACKPACK_TITLE,Lo zaino di Gioia,Gioia's backpack
+BACKPACK_EAT,Mangia,Eat
+HUD_BACKPACK,Zaino,Bag
+ITEMCAT_0,Cibo per animali,Animal food
+ITEMCAT_1,Giochi,Toys
+ITEMCAT_2,Cura,Care
+ITEMCAT_3,Medicine,Medicine
+ITEMCAT_4,Materiali,Materials
+ITEMCAT_5,Semi,Seeds
+ITEMCAT_6,Raccolti,Finds
+ITEMCAT_7,Piatti per Gioia,Meals for Gioia
+BUFF_GOOD_MOOD,Che buona! Gioia è di buonumore: gli animali si affezionano più in fretta,Delicious! Gioia is in a good mood: animals warm up faster
+BUFF_ENERGY,Che energia! Gioia corre più veloce per un po',So much energy! Gioia runs faster for a while
+BUFF_NAME_GOOD_MOOD,buonumore,good mood
+BUFF_NAME_ENERGY,energia,energy
+GARDEN_PLOT,Parcella dell'orto,Garden plot
+GARDEN_EMPTY,Pronta per la semina,Ready for planting
+GARDEN_READY,Pronta da raccogliere!,Ready to harvest!
+GARDEN_GROWING_WET,Cresce (fase %d di %d) · annaffiata,Growing (stage %d of %d) · watered
+GARDEN_GROWING_DRY,Fase %d di %d · ha sete: annaffiala!,Stage %d of %d · thirsty: water it!
+GARDEN_PLANT,Pianta: %s (%d semi),Plant: %s (%d seeds)
+GARDEN_NO_SEEDS,Non hai semi (li vende Bruno),No seeds (Bruno sells them)
+GARDEN_WATER,Annaffia,Water
+GARDEN_HARVEST,Raccogli,Harvest
+GARDEN_HARVESTED,Raccolto: %s!,Harvested: %s!
+PLANT_CARROT,Carote,Carrots
+PLANT_STRAWBERRY,Fragole,Strawberries
+PLANT_HERB,Erbe aromatiche,Herbs
+PLANT_FLOWER,Fiori,Flowers
+Q_M11,Il primo piatto,The first dish
+Q_M12,L'orto della nonna,Grandma's garden
+REWARD_RECIPE_HERBAL_MEDICINE,nuova ricetta: medicina alle erbe,new recipe: herbal medicine
+REWARD_RECIPE_MUSHROOM_SOUP,nuova ricetta: zuppa di funghi,new recipe: mushroom soup

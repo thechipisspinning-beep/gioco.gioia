@@ -131,6 +131,9 @@ func _apply_horizontal_movement(delta: float) -> void:
 	var direction: Vector3 = _camera_relative_direction(_move_input)
 	var strength: float = minf(_move_input.length(), 1.0)
 	var target_speed: float = (run_speed if _is_running else walk_speed) * strength
+	# Energia (piatto "zuppa di funghi"): +15% di velocità (D-22).
+	if is_player and GameState.has_buff(&"energy"):
+		target_speed *= 1.15
 	var target: Vector3 = direction * target_speed
 
 	var horizontal: Vector3 = Vector3(velocity.x, 0.0, velocity.z)

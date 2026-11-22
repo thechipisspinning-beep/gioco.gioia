@@ -17,6 +17,10 @@ var home: HomeLayout = HomeLayout.new()
 var quests: QuestLog = QuestLog.new()
 ## Monete (D-19).
 var coins: int = 0
+## Orto (Fase 11).
+var garden: Garden = Garden.new()
+## Bonus temporanei dei piatti di Gioia: id → minuto di gioco di scadenza (D-22).
+var buffs: Dictionary = {}
 ## Piccoli valori di progressione (es. ultimo giorno in cui si è presa la medicina).
 var flags: Dictionary = {}
 
@@ -34,6 +38,10 @@ func start_new_game(serene: bool = false) -> void:
 	appearance.from_dict(CharacterAppearance.new().to_dict())
 	quests = QuestLog.new()
 	coins = 50
+	garden = Garden.new()
+	buffs = {}
+	inventory.add(&"carrot_seeds", 3)
+	inventory.add(&"flower_seeds", 2)
 	home = HomeLayout.new()
 	# Arredamento iniziale già posizionato e qualche mobile da sistemare.
 	home.place(&"bed", 1, 1, 0, 0)
@@ -41,6 +49,7 @@ func start_new_game(serene: bool = false) -> void:
 	home.place(&"table", 7, 5, 0)
 	home.place(&"pet_bed", 12, 1, 0, 1)
 	home.place(&"plant", 14, 9, 0)
+	home.place(&"stove", 13, 5, 3)
 	for f: StringName in [&"chair", &"chair", &"lamp", &"bookshelf", &"pet_bowl", &"plant", &"sofa"]:
 		inventory.add(furniture_item(f))
 	flags["feeder_portions"] = 10
@@ -65,6 +74,8 @@ func to_dict() -> Dictionary:
 		"home": home.to_dict(),
 		"quests": quests.to_dict(),
 		"coins": coins,
+		"garden": garden.to_dict(),
+		"buffs": buffs.duplicate(),
 	}
 
 
@@ -84,6 +95,25 @@ func from_dict(d: Dictionary) -> void:
 	quests = QuestLog.new()
 	quests.from_dict(d.get("quests", {}) as Dictionary)
 	coins = maxi(0, int(d.get("coins", 0)))
+	garden = Garden.new()
+	garden.from_dict(d.get("garden", {}) as Dictionary)
+	buffs = {}
+	for k: Variant in (d.get("buffs", {}) as Dictionary).keys():
+		buffs[StringName(str(k))] = float((d["buffs"] as Dictionary)[k])
+
+
+## Il bonus temporaneo `buff` è attivo?
+func has_buff(buff: StringName) -> bool:
+	return float(buffs.get(buff, -1.0)) > GameClock.time.get_total_minutes()
+
+
+## Gioia mangia un piatto: attiva il bonus. Restituisce false se non è un piatto.
+func eat_meal(item: StringName) -> bool:
+	if not RecipeData.MEAL_BUFFS.has(item) or not inventory.try_remove(item):
+		return false
+	var b: Dictionary = RecipeData.MEAL_BUFFS[item]
+	buffs[b["buff"]] = GameClock.time.get_total_minutes() + float(b["minutes"])
+	return true
 
 
 ## Chiave d'inventario di un mobile (i mobili da posizionare stanno nell'inventario).

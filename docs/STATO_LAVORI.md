@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 9 completata → prossima: 11 (cucina e giardinaggio). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** 11 completata → prossima: 12 (espansione del mondo). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -19,7 +19,7 @@
 | 8 — Casa e personalizzazione | ✅ |
 | 9 — Missioni e ricompense | ✅ |
 | 10 — Diario e salvataggi | ✅ |
-| 11 — Cucina e giardinaggio | ⏳ |
+| 11 — Cucina e giardinaggio | ✅ |
 | 12 — Espansione del mondo | ⏳ |
 | 13 — Ottimizzazione e test | ⏳ |
 
@@ -144,9 +144,23 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Nota su D-15 (zone sbloccate progressivamente):** su un'isola aperta senza barriere fisiche, lo sblocco è realizzato tramite la storia: le missioni guidano Gioia verso le zone nell'ordine previsto e introducono animali e abitanti legati a ciascuna. Tutte le zone restano esplorabili liberamente (registrato nel GDD).
 
+## Fase 11 — Cucina e giardinaggio ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| `Cooking` + `RecipeData`: 6 ricette (biscotti e snack per animali, mix di bacche per la volpe, medicina alle erbe D-36, macedonia e zuppa di funghi per Gioia), alcune sbloccate dalle missioni | ✅ | Test |
+| Fornello in casa (mobile interattivo) e fuoco da campo in giardino | ✅ | Screenshot |
+| Finestra della cucina con ingredienti posseduti/necessari e mini-gioco "Mescola!" facoltativo (D-23): 2 centri su 3 = porzione extra | ✅ | Test + screenshot |
+| `Garden`: 6 parcelle, 4 piante (carote, fragole, erbe, fiori), crescita solo se annaffiate (12 ore per annaffiatura), nessuna pianta muore | ✅ | 4 test unitari + ciclo completo nel gioco |
+| Zaino con tutti gli oggetti per categoria; i piatti di Gioia si mangiano: buonumore (+25% amicizia) ed energia (+15% velocità) per 3 ore (D-22) | ✅ | Test |
+| Semi nel negozio; Bruno compra anche carote e fragole; nuovi cibi preferiti (biscotti per il cane, mix di bacche per la volpe) | ✅ | Test |
+| Missioni "Il primo piatto" e "L'orto della nonna" | ✅ | |
+
+**Test automatici:** 148 superati, 0 falliti.
+
 ## Da fare / limiti noti
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri. Su telefono il raggio di caricamento è già ridotto (5 × 5 blocchi); se la costruzione dei blocchi causasse scatti, in Fase 13 si sposterà su un thread separato (build native) o si dividerà su più frame.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
+- **Due macchie bianche nel cielo** visibili in alcune inquadrature di giorno: da verificare in Fase 13 (probabilmente il disco del sole con il bagliore).
 - **Controller fisico:** mappato ma non provato con un controller vero (qui non c'è hardware).
 
 ## Bug trovati e corretti

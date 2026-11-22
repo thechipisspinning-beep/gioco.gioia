@@ -34,6 +34,8 @@ const ALL: Array[Dictionary] = [
 const SHOP_ITEMS: Array[Dictionary] = [
 	{"item": &"kibble", "price": 8}, {"item": &"apple", "price": 6}, {"item": &"berries", "price": 10},
 	{"item": &"medicine", "price": 45}, {"item": &"ball", "price": 25}, {"item": &"brush", "price": 30},
+	{"item": &"carrot_seeds", "price": 6}, {"item": &"strawberry_seeds", "price": 8},
+	{"item": &"herb_seeds", "price": 7}, {"item": &"flower_seeds", "price": 5},
 ]
 const SHOP_FURNITURE: Array[Dictionary] = [
 	{"furniture": &"chair", "price": 60}, {"furniture": &"table", "price": 90}, {"furniture": &"sofa", "price": 180},
@@ -42,6 +44,6 @@ const SHOP_FURNITURE: Array[Dictionary] = [
 	{"furniture": &"toy_box", "price": 80}, {"furniture": &"scratching_post", "price": 70}, {"furniture": &"bed", "price": 200},
 ]
 ## Bruno compra gli oggetti raccolti sull'isola.
-const SELL_PRICES: Dictionary = {&"flower": 4, &"seashell": 6, &"mushroom": 5, &"herb": 5, &"berries": 3, &"apple": 3}
+const SELL_PRICES: Dictionary = {&"flower": 4, &"seashell": 6, &"mushroom": 5, &"herb": 5, &"berries": 3, &"apple": 3, &"carrot": 4, &"strawberry": 5}
 ## Costo della visita della veterinaria per ogni animale malato.
 const VET_PRICE: int = 30

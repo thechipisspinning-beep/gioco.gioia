@@ -63,3 +63,6 @@ signal dialogue_requested(speaker: String, text: String)
 ## Apri il negozio (sell = true: vendi gli oggetti raccolti).
 @warning_ignore("unused_signal")
 signal shop_requested(sell: bool)
+## Apri la finestra della cucina.
+@warning_ignore("unused_signal")
+signal cooking_requested

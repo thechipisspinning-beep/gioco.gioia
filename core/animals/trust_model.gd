@@ -31,7 +31,7 @@ class Result:
 
 ## Applica un'interazione allo stato e restituisce il risultato.
 ## `food_preference`: 2 preferito, 1 accettato, 0 rifiutato (solo per FEED).
-static func interact(state: AnimalState, species: SpeciesDefinition, action: Action, day: int, food_preference: int = 1) -> Result:
+static func interact(state: AnimalState, species: SpeciesDefinition, action: Action, day: int, food_preference: int = 1, bonus: float = 1.0) -> Result:
 	var result: Result = Result.new()
 	if not state.is_alive():
 		result.reaction = Reaction.TIRED
@@ -54,7 +54,7 @@ static func interact(state: AnimalState, species: SpeciesDefinition, action: Act
 	if action == Action.FEED and food_preference >= 2:
 		gain *= FAVORITE_FOOD_MULTIPLIER
 		result.reaction = Reaction.VERY_HAPPY
-	gain *= species.trust_gain_multiplier
+	gain *= species.trust_gain_multiplier * bonus
 	state.friendship = clampf(state.friendship + gain, 0.0, AnimalState.MAX_FRIENDSHIP)
 	result.gain = gain
 

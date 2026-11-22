@@ -25,6 +25,8 @@ var _build_panel: BuildPanel
 var _build_mode: BuildMode
 var _dialogue: DialogueBox
 var _shop: ShopPanel
+var _cooking: CookingPanel
+var _backpack: BackpackPanel
 var _mouse_was_captured: bool = false
 var _device: String = ""
 
@@ -62,6 +64,16 @@ func _ready() -> void:
 		_set_ui_locked(true)
 		get_tree().paused = true
 		_shop.open(sell))
+	_cooking = CookingPanel.new()
+	_root.add_child(_cooking)
+	_cooking.closed.connect(_on_overlay_closed)
+	EventBus.cooking_requested.connect(func() -> void:
+		_set_ui_locked(true)
+		get_tree().paused = true
+		_cooking.open())
+	_backpack = BackpackPanel.new()
+	_root.add_child(_backpack)
+	_backpack.closed.connect(_on_overlay_closed)
 	_creator = CharacterCreator.new()
 	_root.add_child(_creator)
 	_creator.closed.connect(func() -> void: _set_ui_locked(false))
@@ -90,11 +102,11 @@ func _process(_delta: float) -> void:
 	var area: Vector2 = _root.size
 	_top_buttons.size = _top_buttons.get_combined_minimum_size()
 	_top_buttons.position = Vector2(area.x - _top_buttons.size.x - 20.0, 20.0)
-	_top_buttons.visible = not (_pause.visible or _journal.visible or _creator.visible or (_build_mode != null and _build_mode.active))
+	_top_buttons.visible = not (_pause.visible or _journal.visible or _creator.visible or _cooking.visible or _backpack.visible or _shop.visible or (_build_mode != null and _build_mode.active))
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible or _creator.visible or _shop.visible:
+	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible or _creator.visible or _shop.visible or _cooking.visible or _backpack.visible:
 		return
 	if _build_mode != null and _build_mode.active:
 		return
@@ -108,6 +120,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("journal"):
 		get_viewport().set_input_as_handled()
 		_open_journal()
+	elif event is InputEventKey and (event as InputEventKey).pressed and (event as InputEventKey).physical_keycode == KEY_I:
+		get_viewport().set_input_as_handled()
+		_open_backpack()
+
+
+func _open_backpack() -> void:
+	_set_ui_locked(true)
+	get_tree().paused = true
+	_backpack.open()
 
 
 ## Collega la modalità arredamento (solo dentro casa).
@@ -143,7 +164,7 @@ func _open_journal() -> void:
 
 
 func _on_overlay_closed() -> void:
-	if _journal.visible or _pause.visible or _shop.visible:
+	if _journal.visible or _pause.visible or _shop.visible or _cooking.visible or _backpack.visible:
 		return
 	get_tree().paused = false
 	_set_ui_locked(false)
@@ -154,6 +175,10 @@ func _build_top_buttons() -> void:
 	_top_buttons = HBoxContainer.new()
 	_top_buttons.add_theme_constant_override("separation", 10)
 	_root.add_child(_top_buttons)
+	var bp: Button = MenuHelpers.button(tr("HUD_BACKPACK"), 110)
+	bp.focus_mode = Control.FOCUS_NONE
+	bp.pressed.connect(_open_backpack)
+	_top_buttons.add_child(bp)
 	var j: Button = MenuHelpers.button(tr("HUD_JOURNAL"), 110)
 	j.focus_mode = Control.FOCUS_NONE
 	j.pressed.connect(_open_journal)

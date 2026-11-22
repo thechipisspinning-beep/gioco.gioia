@@ -50,7 +50,14 @@ func test_build_mode_place_and_pick_up() -> void:
 	bm.place_or_pick()
 	assert_eq(bm.selected, &"bed", "letto raccolto e selezionato")
 	assert_eq(GameState.home.count_of(&"bed"), 0)
-	bm.cursor = Vector2i(10, 5)  # zona libera (la cuccia è in 12,1)
+	# Cerca un punto libero qualsiasi per rimettere il letto.
+	var spot: Vector2i = Vector2i(-1, -1)
+	for y: int in HomeLayout.ROOM_CELLS.y:
+		for x: int in HomeLayout.ROOM_CELLS.x:
+			if spot.x < 0 and GameState.home.can_place(&"bed", x, y, bm.rot):
+				spot = Vector2i(x, y)
+	assert_true(spot.x >= 0, "c'è un posto libero per il letto")
+	bm.cursor = spot
 	bm.place_or_pick()
 	assert_eq(GameState.home.count_of(&"bed"), 1, "letto rimesso altrove")
 	bm.close()

@@ -153,6 +153,19 @@ func _build_home() -> void:
 	door.target_spawn = &"entrance"
 	door.title_key = "DOOR_ENTER_HOME"
 	home.add_child(door)
+	# Orto (6 parcelle) e fuoco da campo per cucinare all'aperto (GDD § 7.6, § 9).
+	for i: int in 6:
+		var plot: GardenPlot = GardenPlot.new()
+		plot.index = i
+		plot.position = base + Vector3(4.0 + (i % 3) * 1.9, 0.0, 4.0 + (i / 3) * 1.9)
+		plot.position.y = ground(plot.position.x, plot.position.z)
+		home.add_child(plot)
+	var campfire: CookingStation = CookingStation.new()
+	campfire.build_campfire = true
+	campfire.title_key = "COOK_CAMPFIRE"
+	campfire.position = base + Vector3(-7.5, 0.0, 9.0)
+	campfire.position.y = ground(campfire.position.x, campfire.position.z)
+	home.add_child(campfire)
 	var feeder: Feeder = Feeder.new()
 	feeder.position = base + Vector3(-6.0, 0.0, 4.0)
 	feeder.position.y = ground(feeder.position.x, feeder.position.z)

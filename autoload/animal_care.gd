@@ -16,6 +16,7 @@ func tick() -> void:
 	# Prima la mangiatoia automatica (D-37), poi l'aggiornamento di bisogni e salute.
 	Feeder.feed_hungry_animals()
 	_caretaker()
+	GameState.garden.update(now)
 	for state: AnimalState in GameState.animals.adopted():
 		var species: SpeciesDefinition = Database.species(state.species_id)
 		if species == null:

@@ -3,7 +3,8 @@ extends Resource
 ## Definizione di un oggetto (cibo, giocattolo, medicina, materiale, seme…).
 ## Un file `.tres` per oggetto in `data/items/`.
 
-enum Category { FOOD, TOY, CARE, MEDICINE, MATERIAL, SEED, COLLECTIBLE }
+## FOOD = cibo per animali; MEAL = piatto per Gioia (bonus temporanei, D-22).
+enum Category { FOOD, TOY, CARE, MEDICINE, MATERIAL, SEED, COLLECTIBLE, MEAL }
 
 @export var id: StringName
 @export var name_key: String

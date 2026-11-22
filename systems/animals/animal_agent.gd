@@ -216,7 +216,9 @@ func perform_interaction(action_id: String) -> void:
 
 func _apply_trust(action: TrustModel.Action, day: int, food_pref: int = 1) -> void:
 	var before: int = data.hearts()
-	var result: TrustModel.Result = TrustModel.interact(data, species, action, day, food_pref)
+	# Buonumore di Gioia (piatto "macedonia"): +25% di amicizia (D-22).
+	var bonus: float = 1.25 if GameState.has_buff(&"good_mood") else 1.0
+	var result: TrustModel.Result = TrustModel.interact(data, species, action, day, food_pref, bonus)
 	EventBus.animal_interacted.emit(data.id, species.id, action, result.gain)
 	var head: Vector3 = global_position + Vector3.UP * 0.95
 	if result.reaction == TrustModel.Reaction.TIRED:

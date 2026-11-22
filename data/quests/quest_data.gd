@@ -57,6 +57,12 @@ static func _build() -> Array[Dictionary]:
 		{"id": &"m10_wild_family", "kind": "main", "giver": &"sofia", "title_key": "Q_M10", "requires": [&"m08_fox_friend"],
 			"objectives": [{"type": "adopt", "target": "fox", "count": 1}],
 			"rewards": {"coins": 150, "room_tokens": 1, "flags": ["unlock_backpack"]}},
+		{"id": &"m11_first_dish", "kind": "main", "giver": &"lia", "title_key": "Q_M11", "requires": [&"m04_cozy_home"],
+			"objectives": [{"type": "cook", "count": 1}],
+			"rewards": {"coins": 40, "flags": ["recipe_herbal_medicine"]}},
+		{"id": &"m12_garden", "kind": "main", "giver": &"elena", "title_key": "Q_M12", "requires": [&"m11_first_dish"],
+			"objectives": [{"type": "plant", "count": 2}, {"type": "harvest", "count": 1}],
+			"rewards": {"coins": 50, "items": {&"strawberry_seeds": 4}, "flags": ["recipe_mushroom_soup"]}},
 		# --- Missioni degli abitanti ------------------------------------------
 		{"id": &"s_bruno_shop", "kind": "side", "giver": &"bruno", "title_key": "Q_S_BRUNO", "requires": [&"m01_welcome"],
 			"objectives": [{"type": "talk", "target": "bruno", "line": "DLG_BRUNO_HELLO"}],

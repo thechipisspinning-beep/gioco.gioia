@@ -134,6 +134,8 @@ static func make_furniture_node(p: Dictionary) -> Node3D:
 	var model: Node3D = FurnitureBuilder.build(id, color)
 	model.rotation.y = -rot * PI * 0.5
 	root.add_child(model)
+	if id == &"stove":
+		root.add_child(CookingStation.new())
 	if not FurnitureCatalog.is_flat(id):
 		var cs: CollisionShape3D = CollisionShape3D.new()
 		var box: BoxShape3D = BoxShape3D.new()
