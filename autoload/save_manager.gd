@@ -99,6 +99,7 @@ func load_game(slot: int) -> bool:
 	_pending_player = (game.get("player", {}) as Dictionary).duplicate()
 	current_slot = slot
 	_autosave_timer = 0.0
+	QuestService.start_day()
 	loaded.emit(slot)
 	return true
 

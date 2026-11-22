@@ -23,6 +23,8 @@ var _creator: CharacterCreator
 var _camera_rig: CameraRig
 var _build_panel: BuildPanel
 var _build_mode: BuildMode
+var _dialogue: DialogueBox
+var _shop: ShopPanel
 var _mouse_was_captured: bool = false
 var _device: String = ""
 
@@ -50,6 +52,16 @@ func _ready() -> void:
 	_pause.closed.connect(_on_overlay_closed)
 	_pause.journal_requested.connect(_open_journal)
 	_build_top_buttons()
+	_root.add_child(QuestTracker.new())
+	_dialogue = DialogueBox.new()
+	_root.add_child(_dialogue)
+	_shop = ShopPanel.new()
+	_root.add_child(_shop)
+	_shop.closed.connect(_on_overlay_closed)
+	EventBus.shop_requested.connect(func(sell: bool) -> void:
+		_set_ui_locked(true)
+		get_tree().paused = true
+		_shop.open(sell))
 	_creator = CharacterCreator.new()
 	_root.add_child(_creator)
 	_creator.closed.connect(func() -> void: _set_ui_locked(false))
@@ -82,7 +94,7 @@ func _process(_delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible or _creator.visible:
+	if _pause.visible or _journal.visible or _menu.visible or _name_dialog.visible or _creator.visible or _shop.visible:
 		return
 	if _build_mode != null and _build_mode.active:
 		return
@@ -131,7 +143,7 @@ func _open_journal() -> void:
 
 
 func _on_overlay_closed() -> void:
-	if _journal.visible or _pause.visible:
+	if _journal.visible or _pause.visible or _shop.visible:
 		return
 	get_tree().paused = false
 	_set_ui_locked(false)
@@ -191,7 +203,7 @@ func _on_action_chosen(action_id: String) -> void:
 func _on_menu_closed() -> void:
 	_menu_target = null
 	# Se l'azione scelta ha aperto un'altra finestra (es. il nome), resta bloccato.
-	if not _name_dialog.visible and not _creator.visible:
+	if not _name_dialog.visible and not _creator.visible and not _shop.visible and not (_build_mode != null and _build_mode.active):
 		_set_ui_locked(false)
 
 

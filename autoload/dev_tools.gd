@@ -10,6 +10,7 @@ extends Node
 ##   --time=HH                            imposta l'ora di gioco all'avvio
 ##   --friendship=id_animale:valore       imposta l'amicizia (e una visita) di un animale
 ##   --adopt=id_animale:Nome:follow       adotta un animale (follow facoltativo: diventa compagno)
+##   --teleport=x:z                       porta Gioia in (x, z) sull'isola
 ##   --signal=nome_segnale:secondi        emette un segnale dell'EventBus senza argomenti (es. build_mode_requested)
 ##
 ## Esempio (screenshot di Gioia che corre):
@@ -48,6 +49,8 @@ func _ready() -> void:
 				var idx: int = part.find(":")
 				if idx > 0:
 					_shots.append({"at": part.substr(0, idx).to_float(), "path": part.substr(idx + 1), "done": false})
+		elif arg.begins_with("--teleport="):
+			_teleport.call_deferred(arg.trim_prefix("--teleport="))
 		elif arg.begins_with("--signal="):
 			var p: PackedStringArray = arg.trim_prefix("--signal=").split(":")
 			_signals.append({"name": StringName(p[0]), "at": p[1].to_float() if p.size() > 1 else 1.0, "done": false})
@@ -85,6 +88,19 @@ func _process(delta: float) -> void:
 			_save_screenshot(String(s["path"]))
 	if _quit_at > 0.0 and _elapsed >= _quit_at:
 		get_tree().quit()
+
+
+func _teleport(spec: String) -> void:
+	for i: int in 6:
+		await get_tree().process_frame
+	var p: PackedStringArray = spec.split(":")
+	var player: PlayerController = get_tree().get_first_node_in_group(&"player") as PlayerController
+	if player == null or p.size() < 2:
+		return
+	var x: float = p[0].to_float()
+	var z: float = p[1].to_float()
+	var y: float = float(WorldQuery.ground_height.call(x, z)) if WorldQuery.ground_height.is_valid() else player.global_position.y
+	player.teleport_to(Vector3(x, y + 0.3, z))
 
 
 ## Evento reale (non solo action_press): così lo ricevono anche

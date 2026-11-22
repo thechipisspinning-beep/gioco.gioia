@@ -203,3 +203,110 @@ FURN_SCRATCHING_POST,Tiragraffi,Scratching post
 FURN_TOY_BOX,Cesta dei giochi,Toy box
 FURN_STOVE,Fornello,Stove
 FURN_COUNTER,Bancone,Counter
+REWARD_COINS,%d monete,%d coins
+REWARD_UNLOCK_FLOWER_CROWN,nuovo accessorio: corona di fiori,new accessory: flower crown
+REWARD_UNLOCK_BACKPACK,nuovo accessorio: zainetto,new accessory: backpack
+REWARD_UNLOCK_RAINCOAT,nuovo vestito: impermeabile,new outfit: raincoat
+REWARD_UNLOCK_BOOTS,nuove scarpe: stivaletti,new shoes: boots
+REWARD_CARETAKER,il custode si prenderà cura degli animali di casa,the caretaker will look after the animals at home
+REWARD_ROOM_PERMIT,permesso per una nuova stanza,permit for a new room
+NOTIFY_QUEST_DONE,Missione completata: %s,Quest complete: %s
+NOTIFY_REWARD,Ricompensa: %s,Reward: %s
+NOTIFY_QUEST_NEW,Nuova missione: %s,New quest: %s
+Q_M01,Benvenuta sull'isola,Welcome to the island
+Q_M02,Un nuovo amico,A new friend
+Q_M03,La prima adozione,The first adoption
+Q_M04,Una casa accogliente,A cosy home
+Q_M05,Il rifugio rinasce,The shelter is reborn
+Q_M06,La mangiatoia della nonna,Grandma's feeder
+Q_M07,Verso il bosco,Towards the woods
+Q_M08,L'amica volpe,The fox friend
+Q_M09,Una visita dalla veterinaria,A visit to the vet
+Q_M10,Una famiglia selvatica,A wild family
+Q_S_BRUNO,Il negozio di Bruno,Bruno's shop
+Q_S_ELENA,Fiori per Elena,Flowers for Elena
+Q_S_TEO,Le conchiglie di Teo,Teo's seashells
+Q_S_NINO,Nino vuole giocare,Nino wants to play
+Q_S_LIA,Il custode degli animali,The animal caretaker
+Q_S_MARTA,Piccola veterinaria,Little vet
+Q_S_PAOLO,Funghi per Paolo,Mushrooms for Paolo
+Q_D_PET,Accarezza 3 animali,Pet 3 animals
+Q_D_FEED,Dai da mangiare a 2 animali,Feed 2 animals
+Q_D_COLLECT,Raccogli 5 oggetti,Collect 5 items
+Q_D_PLAY,Gioca 2 volte con la pallina,Play fetch twice
+Q_D_BRUSH,Spazzola 2 animali,Brush 2 animals
+Q_D_EXPLORE,Visita 2 zone dell'isola,Visit 2 places on the island
+OBJ_TALK,Parla con %s,Talk to %s
+OBJ_HEARTS,Raggiungi %d cuori con: %s,Reach %d hearts with: %s
+OBJ_ADOPT,Adotta un animale,Adopt an animal
+OBJ_ADOPT_SPECIES,Adotta: %s,Adopt: %s
+OBJ_PLACE_FURNITURE,Sistema dei mobili in casa,Place furniture at home
+OBJ_REFILL_FEEDER,Riempi la mangiatoia in giardino,Refill the feeder in the garden
+OBJ_VISIT_ZONE,Visita: %s,Visit: %s
+OBJ_VISIT_ANY,Visita nuove zone,Visit places
+OBJ_MEET,Incontra: %s,Meet: %s
+OBJ_COLLECT,Raccogli: %s,Collect: %s
+OBJ_COLLECT_ANY,Raccogli oggetti,Collect items
+OBJ_PET,Accarezza animali,Pet animals
+OBJ_FEED,Dai da mangiare agli animali,Feed animals
+OBJ_PLAY,Gioca con la pallina,Play fetch
+OBJ_BRUSH,Spazzola animali,Brush animals
+OBJ_CURE,Cura un animale malato,Cure a sick animal
+OBJ_COOK,Cucina una ricetta,Cook a recipe
+OBJ_PLANT,Pianta dei semi,Plant seeds
+OBJ_HARVEST,Raccogli dall'orto,Harvest from the garden
+ITEM_FLOWER,Fiore,Flower
+ITEM_SEASHELL,Conchiglia,Seashell
+ITEM_MUSHROOM,Fungo,Mushroom
+ITEM_HERB,Erba aromatica,Herb
+ACTION_PICK,Raccogli,Pick up
+NOTIFY_PICKED,Hai raccolto: %s,You picked up: %s
+OBJ_DONE,fatto,done
+HUD_COINS,Monete: %d,Coins: %d
+DIALOGUE_CONTINUE,(premi Interagisci o tocca per continuare),(press Interact or tap to continue)
+SHOP_TITLE,Il negozio di Bruno,Bruno's shop
+SHOP_SELL_TITLE,Vendi a Bruno,Sell to Bruno
+SHOP_BUY_FOR,Compra: %d,Buy: %d
+SHOP_SELL_FOR,Vendi: %d,Sell: %d
+SHOP_BOUGHT,Acquisto fatto!,Purchased!
+SHOP_NOTHING_TO_SELL,"Non hai niente da vendere. Raccogli fiori, conchiglie, funghi ed erbe!","Nothing to sell. Pick flowers, shells, mushrooms and herbs!"
+NPC_TALK,Parla,Talk
+NPC_SHOP,Compra,Buy
+NPC_SELL,Vendi,Sell
+NPC_VET_CURE,"Cura gli animali malati (%d, costa %d)","Cure sick animals (%d, costs %d)"
+NPC_VET_NONE,Nessun animale malato,No sick animals
+NOTIFY_CURED_BY_VET,La veterinaria ha curato %s,The vet cured %s
+NPC_SOFIA,"Sofia, la sindaca","Sofia, the mayor"
+NPC_MARTA,"Marta, la veterinaria","Marta, the vet"
+NPC_BRUNO,"Bruno, il negoziante","Bruno, the shopkeeper"
+NPC_LIA,"Lia, la contadina","Lia, the farmer"
+NPC_TEO,"Teo, il pescatore","Teo, the fisherman"
+NPC_ELENA,"Elena, la giardiniera","Elena, the gardener"
+NPC_PAOLO,"Paolo, il falegname","Paolo, the carpenter"
+NPC_NINO,Nino,Nino
+DLG_SOFIA_WELCOME,Gioia! Che bello vederti. Tua nonna amava gli animali più di ogni cosa: il suo vecchio rifugio ora è tuo. Fai amicizia con gli animali dell'isola e riportalo in vita!,Gioia! How lovely to see you. Your grandma loved animals more than anything: her old shelter is yours now. Make friends with the island's animals and bring it back to life!
+DLG_SOFIA_1,Il villaggio è più allegro da quando sei arrivata.,The village is cheerier since you arrived.
+DLG_SOFIA_2,Hai visitato la foresta? Dicono che ci viva una volpe molto timida.,Have you been to the forest? They say a very shy fox lives there.
+DLG_MARTA_MEDICINE,"Se un tuo animale si ammala, portalo da me o dagli una medicina entro tre giorni. Eccone due per cominciare!","If one of your animals gets sick, bring it to me or give it medicine within three days. Here are two to start with!"
+DLG_MARTA_1,"Un animale felice è un animale sano: cibo, coccole e una bella spazzolata!","A happy animal is a healthy animal: food, cuddles and a good brushing!"
+DLG_MARTA_2,"Le volpi adorano i frutti di bosco, lo sapevi?","Foxes love berries, did you know?"
+DLG_BRUNO_HELLO,"Benvenuta nel mio negozio! Compro anche i fiori e le conchiglie che trovi in giro. Tieni, un tappeto in regalo!","Welcome to my shop! I also buy the flowers and shells you find. Here, a rug as a gift!"
+DLG_BRUNO_1,"Crocchette fresche, mobili nuovi... dai un'occhiata!","Fresh kibble, new furniture... have a look!"
+DLG_BRUNO_2,Le conchiglie della spiaggia sono le più richieste.,Beach shells are the most popular.
+DLG_PAOLO_PERMIT,Il rifugio di tua nonna merita di crescere. Ecco il permesso per una nuova stanza: usalo dal catalogo in casa!,Your grandma's shelter deserves to grow. Here's a permit for a new room: use it from the catalogue at home!
+DLG_PAOLO_1,"Il legno buono si trova nella foresta, insieme ai funghi più belli.","Good wood is found in the forest, along with the best mushrooms."
+DLG_PAOLO_2,Una casa diventa casa quando ci sono degli animali dentro.,A house becomes a home when there are animals in it.
+DLG_LIA_1,Con la mangiatoia in giardino i tuoi animali non resteranno mai a pancia vuota.,With the feeder in the garden your animals will never go hungry.
+DLG_LIA_2,"Se ti occupi bene degli animali, posso mandarti un custode che ti aiuti.","If you take good care of the animals, I can send you a caretaker to help."
+DLG_TEO_1,Al tramonto la spiaggia è bellissima.,The beach is beautiful at sunset.
+DLG_TEO_2,Mi porti cinque conchiglie? Ho un regalo per te.,Will you bring me five seashells? I have a gift for you.
+DLG_ELENA_1,I fiori dei prati a sud sono i più colorati.,The flowers in the southern meadows are the most colourful.
+DLG_ELENA_2,Cinque fiori per la mia aiuola e ti regalo due piante!,Five flowers for my flowerbed and I'll give you two plants!
+DLG_NINO_1,"Lanci la pallina al cane? Dai, tre volte!","Will you throw the ball to the dog? Come on, three times!"
+DLG_NINO_2,Da grande voglio avere cento animali come te!,When I grow up I want a hundred animals like you!
+JOURNAL_TAB_QUESTS,Missioni,Quests
+JOURNAL_ACTIVE_QUESTS,In corso,In progress
+JOURNAL_DONE_QUESTS,Completate,Completed
+JOURNAL_NO_QUESTS,Nessuna missione in corso,No quests in progress
+JOURNAL_DAILY,(di oggi),(today)
+JOURNAL_STAT_QUESTS,Missioni completate: %d,Quests completed: %d

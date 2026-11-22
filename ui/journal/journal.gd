@@ -6,7 +6,7 @@ extends Control
 
 signal closed
 
-enum Tab { ANIMALS, FAMILY, PROGRESS }
+enum Tab { ANIMALS, FAMILY, QUESTS, PROGRESS }
 
 var _tab: Tab = Tab.ANIMALS
 var _content: VBoxContainer
@@ -38,9 +38,9 @@ func open() -> void:
 	var tabs: HBoxContainer = HBoxContainer.new()
 	tabs.add_theme_constant_override("separation", 8)
 	_box.add_child(tabs)
-	for t: int in [Tab.ANIMALS, Tab.FAMILY, Tab.PROGRESS]:
-		var key: String = ["JOURNAL_TAB_ANIMALS", "JOURNAL_TAB_FAMILY", "JOURNAL_TAB_PROGRESS"][t]
-		var b: Button = MenuHelpers.button(tr(key), 150)
+	for t: int in [Tab.ANIMALS, Tab.FAMILY, Tab.QUESTS, Tab.PROGRESS]:
+		var key: String = ["JOURNAL_TAB_ANIMALS", "JOURNAL_TAB_FAMILY", "JOURNAL_TAB_QUESTS", "JOURNAL_TAB_PROGRESS"][t]
+		var b: Button = MenuHelpers.button(tr(key), 120)
 		b.toggle_mode = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var tab_id: Tab = t as Tab
@@ -86,6 +86,8 @@ func _show_tab(t: Tab) -> void:
 			_fill_animals()
 		Tab.FAMILY:
 			_fill_family()
+		Tab.QUESTS:
+			_fill_quests()
 		Tab.PROGRESS:
 			_fill_progress()
 
@@ -152,6 +154,34 @@ func _fill_family() -> void:
 			card.add_child(MenuHelpers.body(tr("JOURNAL_MEMORY_TEXT") % a.adopted_day, 16, UITheme.TEXT_SOFT))
 
 
+func _fill_quests() -> void:
+	var active: Array[StringName] = GameState.quests.active_ids()
+	_content.add_child(MenuHelpers.title(tr("JOURNAL_ACTIVE_QUESTS"), 22))
+	if active.is_empty():
+		_content.add_child(MenuHelpers.body(tr("JOURNAL_NO_QUESTS"), 17, UITheme.TEXT_SOFT))
+	# Prima la storia, poi le missioni degli abitanti, poi le giornaliere.
+	var order: Dictionary = {"main": 0, "side": 1, "daily": 2}
+	active.sort_custom(func(a: StringName, b: StringName) -> bool:
+		return int(order.get(QuestData.get_quest(a).get("kind", "side"), 1)) < int(order.get(QuestData.get_quest(b).get("kind", "side"), 1)))
+	for id: StringName in active:
+		var q: Dictionary = QuestData.get_quest(id)
+		var card: VBoxContainer = _card()
+		var title: String = tr(str(q["title_key"]))
+		if q.get("kind", "") == "daily":
+			title += " " + tr("JOURNAL_DAILY")
+		elif q.has("giver"):
+			title += "  ·  " + tr("NPC_" + String(q["giver"]).to_upper())
+		card.add_child(MenuHelpers.body(title, 20))
+		card.add_child(MenuHelpers.body(QuestTexts.objectives_text(q, GameState.quests.progress(id)), 16, UITheme.TEXT_SOFT))
+	var done: Array[StringName] = GameState.quests.completed_ids()
+	if not done.is_empty():
+		_content.add_child(MenuHelpers.title(tr("JOURNAL_DONE_QUESTS"), 22))
+		for id: StringName in done:
+			var q: Dictionary = QuestData.get_quest(id)
+			if q.get("kind", "") != "daily":
+				_content.add_child(MenuHelpers.body("• " + tr(str(q["title_key"])), 17, UITheme.TEXT_SOFT))
+
+
 func _fill_progress() -> void:
 	var t: GameTime = GameClock.time
 	var adopted: Array[AnimalState] = GameState.animals.adopted()
@@ -161,6 +191,8 @@ func _fill_progress() -> void:
 	card.add_child(MenuHelpers.body(tr("JOURNAL_STAT_SPECIES") % [GameState.discoveries.species_count(), Database.all_species().size()], 20))
 	card.add_child(MenuHelpers.body(tr("JOURNAL_STAT_ADOPTED") % alive, 20))
 	card.add_child(MenuHelpers.body(tr("JOURNAL_STAT_COMPANIONS") % [GameState.animals.companions().size(), Adoption.MAX_COMPANIONS], 20))
+	card.add_child(MenuHelpers.body(tr("HUD_COINS") % GameState.coins, 20))
+	card.add_child(MenuHelpers.body(tr("JOURNAL_STAT_QUESTS") % GameState.quests.completed_ids().size(), 20))
 	if GameState.serene_mode:
 		card.add_child(MenuHelpers.body(tr("JOURNAL_SERENE_ON"), 16, UITheme.TEXT_SOFT))
 

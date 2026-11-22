@@ -76,3 +76,4 @@ func perform_interaction(_action_id: String) -> void:
 	if GameState.inventory.try_remove(&"kibble", KIBBLE_PER_REFILL):
 		GameState.flags[FLAG] = mini(MAX_PORTIONS, portions() + KIBBLE_PER_REFILL * PORTIONS_PER_KIBBLE)
 		EventBus.notification_requested.emit(tr("FEEDER_REFILLED") % portions())
+		EventBus.gameplay_event.emit("refill_feeder", &"", 1)

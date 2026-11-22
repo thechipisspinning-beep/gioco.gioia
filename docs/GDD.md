@@ -135,7 +135,7 @@ Il sistema è **modulare**: ogni categoria è uno slot, ogni slot accetta oggett
 | **Prati fioriti / colline** | Colorata, primaverile | Lepri, farfalle, api, cavalli selvatici | Fiori rari, arnie, mongolfiera? |
 
 - Ogni zona ha: palette colori, musica, suoni ambientali, set di vegetazione, set di animali, punti di interesse, segreti/collezionabili.
-- Le zone si **sbloccano progressivamente** (es. un ponte da riparare, un sentiero da liberare) (D-15).
+- Le zone si **sbloccano progressivamente** tramite la storia (D-15): le missioni principali guidano Gioia verso ogni zona e vi introducono animali e abitanti. L'isola resta comunque esplorabile liberamente (nessuna barriera fisica).
 
 ### 5.3 Ciclo giorno/notte
 - Sole e luna con traiettorie, cielo con stelle di notte, transizioni di colore (alba, giorno, tramonto, notte).
@@ -405,3 +405,4 @@ Terza persona libera con orbit, distanza regolabile, collisione con l'ambiente, 
 | 0.1 | 2026-11-22 | Prima stesura dal brief del committente |
 | 0.2 | 2026-11-22 | Decise: piattaforme PC + console + mobile (D-01), 3 compagni (D-04), selvatici adottabili ma più difficili (D-16), malattia e morte in 3 giorni per trascuratezza (D-17). Aggiunti § 6.7 e controlli touch |
 | 1.0 | 2026-11-22 | Tutte le decisioni prese dal team su delega del committente; motore cambiato da Unity a Godot 4.7 (D-30) |
+| 1.1 | 2026-11-22 | D-15 precisata: sblocco delle zone guidato dalla storia, isola esplorabile liberamente |

@@ -48,3 +48,18 @@ signal furniture_placed(furniture_id: StringName)
 ## La casa è stata ampliata (numero di stanze).
 @warning_ignore("unused_signal")
 signal home_expanded(room_count: int)
+## Gioia ha parlato con un abitante.
+@warning_ignore("unused_signal")
+signal npc_talked(npc_id: StringName)
+## Gioia ha raccolto un oggetto dal mondo.
+@warning_ignore("unused_signal")
+signal item_collected(item_id: StringName, amount: int)
+## Evento generico per le missioni (es. "cure", "refill_feeder", "cook", "plant", "harvest").
+@warning_ignore("unused_signal")
+signal gameplay_event(type: String, target: StringName, amount: int)
+## Mostra una battuta di dialogo (nome di chi parla, testo già tradotto).
+@warning_ignore("unused_signal")
+signal dialogue_requested(speaker: String, text: String)
+## Apri il negozio (sell = true: vendi gli oggetti raccolti).
+@warning_ignore("unused_signal")
+signal shop_requested(sell: bool)

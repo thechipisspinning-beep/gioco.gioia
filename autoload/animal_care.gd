@@ -15,6 +15,7 @@ func tick() -> void:
 	var now: float = GameClock.time.get_total_minutes()
 	# Prima la mangiatoia automatica (D-37), poi l'aggiornamento di bisogni e salute.
 	Feeder.feed_hungry_animals()
+	_caretaker()
 	for state: AnimalState in GameState.animals.adopted():
 		var species: SpeciesDefinition = Database.species(state.species_id)
 		if species == null:
@@ -22,6 +23,18 @@ func tick() -> void:
 		var events: Array[AnimalHealth.Event] = AnimalHealth.update(state, species, now, GameState.serene_mode)
 		for e: AnimalHealth.Event in events:
 			_announce(state, e, now)
+
+
+## Il custode (sbloccato con una missione, D-37) passa ogni ora a coccolare e
+## spazzolare gli animali che vivono a casa: felicità e pulizia non scendono
+## sotto la metà. La fame resta compito di Gioia (o della mangiatoia).
+func _caretaker() -> void:
+	if not bool(GameState.flags.get("caretaker", false)):
+		return
+	for state: AnimalState in GameState.animals.adopted():
+		if state.is_alive() and state.location == AnimalState.Location.HOME:
+			state.happiness = maxf(state.happiness, 0.5)
+			state.cleanliness = maxf(state.cleanliness, 0.5)
 
 
 func adopt(state: AnimalState, raw_name: String) -> bool:
@@ -58,6 +71,7 @@ func give_medicine(state: AnimalState) -> bool:
 		return false
 	GameState.inventory.try_remove(&"medicine")
 	EventBus.notification_requested.emit(tr("NOTIFY_CURED") % state.given_name)
+	EventBus.gameplay_event.emit("cure", state.species_id, 1)
 	EventBus.animal_health_changed.emit(state.id, state.health)
 	return true
 

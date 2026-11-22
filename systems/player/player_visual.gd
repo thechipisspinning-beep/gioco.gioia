@@ -37,7 +37,8 @@ func _ready() -> void:
 	if controller != null:
 		controller.landed.connect(_on_landed)
 		controller.jumped.connect(_on_jumped)
-	EventBus.player_gesture.connect(play_gesture)
+	if controller == null or controller.is_player:
+		EventBus.player_gesture.connect(play_gesture)
 
 
 ## Cambia l'aspetto (es. dopo il caricamento o dallo specchio).

@@ -13,6 +13,10 @@ var serene_mode: bool = false
 var appearance: CharacterAppearance = CharacterAppearance.new()
 ## Casa di Gioia: stanze, mobili, colori (Fase 8).
 var home: HomeLayout = HomeLayout.new()
+## Missioni (Fase 9).
+var quests: QuestLog = QuestLog.new()
+## Monete (D-19).
+var coins: int = 0
 ## Piccoli valori di progressione (es. ultimo giorno in cui si è presa la medicina).
 var flags: Dictionary = {}
 
@@ -28,6 +32,8 @@ func start_new_game(serene: bool = false) -> void:
 	serene_mode = serene
 	flags = {}
 	appearance.from_dict(CharacterAppearance.new().to_dict())
+	quests = QuestLog.new()
+	coins = 50
 	home = HomeLayout.new()
 	# Arredamento iniziale già posizionato e qualche mobile da sistemare.
 	home.place(&"bed", 1, 1, 0, 0)
@@ -57,6 +63,8 @@ func to_dict() -> Dictionary:
 		"flags": flags.duplicate(true),
 		"appearance": appearance.to_dict(),
 		"home": home.to_dict(),
+		"quests": quests.to_dict(),
+		"coins": coins,
 	}
 
 
@@ -73,6 +81,9 @@ func from_dict(d: Dictionary) -> void:
 	appearance.from_dict(d.get("appearance", {}) as Dictionary)
 	home = HomeLayout.new()
 	home.from_dict(d.get("home", {}) as Dictionary)
+	quests = QuestLog.new()
+	quests.from_dict(d.get("quests", {}) as Dictionary)
+	coins = maxi(0, int(d.get("coins", 0)))
 
 
 ## Chiave d'inventario di un mobile (i mobili da posizionare stanno nell'inventario).

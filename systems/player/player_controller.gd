@@ -52,10 +52,16 @@ var _move_input: Vector2 = Vector2.ZERO
 
 ## Quando è vero (menu aperti, dialoghi) Gioia ignora l'input di movimento.
 var input_locked: bool = false
+## Falso per i personaggi non giocanti (abitanti): non leggono l'input del
+## giocatore ma `ai_move_input` / `ai_run`, e non sono nel gruppo "player".
+var is_player: bool = true
+var ai_move_input: Vector2 = Vector2.ZERO
+var ai_run: bool = false
 
 
 func _ready() -> void:
-	add_to_group(&"player")
+	if is_player:
+		add_to_group(&"player")
 	floor_max_angle = deg_to_rad(46.0)
 	floor_snap_length = 0.35
 	floor_constant_speed = true
@@ -63,8 +69,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	_move_input = Vector2.ZERO if input_locked else Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	_is_running = not input_locked and Input.is_action_pressed("run") and _move_input.length() > 0.1
+	if is_player:
+		_move_input = Vector2.ZERO if input_locked else Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+		_is_running = not input_locked and Input.is_action_pressed("run") and _move_input.length() > 0.1
+	else:
+		_move_input = ai_move_input.limit_length(1.0)
+		_is_running = ai_run and _move_input.length() > 0.1
 
 	_update_timers(delta)
 	_apply_gravity(delta)
@@ -106,7 +116,7 @@ func _update_timers(delta: float) -> void:
 		_coyote_timer = coyote_time
 	else:
 		_coyote_timer = maxf(_coyote_timer - delta, 0.0)
-	if Input.is_action_just_pressed("jump") and not input_locked:
+	if is_player and Input.is_action_just_pressed("jump") and not input_locked:
 		_jump_buffer_timer = jump_buffer_time
 	else:
 		_jump_buffer_timer = maxf(_jump_buffer_timer - delta, 0.0)

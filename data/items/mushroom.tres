@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/items/item_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"mushroom"
+name_key = "ITEM_MUSHROOM"
+category = 6
+consumable = true
+icon_color = Color(0.88, 0.35, 0.3, 1)

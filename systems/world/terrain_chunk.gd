@@ -190,6 +190,38 @@ func _add_ground_details(terrain: TerrainModel, origin: Vector2, rng: RandomNumb
 		_add_multimesh(PropMeshes.get_mesh(&"grass"), grass, grass_colors, 55.0, false)
 	if not flowers.is_empty():
 		_add_multimesh(PropMeshes.get_mesh(&"flower"), flowers, flower_colors, 70.0, false)
+	_add_collectibles(terrain, origin)
+
+
+## Oggetti da raccogliere (GDD § 7.8), con ID stabili per blocco: ricompaiono ogni giorno.
+func _add_collectibles(terrain: TerrainModel, origin: Vector2) -> void:
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = hash(coord) + 77
+	for n: int in 6:
+		var x: float = origin.x + rng.randf_range(2.0, CHUNK_SIZE - 2.0)
+		var z: float = origin.y + rng.randf_range(2.0, CHUNK_SIZE - 2.0)
+		var h: float = terrain.height_at(x, z)
+		var p2: Vector2 = Vector2(x, z)
+		if h < 0.3 or _in_flat_area(p2):
+			continue
+		var item: StringName = _collectible_for(IslandLayout.zone_at(p2), h, p2, rng)
+		if item == &"":
+			continue
+		var id: String = "c_%d_%d_%d" % [coord.x, coord.y, n]
+		add_child(Collectible.create(item, id, Vector3(x - origin.x, h, z - origin.y)))
+
+
+func _collectible_for(zone: StringName, h: float, p: Vector2, rng: RandomNumberGenerator) -> StringName:
+	if h < 2.0 and p.length() > IslandLayout.ISLAND_RADIUS * 0.7:
+		return &"seashell"
+	match zone:
+		&"forest":
+			return &"mushroom" if rng.randf() < 0.6 else &"berries"
+		&"lake", &"mountain":
+			return &"herb" if rng.randf() < 0.7 else &""
+		&"meadows", &"countryside", &"village":
+			return &"flower" if rng.randf() < 0.7 else (&"herb" if rng.randf() < 0.3 else &"")
+	return &"flower" if rng.randf() < 0.4 else &""
 
 
 func _add_multimesh(mesh: Mesh, transforms: Array, colors: Array, visible_range: float, shadows: bool) -> void:

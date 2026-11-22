@@ -3,7 +3,7 @@
 > Aggiornato a ogni sessione di lavoro. Legenda: ✅ completato e verificato · 🔧 in corso · ⏳ da fare · ⛔ bloccato
 
 **Ultimo aggiornamento:** 2026-11-22
-**Fase attuale:** 8 completata → prossima: 9 (missioni e ricompense). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
+**Fase attuale:** 9 completata → prossima: 11 (cucina e giardinaggio). Ordine scelto: prima gli animali (6, 7), poi i salvataggi (10), poi 4, 5, 8, 9, 11, 12, 13
 **Motore:** Godot 4.7.2 (D-30)
 
 ## Riepilogo fasi
@@ -16,9 +16,9 @@
 | 5 — Prima area esplorabile | ✅ (terreno di tutta l'isola; contenuti dettagliati nel villaggio e a casa, le altre zone si arricchiscono in Fase 12) |
 | 6 — Primo animale e interazione | ✅ |
 | 7 — Adozione | ✅ |
-| 8 — Casa e personalizzazione | ✅ (l'ampliamento richiede un permesso, che arriva come ricompensa con la Fase 9) |
-| 9 — Missioni e ricompense | ⏳ |
-| 10 — Diario e salvataggi | ✅ (scheda Missioni del diario arriva con la Fase 9) |
+| 8 — Casa e personalizzazione | ✅ |
+| 9 — Missioni e ricompense | ✅ |
+| 10 — Diario e salvataggi | ✅ |
 | 11 — Cucina e giardinaggio | ⏳ |
 | 12 — Espansione del mondo | ⏳ |
 | 13 — Ottimizzazione e test | ⏳ |
@@ -128,6 +128,22 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 
 **Test automatici:** 122 superati, 0 falliti.
 
+## Fase 9 — Missioni e ricompense ✅
+| Attività | Stato | Verifica |
+|----------|-------|----------|
+| `QuestLog` (logica pura): prerequisiti, obiettivi multipli, cuori raggiunti, giornaliere deterministiche, salvataggio | ✅ | 7 test unitari, coerenza dei dati |
+| `QuestData`: storia principale in 10 capitoli (il rifugio della nonna, D-12), 7 missioni degli abitanti, 6 giornaliere (3 al giorno) | ✅ | Test: la storia avanza con eventi reali |
+| `QuestService`: collega gli eventi (incontri, adozioni, cure, raccolta, dialoghi, mobili, zone, mangiatoia) e consegna le ricompense (monete, oggetti, mobili, vestiti sbloccati, permessi per nuove stanze, custode) | ✅ | Test |
+| 8 abitanti (D-11) con aspetto proprio, passeggiano attorno alla piazza, si girano verso Gioia, "!" quando hanno qualcosa da dire | ✅ | Test + screenshot |
+| Dialoghi; negozio di Bruno (compra oggetti e mobili, vendi ciò che raccogli) (D-19); veterinaria che cura a pagamento (D-36) | ✅ | Test |
+| Custode degli animali (D-37), sbloccato da Lia: tiene felici e puliti gli animali di casa | ✅ | Test |
+| Oggetti da raccogliere (fiori, conchiglie, funghi, erbe, frutti di bosco) per zona, ricompaiono ogni giorno | ✅ | Test |
+| HUD: monete e missione principale con obiettivi; diario: scheda Missioni | ✅ | Screenshot |
+
+**Test automatici:** 138 superati, 0 falliti.
+
+**Nota su D-15 (zone sbloccate progressivamente):** su un'isola aperta senza barriere fisiche, lo sblocco è realizzato tramite la storia: le missioni guidano Gioia verso le zone nell'ordine previsto e introducono animali e abitanti legati a ciascuna. Tutte le zone restano esplorabili liberamente (registrato nel GDD).
+
 ## Da fare / limiti noti
 - **Prestazioni reali non misurate:** qui il rendering è software (3 fps nel browser). Serve una prova su un telefono e un PC veri. Su telefono il raggio di caricamento è già ridotto (5 × 5 blocchi); se la costruzione dei blocchi causasse scatti, in Fase 13 si sposterà su un thread separato (build native) o si dividerà su più frame.
 - **Export Android:** richiede SDK Android e chiave di firma; da configurare in Fase 5. iOS richiede un Mac (D-42).
@@ -151,5 +167,6 @@ GDD v1.0, architettura Godot, tutte le decisioni registrate (`DECISIONI_APERTE.m
 | I sentieri dell'isola non venivano letti | Liste di punti non convertite nel tipo giusto | Dichiarate come `PackedVector2Array` |
 | Terreno, erba e fiori slavati su desktop, troppo scuri sul web | I colori per vertice non venivano convertiti da sRGB (e il renderer web lo fa già) | Conversione nello shader solo dove serve |
 | Foschia che velava cielo e colori | Nebbia troppo densa applicata anche al cielo | Nebbia leggera, cielo escluso |
+| Errori di formattazione dei testi delle missioni | Testi mancanti nelle traduzioni | Aggiunti; il runner severo li ha segnalati |
 | Pannello della personalizzazione schiacciato | Lo ScrollContainer non trasmette l'altezza del contenuto | Altezza calcolata dal contenuto |
 | Diario e pausa in alto a sinistra senza sfondo | I pannelli creati da codice restavano di dimensione zero | Ancoraggi e margini impostati insieme (`set_anchors_and_offsets_preset`) |

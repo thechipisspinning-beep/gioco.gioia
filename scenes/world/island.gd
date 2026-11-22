@@ -51,6 +51,7 @@ func _ready() -> void:
 	_build_village()
 	_build_home()
 	_spawn_animals()
+	_spawn_villagers()
 
 	var tracker: ZoneTracker = ZoneTracker.new()
 	tracker.target = player
@@ -178,6 +179,17 @@ func _spawn_animals() -> void:
 	var village: Vector2 = IslandLayout.FLAT_AREAS[0]["center"]
 	_spawn(&"village_dog", &"dog", Vector2(village.x - 8.0, village.y + 12.0))
 	_spawn(&"forest_fox", &"fox", Vector2(-230.0, 10.0))
+
+
+func _spawn_villagers() -> void:
+	var plaza: Vector2 = IslandLayout.FLAT_AREAS[0]["center"]
+	for d: Dictionary in VillagerData.ALL:
+		var v: Villager = preload("res://systems/npc/villager.tscn").instantiate() as Villager
+		var p: Vector2 = plaza + (d["offset"] as Vector2)
+		var anchor: Vector3 = Vector3(p.x, ground(p.x, p.y) + 0.2, p.y)
+		v.setup(d, anchor)
+		v.position = anchor
+		add_child(v)
 
 
 func _spawn(id: StringName, species: StringName, p: Vector2) -> void:
